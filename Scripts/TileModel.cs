@@ -15,7 +15,7 @@ public class TileModel : MonoBehaviour {
 
         mat = GetComponent<Renderer>().material;
         mat.shader = Shader.Find("Sprites/Default");
-        mat.mainTexture = Resources.Load<Texture2D>("Textures/tileBlank");
+		mat.mainTexture = Resources.Load<Texture2D>("Textures/tileBlank");
         mat.color = new Color(1, 1, 1);
     }
 
