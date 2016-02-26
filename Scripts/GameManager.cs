@@ -13,10 +13,16 @@ public class GameManager : MonoBehaviour
     private Tower currentTower;
     private bool placing;
 
+	// Beat timing variables - Noel
+	private float clock = 0f;
+	private float startTime = 0f;
+	private float BEAT = .5f;
+	private int numBeats = 0;
+
     // Use this for initialization
     void Start()
     {
-
+		// Placing board
         numTiles = 0;
         placing = false;
 
@@ -30,11 +36,22 @@ public class GameManager : MonoBehaviour
 
         buildBoard();
 
+
     }
 
     // Update is called once per frame
     void Update()
     {
+		clock = clock + Time.deltaTime;
+
+		// This calls certain functions every beat, for organization 
+		if (clock - startTime >= BEAT) {
+			startTime = clock;
+			for (int i = 0; i < towers.Count; i++) {
+				// towers [i].shoot (numBeats);
+			}
+			numBeats++;
+		}
 
     }
 
