@@ -4,22 +4,23 @@ using System.Collections;
 public class GreenTower : MonoBehaviour
 {
 
-    private Tower owner;
-    private Material mat;
-    private bool isPlaced;
+    private Tower owner; // object that created it
+    private Material mat; // material (for texture)
+    private bool isPlaced; // whether the tower has been placed
 
+    // called by the parent object
     public void init(Tower t)
     {
         this.owner = t;
         isPlaced = false;
 
-        transform.parent = owner.transform;
-        transform.localPosition = new Vector3(0, 0, 0);
+        transform.parent = owner.transform; // make quad the same location as the parent
+        transform.localPosition = new Vector3(0, 0, 0); // position relative to parent object
 
-        mat = GetComponent<Renderer>().material;
-        mat.shader = Shader.Find("Sprites/Default");
-        mat.mainTexture = Resources.Load<Texture2D>("Textures/greenTower");
-        mat.color = new Color(1, 1, 1);
+        mat = GetComponent<Renderer>().material; // get material component
+        mat.shader = Shader.Find("Sprites/Default"); // set shader
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/greenTower"); // set greenTower.png as textre
+        mat.color = new Color(1, 1, 1); // set color
     }
 
     // Use this for initialization
@@ -34,6 +35,7 @@ public class GreenTower : MonoBehaviour
 
     }
 
+    // when the mouse moves to a new tile
     void OnMouseExit()
     {
         if (owner.manager.isPlacing() && (!isPlaced))
@@ -50,6 +52,7 @@ public class GreenTower : MonoBehaviour
     {
         //if (!isPlaced)
         //{
+	    // instruct manager which tiles to highlight
             int x = (int)owner.transform.position.x;
             int y = (int)owner.transform.position.y;
             owner.manager.highlight(x, y + 1);
@@ -57,6 +60,8 @@ public class GreenTower : MonoBehaviour
             owner.manager.highlight(x, y - 1);
             owner.manager.highlight(x + 1, y);
         //}
+	
+	// if the player clicks the tower
         if (Input.GetMouseButtonDown(0))
         {
             if (!isPlaced)

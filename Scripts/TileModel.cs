@@ -15,7 +15,7 @@ public class TileModel : MonoBehaviour {
 
         mat = GetComponent<Renderer>().material;
         mat.shader = Shader.Find("Sprites/Default");
-		mat.mainTexture = Resources.Load<Texture2D>("Textures/tileBlank");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/tileBlank");
         mat.color = new Color(1, 1, 1);
     }
 
@@ -34,10 +34,12 @@ public class TileModel : MonoBehaviour {
         return mat;
     }
 
+    // when the tile is moused over
     void OnMouseOver()
     {
         if (owner.manager.isPlacing())
         {
+	    // move the current tower to this tile
             Tower tower = owner.manager.getCurrent();
             Vector3 vector = owner.transform.position;
             vector.z = -1;
@@ -45,14 +47,17 @@ public class TileModel : MonoBehaviour {
         }
         else
         {
+	    // highlight the tile under the mouse
             mat.color = Color.grey;
         }
     }
     
+    // when the mouse leaves the tile
     void OnMouseExit()
     {
         if (!owner.manager.isPlacing())
         {
+	    //reset color of texture
             mat.color = new Color(1, 1, 1, 1);
         }
     }
