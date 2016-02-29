@@ -14,7 +14,7 @@ public class Tower : MonoBehaviour
 
     private int towerType, direction;
 
-	// List of bullets - Noel
+	// List of bullets
 	private List<Bullet> bullets;
 
     // called by the manager when a tower is created
@@ -46,7 +46,7 @@ public class Tower : MonoBehaviour
         }
         if (type == 2) // if the tower is BLUE
         {
-            blueModel = modelObject.AddComponent<BlueTower>(); // same BlueTower script to quad
+            blueModel = modelObject.AddComponent<BlueTower>(); // add BlueTower script to quad
             blueModel.transform.parent = this.transform;
             blueModel.transform.localPosition = new Vector3(0, 0, 0);
 
@@ -70,7 +70,7 @@ public class Tower : MonoBehaviour
     // maybe bind this to right mouse or key later
     public void rotate()
     {
-        direction = (direction + 1) % 4;
+        direction = (direction + 1) % 4; // 0 = up, 1 = left, etc.
         transform.eulerAngles = new Vector3(0, 0, direction * 90);
     }
     
@@ -99,24 +99,43 @@ public class Tower : MonoBehaviour
 		}
 	}
 
-	private void patternZero(int numBeats) {
+	private void patternZero(int numBeats) { // RED: Shoots 1  in front of it every 2 beats
 		if (numBeats % 2 == 0) {
-			addBullet (this.transform.position.x, this.transform.position.y + 1);
+			if (direction == 0) { // makes sure 1 in front corresponds with tower direction
+				addBullet (this.transform.position.x, this.transform.position.y + 1);
+			} else if (direction == 1) {
+				addBullet (this.transform.position.x - 1, this.transform.position.y);
+			} else if (direction == 2) {
+				addBullet (this.transform.position.x, this.transform.position.y - 1);
+			} else {
+				addBullet (this.transform.position.x + 1, this.transform.position.y);
+			}
 		} else {
 			eraseBullets ();
 		}
 	}
 
-	private void patternOne(int numBeats) {
+	private void patternOne(int numBeats) { // GREEN: Shoots 2 in front every 4 beats
 		if (numBeats % 4 == 0) {
-			addBullet (this.transform.position.x, this.transform.position.y + 1);
-			addBullet (this.transform.position.x, this.transform.position.y + 2);
+			if (direction == 0) { // makes sure shooting corresponds with tower direction
+				addBullet (this.transform.position.x, this.transform.position.y + 1);
+				addBullet (this.transform.position.x, this.transform.position.y + 2);
+			} else if (direction == 1) {
+				addBullet (this.transform.position.x - 1, this.transform.position.y);
+				addBullet (this.transform.position.x - 2, this.transform.position.y);
+			} else if (direction == 2) {
+				addBullet (this.transform.position.x, this.transform.position.y - 1);
+				addBullet (this.transform.position.x, this.transform.position.y - 2);
+			} else {
+				addBullet (this.transform.position.x + 1, this.transform.position.y);
+				addBullet (this.transform.position.x + 2, this.transform.position.y);
+			}		
 		} else {
 			eraseBullets ();
 		}
 	}
 
-	private void patternTwo(int numBeats) {
+	private void patternTwo(int numBeats) { // BLUE: Cycles directions
 		if (numBeats % 4 == 0) {
 			eraseBullets ();
 			addBullet (this.transform.position.x, this.transform.position.y + 1);

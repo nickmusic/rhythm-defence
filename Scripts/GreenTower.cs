@@ -55,10 +55,31 @@ public class GreenTower : MonoBehaviour
 	    // instruct manager which tiles to highlight
             int x = (int)owner.transform.position.x;
             int y = (int)owner.transform.position.y;
-            owner.manager.highlight(x, y + 1);
+            /*owner.manager.highlight(x, y + 1);
             owner.manager.highlight(x - 1, y);
             owner.manager.highlight(x, y - 1);
-            owner.manager.highlight(x + 1, y);
+            owner.manager.highlight(x + 1, y);*/
+		if ((int)owner.transform.eulerAngles.z == 0)
+		{
+			owner.manager.highlight(x, y + 1);
+			owner.manager.highlight(x, y + 2);
+		}
+		else if ((int)owner.transform.eulerAngles.z == 90)
+		{
+			owner.manager.highlight(x - 1, y);
+			owner.manager.highlight(x - 2, y);
+		}
+		else if ((int)owner.transform.eulerAngles.z == 180)
+		{
+			owner.manager.highlight(x, y - 1);
+			owner.manager.highlight(x, y - 2);
+		}
+		else if ((int)owner.transform.eulerAngles.z == 270)
+		{
+			owner.manager.highlight(x + 1, y);
+			owner.manager.highlight(x + 2, y);
+		}
+
         //}
 	
 	// if the player clicks the tower
