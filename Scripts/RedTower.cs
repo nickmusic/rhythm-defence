@@ -80,4 +80,8 @@ public class RedTower : MonoBehaviour {
             }
         }
     }
+		
+	public bool placed() {
+		return isPlaced;
+	}
 }

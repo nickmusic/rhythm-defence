@@ -72,4 +72,9 @@ public class GreenTower : MonoBehaviour
             }
         }
     }
+
+	public bool placed() {
+		return isPlaced;
+	}
+
 }

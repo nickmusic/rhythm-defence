@@ -18,6 +18,12 @@ public class GameManager : MonoBehaviour
     private Tower currentTower; // tower currently being placed
     private bool placing; // whether a tower is being placed
 
+	// Beat tracking
+	private float clock;
+	private float startTime;
+	private float BEAT = .5f;
+	private int numBeats = 0;
+
     // Use this for initialization
     void Start()
     {
@@ -42,6 +48,18 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		// Beat counting
+		clock = clock + Time.deltaTime;
+
+		if (clock - startTime >= BEAT) {	
+			startTime = clock; // Resets counter for next beat
+
+			// Makes every tower fire
+			for (int i = 0; i < towers.Count; i++) {
+				towers [i].shoot (numBeats);
+			}
+			numBeats++;
+		}
 
     }
 

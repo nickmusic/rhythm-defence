@@ -14,12 +14,16 @@ public class Tower : MonoBehaviour
 
     private int towerType, direction;
 
+	// List of bullets - Noel
+	private List<Bullet> bullets;
+
     // called by the manager when a tower is created
     public void init(int type, GameManager m)
     {
         this.manager = m;
         towerType = type;
         direction = 0;
+		bullets = new List<Bullet> ();
 
         var modelObject = GameObject.CreatePrimitive(PrimitiveType.Quad); // create quad
         modelObject.SetActive(true); // amkes sure the quad is active
@@ -83,12 +87,15 @@ public class Tower : MonoBehaviour
     }
 
 	public void shoot (int numBeats) {
-		if (towerType == 0) {
-			patternZero (numBeats);
-		} else if (towerType == 1) {
-			patternOne (numBeats);
-		} else if (towerType == 2) {
-			patternTwo (numBeats);
+		if (this.placed()) {
+		// Pattern<Number> refers to the shooting pattern for each type of tower
+			if (towerType == 0) {
+				patternZero (numBeats);
+			} else if (towerType == 1) {
+				patternOne (numBeats);
+			} else if (towerType == 2) {
+				patternTwo (numBeats);
+			}
 		}
 	}
 
@@ -145,5 +152,15 @@ public class Tower : MonoBehaviour
 		bullets = new List<Bullet> ();
 	}
 
+	private bool placed() {
+		if (towerType == 0) { // if the tower is RED 
+			return redModel.placed();
+		} else if (towerType == 1) { // if the tower is GREEN 
+			return greenModel.placed();
+		} else if (towerType == 2) {// if the tower is BLUE
+			return blueModel.placed();
+		}
+		return false;
 
+	}
 }

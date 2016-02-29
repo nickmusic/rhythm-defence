@@ -10,7 +10,7 @@ public class BulletModel : MonoBehaviour {
 		this.owner = owner;
 
 		transform.parent = owner.transform;					// Set the model's parent to the gem.
-		transform.localPosition = new Vector3(0,0,0);		// Center the model on the parent.
+		transform.localPosition = new Vector3(0,0,-1);		// Center the model on the parent.
 		name = "Bullet Model";									// Name the object.
 
 		mat = GetComponent<Renderer>().material;					// Get the material component of this quad object.

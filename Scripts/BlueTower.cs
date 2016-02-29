@@ -84,4 +84,9 @@ public class BlueTower : MonoBehaviour
             }
         }
     }
+
+	public bool placed() {
+		return isPlaced;
+	}
+
 }
