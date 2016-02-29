@@ -55,7 +55,7 @@ public class BlueTower : MonoBehaviour
 	    // tell the manager which tiles to highlight
             int x = (int)owner.transform.position.x;
             int y = (int)owner.transform.position.y;
-            if ((int)owner.transform.eulerAngles.z == 0)
+            /*if ((int)owner.transform.eulerAngles.z == 0)
             {
                 owner.manager.highlight(x, y + 1);
             }
@@ -70,7 +70,12 @@ public class BlueTower : MonoBehaviour
             else if ((int)owner.transform.eulerAngles.z == 270)
             {
                 owner.manager.highlight(x + 1, y);
-            }
+            }*/
+			owner.manager.highlight(x, y + 1);
+			owner.manager.highlight(x - 1, y);
+			owner.manager.highlight(x, y - 1);
+			owner.manager.highlight(x + 1, y);
+
         //}
 	
 	// if the tower is clicked
@@ -84,4 +89,9 @@ public class BlueTower : MonoBehaviour
             }
         }
     }
+
+	public bool placed() {
+		return isPlaced;
+	}
+
 }
