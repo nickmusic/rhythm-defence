@@ -21,7 +21,7 @@ public class enemyModel : MonoBehaviour
 	private int damagebuf;
 
 	public void init(int enemyType, Enemy owner) {
-		owner = owner;
+		this.owner = owner;
 		healthcolor = 1;
 		this.enemyType = enemyType;
 		beat = 0;
@@ -93,8 +93,8 @@ public class enemyModel : MonoBehaviour
 
 	public void move(int numBeats){
 		if (this != null) {
-			if (numBeats % moverhythm == 0 && numBeats >= 10) {
-				if (transform.position.x < 7) {
+			if ((numBeats % moverhythm == 0) && owner.m.isStarted()) {
+				if (transform.position.x < owner.m.boardWidth) {
 					transform.position = new Vector3 (transform.position.x + 1, transform.position.y);
 				}
 			}
