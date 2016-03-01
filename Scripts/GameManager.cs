@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
 	private float BEAT = .5f;
 	private int numBeats = 0;
 
+	// Level number
+	private int level = 0;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -212,8 +215,10 @@ public class GameManager : MonoBehaviour
 				addEnemy (type, 0, i);
 			}
 		}*/
-		addEnemy (2, -1, 5);
-		addEnemy (2, -3, 5);
+		if (level == 0) {
+			addEnemy (2, -1, 5);
+			addEnemy (2, -3, 5);
+		}
 	}
 
 	// add a single enemy
