@@ -94,7 +94,7 @@ public class enemyModel : MonoBehaviour
 	public void move(int numBeats){
 		if (this != null) {
 			if (numBeats % moverhythm == 0 && numBeats >= 10) {
-				if (transform.position.x < 7) {
+				if (transform.position.x < 9) {
 					transform.position = new Vector3 (transform.position.x + 1, transform.position.y);
 				}
 			}
