@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour {
 	private int enemyType;
 	private float enemyx;
 	private float enemyy;
-	private GameManager m;		// A pointer to the manager (not needed here, but potentially useful in general).
+	public GameManager m;		// A pointer to the manager (not needed here, but potentially useful in general).
 
 	// The Start function is good for initializing objects, but doesn't allow you to pass in parameters.
 	// For any initialization that requires input, you'll probably want your own init function. 
