@@ -201,13 +201,15 @@ public class GameManager : MonoBehaviour
 
 	// add enemies
 	public void addEnemies(){
-		int i;
+		/*int i;
 		for (i = 0; i < boardHeight; i++) {
 			int type = i % 3;
 			if (i % 2 == 1) {
 				addEnemy (type, 0, i);
 			}
-		}
+		}*/
+		addEnemy (2, -1, 5);
+		addEnemy (2, -3, 5);
 	}
 
 	// add a single enemy
