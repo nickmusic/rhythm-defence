@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 	private List<int> currentbullets; //list of current bullets on the board
 	private Tower currentTower; // tower currently being placed
 	private bool placing; // whether a tower is being placed
+    private bool started; // whether enemies are permitted to move
 
 	// Beat tracking
 	private float clock;
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
 
 		numTiles = 0;
 		placing = false;
+        started = false;
 		currentbullets = new List<int>();	// list of current bullets on the board in terms of tile number
 
 		// set up folder for tiles
@@ -56,7 +58,7 @@ public class GameManager : MonoBehaviour
 		// Beat counting
 		clock = clock + Time.deltaTime;
 
-		if (clock - startTime >= BEAT) {	
+		if (clock - startTime >= BEAT) {
 			startTime = clock; // Resets counter for next beat
 
 			// Makes every tower fire
@@ -65,7 +67,7 @@ public class GameManager : MonoBehaviour
 			}
 
 			// Makes every enemy move
-			for (int i = 0; i < enemies.Count; i++){
+			for (int i = 0; i < enemies.Count; i++) {
 				enemies [i].move (numBeats);
 			}
 			numBeats++;
@@ -229,9 +231,20 @@ public class GameManager : MonoBehaviour
 		return ontile;
 	}
 
+    public bool isStarted()
+    {
+        return started;
+    }
+
 	// logic for the GUI
 	void OnGUI()
 	{
+        if (!started)
+        {
+            if (GUI.Button(new Rect(Screen.width-135, 50, 110, 30), "START")) {
+                started = true;
+            }
+        }
 		if (placing)
 		{
 			// if the rotate button is pressed
@@ -240,6 +253,7 @@ public class GameManager : MonoBehaviour
 				currentTower.rotate(); // rotate the tower being placed
 			}
 		}
+
 		// if the RED button is placed
 		if (GUI.Button(new Rect(25, Screen.height - 250, 110, 30), "RED"))
 		{
