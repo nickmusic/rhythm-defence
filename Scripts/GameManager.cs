@@ -17,20 +17,14 @@ public class GameManager : MonoBehaviour
 	private bool placing; // whether a tower is being placed
     private bool started; // whether enemies are permitted to move
 
-<<<<<<< HEAD
     int constraint0 = 0; //Constraints of red tower
     int constraint1 = 0; //Constraints of green tower
     int constraint2 = 0; //Constraints of blue tower
-=======
-    int constraint0 = 1; //Constraints of red tower
-    int constraint1 = 1; //Constraints of green tower
-    int constraint2 = 1; //Constraints of blue tower
 
     Texture2D redtexture; // texture for red tower
     Texture2D greentexture; // texture for green tower
     Texture2D bluetexture; // texture for blue tower
 
->>>>>>> master
 	// Beat tracking
 	private float clock;
 	private float startTime;
