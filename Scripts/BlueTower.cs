@@ -50,33 +50,14 @@ public class BlueTower : MonoBehaviour
 
     void OnMouseOver()
     {
-        //if (!isPlaced)
-        //{
-	    // tell the manager which tiles to highlight
-            int x = (int)owner.transform.position.x;
-            int y = (int)owner.transform.position.y;
-            /*if ((int)owner.transform.eulerAngles.z == 0)
-            {
-                owner.manager.highlight(x, y + 1);
-            }
-            else if ((int)owner.transform.eulerAngles.z == 90)
-            {
-                owner.manager.highlight(x - 1, y);
-            }
-            else if ((int)owner.transform.eulerAngles.z == 180)
-            {
-                owner.manager.highlight(x, y - 1);
-            }
-            else if ((int)owner.transform.eulerAngles.z == 270)
-            {
-                owner.manager.highlight(x + 1, y);
-            }*/
-			owner.manager.highlight(x, y + 1);
-			owner.manager.highlight(x - 1, y);
-			owner.manager.highlight(x, y - 1);
-			owner.manager.highlight(x + 1, y);
+        // tell the manager which tiles to highlight
+        int x = (int)owner.transform.position.x;
+        int y = (int)owner.transform.position.y;
 
-        //}
+        owner.manager.highlight(x, y + 1);
+        owner.manager.highlight(x - 1, y);
+        owner.manager.highlight(x, y - 1);
+        owner.manager.highlight(x + 1, y);
 	
 	// if the tower is clicked
         if (Input.GetMouseButtonDown(0))
@@ -85,6 +66,13 @@ public class BlueTower : MonoBehaviour
             {
                 bool test = owner.manager.placeTower();
                 isPlaced = test;
+                owner.manager.resetColors();
+            }
+            else
+            {
+                owner.manager.getTile(x, y).setHasTower(false);
+                owner.manager.destroyTower(owner);
+                owner.manager.addConstraint(2, 1);
                 owner.manager.resetColors();
             }
         }
