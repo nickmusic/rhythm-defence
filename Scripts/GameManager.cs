@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
 	private bool placing; // whether a tower is being placed
     private bool started; // whether enemies are permitted to move
 
+    int constraint0 = 1; //Constraints of red tower
+    int constraint1 = 1; //Constraints of green tower
+    int constraint2 = 1; //Constraints of blue tower
 	// Beat tracking
 	private float clock;
 	private float startTime;
@@ -264,69 +267,84 @@ public class GameManager : MonoBehaviour
 		}
 
 		// if the RED button is placed
-		if (GUI.Button(new Rect(25, Screen.height - 250, 110, 30), "RED"))
+		if (GUI.Button(new Rect(25, Screen.height - 250, 110, 30), "RED  "+constraint0))
 		{
-			// if a tower was already being placed
-			if (placing)
-			{
-				destroyTower(currentTower); // destroy the tower currently being placed
-				// if the tower was red
-				if (currentTower.getTowerType() == 0)
-				{
-					placing = false; // player no longer wants to place the tower
-				}
-				else
-				{
-					addTower(0); //  player wants to place a RED tower
-				}
-			}
-			else
-			{
-				addTower(0); // player wants to begin placing a tower
-				placing = true;
-			}
+            if (constraint0 != 0)
+            {
+
+                if (placing)
+                {
+                    destroyTower(currentTower);
+                    if (currentTower.getTowerType() == 0)
+                    {
+                        placing = false;
+                    }
+                    else
+                    {
+                        addTower(0);
+                        constraint0 = constraint0 - 1;
+                    }
+                }
+                else
+                {
+                    addTower(0);
+                    constraint0 = constraint0 - 1;
+                    placing = true;
+                }
+            }
 		}
 		// same as above but for GREEN button
-		if (GUI.Button(new Rect(25, Screen.height - 150, 110, 30), "GREEN"))
+		if (GUI.Button(new Rect(25, Screen.height - 150, 110, 30), "GREEN  "+constraint1))
 		{
-			if (placing)
-			{
-				destroyTower(currentTower);
-				if (currentTower.getTowerType() == 1)
-				{
-					placing = false;
-				}
-				else
-				{
-					addTower(1);
-				}
-			}
-			else
-			{
-				addTower(1);
-				placing = true;
-			}
+            if (constraint1 != 0) { 
+            
+                if (placing)
+                {
+                    destroyTower(currentTower);
+                    if (currentTower.getTowerType() == 1)
+                    {
+                        placing = false;
+                    }
+                    else
+                    {
+                        addTower(1);
+                        constraint1 = constraint1 - 1;
+                    }
+                }
+                else
+                {
+                    addTower(1);
+                    constraint1 = constraint1 - 1;
+                    placing = true;
+                }
+            }
 		}
 		// same as above but for BLUE button
-		if (GUI.Button(new Rect(25, Screen.height - 50, 110, 30), "BLUE"))
+		if (GUI.Button(new Rect(25, Screen.height - 50, 110, 30), "BLUE  "+constraint2))
 		{
-			if (placing)
-			{
-				destroyTower(currentTower);
-				if (currentTower.getTowerType() == 2)
-				{
-					placing = false;
-				}
-				else
-				{
-					addTower(2);
-				}
-			}
-			else
-			{
-				addTower(2);
-				placing = true;
-			}
+            if (constraint2 != 0)
+            {
+
+                if (placing)
+                {
+                    destroyTower(currentTower);
+                    if (currentTower.getTowerType() == 2)
+                    {
+                        placing = false;
+                    }
+                    else
+                    {
+                        addTower(2);
+                        constraint2 = constraint2 - 1;
+                    }
+                }
+                else
+                {
+                    addTower(2);
+                    constraint2 = constraint2 - 1;
+                    placing = true;
+                }
+            }
 		}
 	}
 }
