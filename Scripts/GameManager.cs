@@ -10,20 +10,20 @@ public class GameManager : MonoBehaviour
 	private GameObject tileFolder, towerFolder, enemyFolder;// folders for object organization
 	private int numTiles; // # of tiles for labeling each tile
 	private Tile[,] board; // 2d array containing all tiles
-	private List<Tower> towers; // list of all placed towers 
-	private List<Enemy> enemies; // list of all placed towers 
+	private List<Tower> towers; // list of all placed towers
+	private List<Enemy> enemies; // list of all placed towers
 	private List<int> currentbullets; //list of current bullets on the board
 	private Tower currentTower; // tower currently being placed
 	private bool placing; // whether a tower is being placed
-    private bool started; // whether enemies are permitted to move
+  private bool started; // whether enemies are permitted to move
 
-    int constraint0 = 1; //Constraints of red tower
-    int constraint1 = 1; //Constraints of green tower
-    int constraint2 = 1; //Constraints of blue tower
+  int constraint0 = 1; //Constraints of red tower
+  int constraint1 = 1; //Constraints of green tower
+  int constraint2 = 1; //Constraints of blue tower
 
-    Texture2D redtexture; // texture for red tower
-    Texture2D greentexture; // texture for green tower
-    Texture2D bluetexture; // texture for blue tower
+  Texture2D redtexture; // texture for red tower
+  Texture2D greentexture; // texture for green tower
+  Texture2D bluetexture; // texture for blue tower
 
 	// Beat tracking
 	private float clock;
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
 				}
 				numBeats++;
 			}
-			
+
 			// Update the current bullets
 			for (int i = 0; i < towers.Count; i++) {
 				List<Bullet> bullets = towers [i].getBullets ();
@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
 					}
 				}
 			}
-	
+
 			// Update interaction between enemies and bullets
 			for (int i = 0; i < enemies.Count; i++) {
 				Enemy enemy = enemies [i];
@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	// 
+	//
 	private void makeLevel() {
 		addEnemies ();
 		buildBoard ();
@@ -289,11 +289,104 @@ public class GameManager : MonoBehaviour
 
     // logic for the GUI
     void OnGUI()
-	{
+    {
         if (!started)
         {
-            if (GUI.Button(new Rect(25, 25, 110, 30), "START")) {
-                started = true;
+          if (GUI.Button(new Rect(25, 25, 110, 30), "START")) {
+              started = true;
+          }
+        }
+        if (placing)
+        {
+	    // if the rotate button is pressed
+            if (GUI.Button(new Rect(Screen.width-135, Screen.height - 250, 110, 30), "ROTATE"))
+            {
+                currentTower.rotate(); // rotate the tower being placed
+            }
+        }
+	// if the RED button is placed
+        if (GUI.Button(new Rect(25, Screen.height - 250, 110, 30), "RED  "+constraint0))
+        {
+            GUI.color = Color.red;
+            if (constraint0 != 0)
+            {
+
+                if (placing)
+                {
+                    destroyTower(currentTower);
+                    if (currentTower.getTowerType() == 0)
+                    {
+                        placing = false;
+                    }
+                    else
+                    {
+                        addTower(0);
+                        constraint0 = constraint0 - 1;
+                    }
+                }
+                else
+                {
+                    addTower(0);
+                    constraint0 = constraint0 - 1;
+                    placing = true;
+                }
+            }
+
+        }
+        // same as above but for GREEN button
+        if (GUI.Button(new Rect(25, Screen.height - 150, 110, 30), "GREEN  " + constraint1))
+        {
+            GUI.color = Color.green;
+            if (constraint1 != 0) {
+
+                if (placing)
+                {
+                    destroyTower(currentTower);
+                    if (currentTower.getTowerType() == 1)
+                    {
+                        placing = false;
+                    }
+                    else
+                    {
+                        addTower(1);
+                        constraint1 = constraint1 - 1;
+                    }
+                }
+                else
+                {
+                    addTower(1);
+                    constraint1 = constraint1 - 1;
+                    placing = true;
+                }
+            }
+
+            }
+	// same as above but for BLUE button
+        if (GUI.Button(new Rect(25, Screen.height - 50, 110, 30), "BLUE  " + constraint2))
+        {
+            GUI.color = Color.blue;
+            if (constraint2 != 0)
+            {
+
+                if (placing)
+                {
+                    destroyTower(currentTower);
+                    if (currentTower.getTowerType() == 2)
+                    {
+                        placing = false;
+                    }
+                    else
+                    {
+                        addTower(2);
+                        constraint2 = constraint2 - 1;
+                    }
+                }
+                else
+                {
+                    addTower(2);
+                    constraint2 = constraint2 - 1;
+                    placing = true;
+                }
             }
         }
 		if (placing)
@@ -383,7 +476,7 @@ public class GameManager : MonoBehaviour
                 constraint2 = constraint2 - 1;
                 placing = true;
             }
-            
+
 		}
 	}
 }
