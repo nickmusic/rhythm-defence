@@ -17,9 +17,9 @@ public class GameManager : MonoBehaviour
 	private bool placing; // whether a tower is being placed
     private bool started; // whether enemies are permitted to move
 
-    int constraint0 = 0; //Constraints of red tower
-    int constraint1 = 0; //Constraints of green tower
-    int constraint2 = 0; //Constraints of blue tower
+    int constraint0 = 1; //Constraints of red tower
+    int constraint1 = 1; //Constraints of green tower
+    int constraint2 = 1; //Constraints of blue tower
 
     Texture2D redtexture; // texture for red tower
     Texture2D greentexture; // texture for green tower
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 	private int numBeats = 0;
 
 	// Level number
-	private int level = 0;
+	public int level = 0;
 
 	// Use this for initialization
 	void Start()
@@ -62,9 +62,7 @@ public class GameManager : MonoBehaviour
 		enemyFolder.name = "Enemies";
 		enemies = new List<Enemy>();
 
-		addEnemies ();
-		buildBoard();
-
+		makeLevel ();
 	}
 
 	// Update is called once per frame
@@ -220,8 +218,24 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	// 
+	private void makeLevel() {
+		addEnemies ();
+		buildBoard ();
+		setConstraints ();
+	}
+
+	// set constraints based on level
+	private void setConstraints() {
+		if (level == 0) {
+			constraint0 = 0;
+			constraint1 = 0;
+			constraint2 = 2;
+		}
+	}
+
 	// add enemies
-	public void addEnemies(){
+	private void addEnemies(){
 		/*int i;
 		for (i = 0; i < boardHeight; i++) {
 			int type = i % 3;
