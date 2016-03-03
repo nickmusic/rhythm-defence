@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour {
 		this.enemyy = y;
 
 		var modelObject = GameObject.CreatePrimitive(PrimitiveType.Quad);	// Create a quad object for holding the gem texture.
-		model = modelObject.AddComponent<enemyModel>();						// Add a gemModel script to control visuals of the gem.
+		model = modelObject.AddComponent<enemyModel>();						// Add an enemyModel script to control visuals of the gem.
 		model.init(enemyType, this);						
 	}
 

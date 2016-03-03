@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
 	private float BEAT = .5f;
 	private int numBeats = 0;
 
+	// Level number
+	private int level = 0;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -55,52 +58,54 @@ public class GameManager : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		// Beat counting
-		clock = clock + Time.deltaTime;
+		if (this.started) {
+			// Beat counting
+			clock = clock + Time.deltaTime;
 
-		if (clock - startTime >= BEAT) {
-			startTime = clock; // Resets counter for next beat
+			if (clock - startTime >= BEAT) {
+				startTime = clock; // Resets counter for next beat
 
-			// Makes every tower fire
-			for (int i = 0; i < towers.Count; i++) {
-				towers [i].shoot (numBeats);
+				// Makes every tower fire
+				for (int i = 0; i < towers.Count; i++) {
+					towers [i].shoot (numBeats);
+				}
+
+				// Makes every enemy move
+				for (int i = 0; i < enemies.Count; i++) {
+					enemies [i].move (numBeats);
+				}
+				numBeats++;
 			}
-
-			// Makes every enemy move
-			for (int i = 0; i < enemies.Count; i++) {
-				enemies [i].move (numBeats);
-			}
-			numBeats++;
-		}
 			
-		// Update the current bullets
-		for (int i = 0; i < towers.Count; i++){
-			List<Bullet> bullets = towers [i].getBullets();
-			for (int j = 0; j < bullets.Count; j++) {
-				int a = onTile(bullets [j].transform.position.x, bullets [j].transform.position.y);
-				if (!currentbullets.Contains (a)) {
-					currentbullets.Add (a);
-				}
-			}
-		}
-	
-		// Update interaction between enemies and bullets
-		for (int i = 0; i < enemies.Count; i++){
-			Enemy enemy = enemies [i];
-			int h = enemy.getHealth ();
-			for (int j = 0; j < currentbullets.Count; j++) {
-				int b = onTile(enemy.getX(), enemy.getY());
-				if (b == currentbullets[j]) {
-					enemy.damage (numBeats);
-					if (enemy.getHealth() == 0) {
-						enemy.destroy ();
-						enemies.Remove (enemy);
+			// Update the current bullets
+			for (int i = 0; i < towers.Count; i++) {
+				List<Bullet> bullets = towers [i].getBullets ();
+				for (int j = 0; j < bullets.Count; j++) {
+					int a = onTile (bullets [j].transform.position.x, bullets [j].transform.position.y);
+					if (!currentbullets.Contains (a)) {
+						currentbullets.Add (a);
 					}
-					break;
 				}
 			}
+	
+			// Update interaction between enemies and bullets
+			for (int i = 0; i < enemies.Count; i++) {
+				Enemy enemy = enemies [i];
+				int h = enemy.getHealth ();
+				for (int j = 0; j < currentbullets.Count; j++) {
+					int b = onTile (enemy.getX (), enemy.getY ());
+					if (b == currentbullets [j]) {
+						enemy.damage (numBeats);
+						if (enemy.getHealth () == 0) {
+							enemy.destroy ();
+							enemies.Remove (enemy);
+						}
+						break;
+					}
+				}
+			}
+			currentbullets.Clear ();
 		}
-		currentbullets.Clear ();
 	}
 
 	//adds a single game tile to the location x, y (unity units)
@@ -203,12 +208,16 @@ public class GameManager : MonoBehaviour
 
 	// add enemies
 	public void addEnemies(){
-		int i;
+		/*int i;
 		for (i = 0; i < boardHeight; i++) {
 			int type = i % 3;
 			if (i % 2 == 1) {
 				addEnemy (type, 0, i);
 			}
+		}*/
+		if (level == 0) {
+			addEnemy (2, -1, 5);
+			addEnemy (2, -3, 5);
 		}
 	}
 
