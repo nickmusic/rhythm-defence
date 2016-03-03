@@ -34,6 +34,8 @@ public class enemyModel : MonoBehaviour
 			healthval = 30;
 		} else if (enemyType == 2) {
 			healthval = 20;
+		} else if (enemyType == 3) {
+			healthval = 10;
 		}
 
 		// set up rhythm of enemy
@@ -43,6 +45,8 @@ public class enemyModel : MonoBehaviour
 			moverhythm = 2;
 		} else if (enemyType == 2) {
 			moverhythm = 1;
+		} else if (enemyType == 3) {
+			moverhythm = 1;
 		}
 
 		movebuf = 0;
@@ -50,12 +54,12 @@ public class enemyModel : MonoBehaviour
 		transform.parent = owner.transform;	
 		transform.localPosition = new Vector3(0,0,0);
 		name = "Enemy Model";
-		if (enemyType == 0) {
+		//if (enemyType == 0) {
 			mat = GetComponent<Renderer> ().material;	
 			mat.shader = Shader.Find ("Sprites/Default");
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");
 			mat.color = new Color (1, 1, 1, 1);
-		} else if (enemyType == 1) {
+		/*} else if (enemyType == 1) {
 			mat = GetComponent<Renderer> ().material;		
 			mat.shader = Shader.Find ("Sprites/Default");	
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");	
@@ -66,7 +70,7 @@ public class enemyModel : MonoBehaviour
 			mat.shader = Shader.Find ("Sprites/Default");						
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");	
 			mat.color = new Color (1, 1, 1, 1);
-		}
+		}*/
 	}
 
 	void Start(){

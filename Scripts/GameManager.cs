@@ -231,6 +231,10 @@ public class GameManager : MonoBehaviour
 			constraint0 = 0;
 			constraint1 = 0;
 			constraint2 = 2;
+		} else if (level == 1) {
+			constraint0 = 1;
+			constraint1 = 0;
+			constraint2 = 0;
 		}
 	}
 
@@ -246,6 +250,10 @@ public class GameManager : MonoBehaviour
 		if (level == 0) {
 			addEnemy (2, -1, 5);
 			addEnemy (2, -3, 5);
+		} else if (level == 1) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 5);
+			}
 		}
 	}
 
