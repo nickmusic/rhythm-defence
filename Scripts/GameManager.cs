@@ -17,9 +17,20 @@ public class GameManager : MonoBehaviour
 	private bool placing; // whether a tower is being placed
     private bool started; // whether enemies are permitted to move
 
+<<<<<<< HEAD
     int constraint0 = 0; //Constraints of red tower
     int constraint1 = 0; //Constraints of green tower
     int constraint2 = 0; //Constraints of blue tower
+=======
+    int constraint0 = 1; //Constraints of red tower
+    int constraint1 = 1; //Constraints of green tower
+    int constraint2 = 1; //Constraints of blue tower
+
+    Texture2D redtexture; // texture for red tower
+    Texture2D greentexture; // texture for green tower
+    Texture2D bluetexture; // texture for blue tower
+
+>>>>>>> master
 	// Beat tracking
 	private float clock;
 	private float startTime;
@@ -27,7 +38,7 @@ public class GameManager : MonoBehaviour
 	private int numBeats = 0;
 
 	// Level number
-	public int level = 0; // accessible in Unity editor
+	private int level = 0;
 
 	// Use this for initialization
 	void Start()
@@ -38,8 +49,12 @@ public class GameManager : MonoBehaviour
         started = false;
 		currentbullets = new List<int>();	// list of current bullets on the board in terms of tile number
 
-		// set up folder for tiles
-		tileFolder = new GameObject();
+        redtexture = Resources.Load<Texture2D>("Textures/redTower");
+        greentexture = Resources.Load<Texture2D>("Textures/greenTower");
+        bluetexture = Resources.Load<Texture2D>("Textures/blueTower");
+
+        // set up folder for tiles
+        tileFolder = new GameObject();
 		tileFolder.name = "Tiles";
 		board = new Tile[boardWidth, boardHeight];
 
@@ -53,8 +68,7 @@ public class GameManager : MonoBehaviour
 		enemyFolder.name = "Enemies";
 		enemies = new List<Enemy>();
 
-		addEnemies (level);
-		setTowers (level);
+		addEnemies ();
 		buildBoard();
 
 	}
@@ -140,6 +154,7 @@ public class GameManager : MonoBehaviour
 	// creates a tower (hiden at first) which is then moved around as the player mouses over tiles
 	private void addTower(int type)
 	{
+        Debug.Log(towers.Count);
 		GameObject towerObject = new GameObject(); // create empty game object
 		Tower tower = towerObject.AddComponent<Tower>(); // add tower script to object
 		tower.transform.parent = towerFolder.transform; // make the tower folder its parent
@@ -174,7 +189,8 @@ public class GameManager : MonoBehaviour
 	// calls the destroy method of tower (possibly not necessary)
 	public void destroyTower(Tower tower)
 	{
-		tower.destroy();
+        towers.Remove(tower);
+        tower.destroy();
 	}
 
 	// returns the tower whcih is currently being placed
@@ -211,7 +227,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	// add enemies
-	private void addEnemies(int level){
+	public void addEnemies(){
 		/*int i;
 		for (i = 0; i < boardHeight; i++) {
 			int type = i % 3;
@@ -219,22 +235,9 @@ public class GameManager : MonoBehaviour
 				addEnemy (type, 0, i);
 			}
 		}*/
-		if (level == 0 || level == 1) {
+		if (level == 0) {
 			addEnemy (2, -1, 5);
 			addEnemy (2, -3, 5);
-		}
-	}
-
-	// set up tower constraints. 0 == red, 1 == green, 2 == blue
-	private void setTowers(int level) {
-		if (level == 0) {
-			constraint0 = 0;
-			constraint1 = 0;
-			constraint2 = 2;
-		} else if (level == 1) {
-			constraint0 = 2;
-			constraint1 = 0;
-			constraint2 = 0;
 		}
 	}
 
@@ -262,103 +265,117 @@ public class GameManager : MonoBehaviour
         return started;
     }
 
-	// logic for the GUI
-	void OnGUI()
+    //used to update how many towers are available when one is destroyed
+    public void addConstraint(int type, int x)
+    {
+        if (type == 0) { constraint0 += x; }
+        if (type == 1) { constraint1 += x; }
+        if (type == 2) { constraint2 += x; }
+    }
+
+    //so towers can access tiles
+    public Tile getTile(int x, int y)
+    {
+        return board[x, y];
+    }
+
+    // logic for the GUI
+    void OnGUI()
 	{
         if (!started)
         {
-            if (GUI.Button(new Rect(Screen.width-135, 50, 110, 30), "START")) {
+            if (GUI.Button(new Rect(25, 25, 110, 30), "START")) {
                 started = true;
             }
         }
 		if (placing)
 		{
 			// if the rotate button is pressed
-			if (GUI.Button(new Rect(Screen.width-135, Screen.height - 250, 110, 30), "ROTATE"))
+			if (GUI.Button(new Rect(Screen.width-135, Screen.height - 55, 110, 30), "ROTATE"))
 			{
 				currentTower.rotate(); // rotate the tower being placed
 			}
 		}
 
-		// if the RED button is placed
-		if (GUI.Button(new Rect(25, Screen.height - 250, 110, 30), "RED  "+constraint0))
+        // button for RED tower
+        if (GUI.Button(new Rect(Screen.width - 135, 25, 110, 110), image: redtexture))
 		{
-            if (constraint0 != 0)
+            if (placing)
             {
-
-                if (placing)
+                int type = currentTower.getTowerType();
+                destroyTower(currentTower);
+                if (type == 0) // if already placing that tower, stop placing
                 {
-                    destroyTower(currentTower);
-                    if (currentTower.getTowerType() == 0)
-                    {
-                        placing = false;
-                    }
-                    else
-                    {
-                        addTower(0);
-                        constraint0 = constraint0 - 1;
-                    }
+                    placing = false;
+                    constraint0 += 1;
                 }
-                else
+                else if (constraint0 > 0) // if placing another tower, switch to this one if one is left
                 {
+                    if (type == 1) { constraint1 += 1; }
+                    if (type == 2) { constraint2 += 1; }
                     addTower(0);
                     constraint0 = constraint0 - 1;
-                    placing = true;
                 }
             }
+            else if (constraint0 > 0) // if not already placing, start placing this one if one is left
+            {
+                addTower(0);
+                constraint0 = constraint0 - 1;
+                placing = true;
+            }
 		}
-		// same as above but for GREEN button
-		if (GUI.Button(new Rect(25, Screen.height - 150, 110, 30), "GREEN  "+constraint1))
+        // button for GREEN tower
+        if (GUI.Button(new Rect(Screen.width - 135, 160, 110, 110), image: greentexture))
 		{
-            if (constraint1 != 0) { 
-            
-                if (placing)
+            if (placing)
+            {
+                int type = currentTower.getTowerType();
+                destroyTower(currentTower);
+                if (type == 1) // if already placing that tower, stop placing
                 {
-                    destroyTower(currentTower);
-                    if (currentTower.getTowerType() == 1)
-                    {
-                        placing = false;
-                    }
-                    else
-                    {
-                        addTower(1);
-                        constraint1 = constraint1 - 1;
-                    }
+                    placing = false;
                 }
-                else
+                else if (constraint1 > 0) // if placing another tower, switch to this one if one is left
                 {
+                    if (type == 0) { constraint0 += 1; }
+                    if (type == 2) { constraint2 += 1; }
                     addTower(1);
                     constraint1 = constraint1 - 1;
-                    placing = true;
                 }
+            }
+            else if (constraint1 > 0) // if not already placing, start placing this one if one is left
+            {
+                addTower(1);
+                constraint1 = constraint1 - 1;
+                placing = true;
             }
 		}
-		// same as above but for BLUE button
-		if (GUI.Button(new Rect(25, Screen.height - 50, 110, 30), "BLUE  "+constraint2))
+		// button for BLUE tower
+		if (GUI.Button(new Rect(Screen.width - 135, 295, 110, 110), image: bluetexture))
 		{
-            if (constraint2 != 0)
+            if (placing)
             {
-
-                if (placing)
+                int type = currentTower.getTowerType(); // previous tower type
+                destroyTower(currentTower);
+                if (type == 2) // if already placing that tower, stop placing
                 {
-                    destroyTower(currentTower);
-                    if (currentTower.getTowerType() == 2)
-                    {
-                        placing = false;
-                    }
-                    else
-                    {
-                        addTower(2);
-                        constraint2 = constraint2 - 1;
-                    }
+                    placing = false;
                 }
-                else
+                else if (constraint2 > 0) // if placing another tower, switch to this one if one is left
                 {
+                    if (type == 0) { constraint0 += 1; }
+                    if (type == 1) { constraint1 += 1; }
                     addTower(2);
                     constraint2 = constraint2 - 1;
-                    placing = true;
                 }
             }
+            else if (constraint2 > 0) // if not already placing, start placing this one if one is left
+            {
+                addTower(2);
+                constraint2 = constraint2 - 1;
+                placing = true;
+            }
+            
 		}
 	}
 }

@@ -45,37 +45,37 @@ public class RedTower : MonoBehaviour {
 
     void OnMouseOver()
     {
-        //if (!isPlaced)
-        //{
             int x = (int)owner.transform.position.x;
             int y = (int)owner.transform.position.y;
-            if ((int)owner.transform.eulerAngles.z == 0)
-            {
-                owner.manager.highlight(x, y + 1);
-                //owner.manager.highlight(x, y + 2);
-            }
-            else if ((int)owner.transform.eulerAngles.z == 90)
-            {
-                owner.manager.highlight(x - 1, y);
-                //owner.manager.highlight(x - 2, y);
-            }
-            else if ((int)owner.transform.eulerAngles.z == 180)
-            {
-                owner.manager.highlight(x, y - 1);
-                //owner.manager.highlight(x, y - 2);
-            }
-            else if ((int)owner.transform.eulerAngles.z == 270)
-            {
-                owner.manager.highlight(x + 1, y);
-                //owner.manager.highlight(x + 2, y);
-            }
-        //}
+        if ((int)owner.transform.eulerAngles.z == 0)
+        {
+            owner.manager.highlight(x, y + 1);
+        }
+        else if ((int)owner.transform.eulerAngles.z == 90)
+        {
+            owner.manager.highlight(x - 1, y);
+        }
+        else if ((int)owner.transform.eulerAngles.z == 180)
+        {
+            owner.manager.highlight(x, y - 1);
+        }
+        else if ((int)owner.transform.eulerAngles.z == 270)
+        {
+            owner.manager.highlight(x + 1, y);
+        }
         if (Input.GetMouseButtonDown(0))
         {
             if (!isPlaced)
             {
                 bool test = owner.manager.placeTower();
                 isPlaced = test;
+                owner.manager.resetColors();
+            }
+            else
+            {
+                owner.manager.getTile(x, y).setHasTower(false);
+                owner.manager.destroyTower(owner);
+                owner.manager.addConstraint(0, 1);
                 owner.manager.resetColors();
             }
         }
