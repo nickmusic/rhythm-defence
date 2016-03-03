@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 	private int numBeats = 0;
 
 	// Level number
-	private int level = 0;
+	public int level = 0; // accessible in Unity editor
 
 	// Use this for initialization
 	void Start()
@@ -53,7 +53,8 @@ public class GameManager : MonoBehaviour
 		enemyFolder.name = "Enemies";
 		enemies = new List<Enemy>();
 
-		addEnemies ();
+		addEnemies (level);
+		setTowers (level);
 		buildBoard();
 
 	}
@@ -210,7 +211,7 @@ public class GameManager : MonoBehaviour
 	}
 
 	// add enemies
-	public void addEnemies(){
+	private void addEnemies(int level){
 		/*int i;
 		for (i = 0; i < boardHeight; i++) {
 			int type = i % 3;
@@ -218,9 +219,22 @@ public class GameManager : MonoBehaviour
 				addEnemy (type, 0, i);
 			}
 		}*/
-		if (level == 0) {
+		if (level == 0 || level == 1) {
 			addEnemy (2, -1, 5);
 			addEnemy (2, -3, 5);
+		}
+	}
+
+	// set up tower constraints. 0 == red, 1 == green, 2 == blue
+	private void setTowers(int level) {
+		if (level == 0) {
+			constraint0 = 0;
+			constraint1 = 0;
+			constraint2 = 2;
+		} else if (level == 1) {
+			constraint0 = 2;
+			constraint1 = 0;
+			constraint2 = 0;
 		}
 	}
 
