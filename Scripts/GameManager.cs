@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 	private int numTiles; // # of tiles for labeling each tile
 	private Tile[,] board; // 2d array containing all tiles
 	private List<Tower> towers; // list of all placed towers 
-	private List<Enemy> enemies; // list of all placed towers 
+	private List<Enemy> enemies; // list of all placed enemies 
 	private List<int> currentbullets; //list of current bullets on the board
 	private Tower currentTower; // tower currently being placed
 	private bool placing; // whether a tower is being placed
