@@ -182,4 +182,8 @@ public class Tower : MonoBehaviour
 		return false;
 
 	}
+
+	public List<Bullet> getBullets(){
+		return bullets;
+	}
 }

@@ -15,8 +15,8 @@ public class BulletModel : MonoBehaviour {
 
 		mat = GetComponent<Renderer>().material;					// Get the material component of this quad object.
 		mat.shader = Shader.Find ("Sprites/Default");	
-		mat.mainTexture = Resources.Load<Texture2D>("Textures/marble");	// Set the texture.  Must be in Resources folder.
-		mat.color = new Color (8, 8, 8);
+		mat.mainTexture = Resources.Load<Texture2D>("Textures/explosion");	// Set the texture.  Must be in Resources folder.
+		mat.color = new Color (1, 1, 1);
 
 	}
 
