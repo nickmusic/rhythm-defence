@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 	private int numBeats = 0;
 
 	// Level number
-	public int level = 0;
+	public int level = 20;
 
 	// Use this for initialization
 	void Start()
@@ -227,11 +227,23 @@ public class GameManager : MonoBehaviour
 
 	// set constraints based on level
 	private void setConstraints() {
-		if (level == 0) {
+		if (level == 20) {
+			constraint0 = 1;
+			constraint1 = 1;
+			constraint2 = 0;
+		} else if (level == 21) {
 			constraint0 = 0;
 			constraint1 = 0;
-			constraint2 = 2;
-		}
+			constraint2 = 4;
+		} else if (level == 22) {
+			constraint0 = 0;
+			constraint1 = 1;
+			constraint2 = 3;
+		} else if (level == 23) {
+			constraint0 = 0;
+			constraint1 = 2;
+			constraint2 = 0;
+		}			
 	}
 
 	// add enemies
@@ -243,10 +255,32 @@ public class GameManager : MonoBehaviour
 				addEnemy (type, 0, i);
 			}
 		}*/
-		if (level == 0) {
-			addEnemy (2, -1, 5);
-			addEnemy (2, -3, 5);
+		print(level);
+		if (level == 20) {
+			addEnemy (3, -1, 5);
+			addEnemy (3, -3, 5);
+			addEnemy (1, -1, 6);
+		} else if (level == 21) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 5);
+			}
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 3);
+			}
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 1);			
+			}
+		} else if (level == 22){
+			addEnemy (3, -1, 3);
+			addEnemy (1, -1, 4);
+			addEnemy (0, -1, 5);
+		} else if (level == 23){
+			addEnemy (3, -1, 5);
+			addEnemy (3, -2, 5);
+			addEnemy (3, -1, 6);
+			addEnemy (3, -2, 6);
 		}
+
 	}
 
 	// add a single enemy
