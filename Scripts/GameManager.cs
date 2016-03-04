@@ -148,14 +148,13 @@ public class GameManager : MonoBehaviour
 	// creates a tower (hiden at first) which is then moved around as the player mouses over tiles
 	private void addTower(int type)
 	{
-        Debug.Log(towers.Count);
+        //Debug.Log(towers);
 		GameObject towerObject = new GameObject(); // create empty game object
 		Tower tower = towerObject.AddComponent<Tower>(); // add tower script to object
 		tower.transform.parent = towerFolder.transform; // make the tower folder its parent
 		tower.transform.position = new Vector3(0, 0, 0); // set location in relation to global coords
 		tower.init(type, this); // initialize tower
 		tower.name = "Tower " + towers.Count; // name tower for easy finding
-		towers.Add(tower); // add tower into the towers list
 		currentTower = tower; // make the tower the one currently being placed
 	}
 
@@ -184,7 +183,7 @@ public class GameManager : MonoBehaviour
 	public void destroyTower(Tower tower)
 	{
         towers.Remove(tower);
-        tower.destroy();
+        Destroy(tower.gameObject);
 	}
 
 	// returns the tower whcih is currently being placed
