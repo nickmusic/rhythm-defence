@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 	private int numBeats = 0;
 
 	// Level number
-	private int level = 0;
+	public int level = 0;
 
 	// Use this for initialization
 	void Start()
@@ -62,9 +62,7 @@ public class GameManager : MonoBehaviour
 		enemyFolder.name = "Enemies";
 		enemies = new List<Enemy>();
 
-		addEnemies ();
-		buildBoard();
-
+		makeLevel ();
 	}
 
 	// Update is called once per frame
@@ -148,7 +146,6 @@ public class GameManager : MonoBehaviour
 	// creates a tower (hiden at first) which is then moved around as the player mouses over tiles
 	private void addTower(int type)
 	{
-        //Debug.Log(towers);
 		GameObject towerObject = new GameObject(); // create empty game object
 		Tower tower = towerObject.AddComponent<Tower>(); // add tower script to object
 		tower.transform.parent = towerFolder.transform; // make the tower folder its parent
@@ -182,9 +179,9 @@ public class GameManager : MonoBehaviour
 	// calls the destroy method of tower (possibly not necessary)
 	public void destroyTower(Tower tower)
 	{
-        towers.Remove(tower);
-        Destroy(tower.gameObject);
-	}
+            towers.Remove(tower);
+            Destroy(tower.gameObject);
+    }
 
 	// returns the tower whcih is currently being placed
 	public Tower getCurrent()
@@ -219,16 +216,27 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	// add enemies
-	public void addEnemies(){
-		/*int i;
-		for (i = 0; i < boardHeight; i++) {
-			int type = i % 3;
-			if (i % 2 == 1) {
-				addEnemy (type, 0, i);
-			}
-		}*/
+	// 
+	private void makeLevel() {
+		addEnemies ();
+		buildBoard ();
+		setConstraints ();
+	}
+
+	// set constraints based on level
+	private void setConstraints() {
 		if (level == 0) {
+			constraint0 = 0;
+			constraint1 = 0;
+			constraint2 = 2;
+		}
+	}
+
+	// add enemies
+	private void addEnemies()
+    {
+		if (level == 0)
+        {
 			addEnemy (2, -1, 5);
 			addEnemy (2, -3, 5);
 		}
