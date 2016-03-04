@@ -1,9 +1,4 @@
 
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System;
-
 public class GameManager : MonoBehaviour
 {
 
@@ -12,7 +7,7 @@ public class GameManager : MonoBehaviour
 	private int numTiles; // # of tiles for labeling each tile
 	private Tile[,] board; // 2d array containing all tiles
 	private List<Tower> towers; // list of all placed towers
-	private List<Enemy> enemies; // list of all placed towers
+	private List<Enemy> enemies; // list of all placed enemies
 	private List<int> currentbullets; //list of current bullets on the board
 	private Tower currentTower; // tower currently being placed
 	private bool placing; // whether a tower is being placed
@@ -147,12 +142,14 @@ public class GameManager : MonoBehaviour
 	// creates a tower (hiden at first) which is then moved around as the player mouses over tiles
 	private void addTower(int type)
 	{
+        Debug.Log(towers.Count);
 		GameObject towerObject = new GameObject(); // create empty game object
 		Tower tower = towerObject.AddComponent<Tower>(); // add tower script to object
 		tower.transform.parent = towerFolder.transform; // make the tower folder its parent
 		tower.transform.position = new Vector3(0, 0, 0); // set location in relation to global coords
 		tower.init(type, this); // initialize tower
 		tower.name = "Tower " + towers.Count; // name tower for easy finding
+		towers.Add(tower); // add tower into the towers list
 		currentTower = tower; // make the tower the one currently being placed
 	}
 
@@ -180,9 +177,9 @@ public class GameManager : MonoBehaviour
 	// calls the destroy method of tower (possibly not necessary)
 	public void destroyTower(Tower tower)
 	{
-            towers.Remove(tower);
-            Destroy(tower.gameObject);
-    }
+        towers.Remove(tower);
+        tower.destroy();
+	}
 
 	// returns the tower whcih is currently being placed
 	public Tower getCurrent()
@@ -230,16 +227,29 @@ public class GameManager : MonoBehaviour
 			constraint0 = 0;
 			constraint1 = 0;
 			constraint2 = 2;
+		} else if (level == 1) {
+			constraint0 = 1;
+			constraint1 = 0;
+			constraint2 = 0;
 		}
 	}
 
 	// add enemies
-	private void addEnemies()
-    {
-		if (level == 0)
-        {
+	private void addEnemies(){
+		/*int i;
+		for (i = 0; i < boardHeight; i++) {
+			int type = i % 3;
+			if (i % 2 == 1) {
+				addEnemy (type, 0, i);
+			}
+		}*/
+		if (level == 0) {
 			addEnemy (2, -1, 5);
 			addEnemy (2, -3, 5);
+		} else if (level == 1) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 5);
+			}
 		}
 	}
 
