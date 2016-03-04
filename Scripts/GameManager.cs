@@ -227,6 +227,22 @@ public class GameManager : MonoBehaviour
 
 	// set constraints based on level
 	private void setConstraints() {
+		// Noel's levels
+		if (level == 0) {
+			constraint0 = 0;
+			constraint1 = 0;
+			constraint2 = 2;
+		} else if (level == 1) {
+			constraint0 = 1;
+			constraint1 = 0;
+			constraint2 = 0;
+		} else if (level == 2) {
+			constraint0 = 2;
+			constraint1 = 0;
+			constraint2 = 0;
+		}
+
+		// Luxing's levels
 		if (level == 20) {
 			constraint0 = 1;
 			constraint1 = 1;
@@ -248,14 +264,23 @@ public class GameManager : MonoBehaviour
 
 	// add enemies
 	private void addEnemies(){
-		/*int i;
-		for (i = 0; i < boardHeight; i++) {
-			int type = i % 3;
-			if (i % 2 == 1) {
-				addEnemy (type, 0, i);
+		// Noel's levels
+		if (level == 0) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (2, (i * -2) - 1, 5);
 			}
-		}*/
-		print(level);
+		} else if (level == 1) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 5);
+			}
+		} else if (level == 2) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 5);
+				addEnemy (3, (i * -2) - 2, 5);
+			}
+		}
+
+		// Luxing's levels
 		if (level == 20) {
 			addEnemy (3, -1, 5);
 			addEnemy (3, -3, 5);

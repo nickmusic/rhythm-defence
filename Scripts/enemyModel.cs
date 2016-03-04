@@ -63,7 +63,7 @@ public class enemyModel : MonoBehaviour
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");	
 
 			mat.color = new Color (1, 1, 1, 1);
-		} else if (enemyType == 2) {
+		} else if (enemyType == 2 || enemyType == 3) {
 			mat = GetComponent<Renderer> ().material;								
 			mat.shader = Shader.Find ("Sprites/Default");						
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");	
