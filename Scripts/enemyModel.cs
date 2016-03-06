@@ -77,6 +77,14 @@ public class enemyModel : MonoBehaviour
 
 	void Update(){
 		clock += Time.deltaTime;
+
+		if (healthval >= 30) {
+			mat.color = new Color (1, 8, 1);
+		} else if (healthval == 20) {
+			mat.color = new Color (8, 8, 1);
+		} else if (healthval  == 10) {
+			mat.color = new Color (8, 1, 1);
+		}
 	}
 
 	public void damage(int numBeats){
