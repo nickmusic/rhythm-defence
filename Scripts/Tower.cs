@@ -164,7 +164,7 @@ public class Tower : MonoBehaviour
 
 	}
 
-	private void eraseBullets() {
+	public void eraseBullets() {
 		for (int i = 0; i < bullets.Count; i++) {
 			Destroy (bullets [i].gameObject);
 		}

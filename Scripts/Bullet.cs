@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour {
 
 		var modelObject = GameObject.CreatePrimitive(PrimitiveType.Quad);	// Create a quad object for holding the gem texture.
 		model = modelObject.AddComponent<BulletModel>();						// Add a towerModel script to control visuals of the gem.
-
+        model.transform.parent = transform.parent;
 		model.init (this);
 
 	}

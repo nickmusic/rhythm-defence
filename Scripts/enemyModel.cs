@@ -55,18 +55,18 @@ public class enemyModel : MonoBehaviour
 		if (enemyType == 0) {
 			mat = GetComponent<Renderer> ().material;	
 			mat.shader = Shader.Find ("Sprites/Default");
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/ghoul");
 			mat.color = new Color (1, 1, 1, 1);
 		} else if (enemyType == 1) {
 			mat = GetComponent<Renderer> ().material;		
 			mat.shader = Shader.Find ("Sprites/Default");	
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");	
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/spider");	
 
 			mat.color = new Color (1, 1, 1, 1);
 		} else if (enemyType == 2 || enemyType == 3) {
 			mat = GetComponent<Renderer> ().material;								
 			mat.shader = Shader.Find ("Sprites/Default");						
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");	
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slimeGrey");	
 			mat.color = new Color (1, 1, 1, 1);
 		}
 	}
