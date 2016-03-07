@@ -34,6 +34,8 @@ public class enemyModel : MonoBehaviour
 			healthval = 30;
 		} else if (enemyType == 2) {
 			healthval = 20;
+		} else if (enemyType == 3) {
+			healthval = 10;
 		}
 
 		// set up rhythm of enemy
@@ -41,7 +43,7 @@ public class enemyModel : MonoBehaviour
 			moverhythm = 4;
 		} else if (enemyType == 1) {
 			moverhythm = 2;
-		} else if (enemyType == 2) {
+		} else if (enemyType == 2 || enemyType == 3) {
 			moverhythm = 1;
 		}
 
@@ -61,7 +63,7 @@ public class enemyModel : MonoBehaviour
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/spider");	
 
 			mat.color = new Color (1, 1, 1, 1);
-		} else if (enemyType == 2) {
+		} else if (enemyType == 2 || enemyType == 3) {
 			mat = GetComponent<Renderer> ().material;								
 			mat.shader = Shader.Find ("Sprites/Default");						
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slimeGrey");	
@@ -75,6 +77,14 @@ public class enemyModel : MonoBehaviour
 
 	void Update(){
 		clock += Time.deltaTime;
+
+		if (healthval >= 30) {
+			mat.color = new Color (1, 8, 1);
+		} else if (healthval == 20) {
+			mat.color = new Color (8, 8, 1);
+		} else if (healthval  == 10) {
+			mat.color = new Color (8, 1, 1);
+		}
 	}
 
 	public void damage(int numBeats){

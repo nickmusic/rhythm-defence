@@ -1,3 +1,5 @@
+﻿using UnityEngine;
+using System.Collections;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -264,21 +266,86 @@ public class GameManager : MonoBehaviour
 
 	// set constraints based on level
 	private void setConstraints() {
+		// Noel's levels
 		if (level == 0) {
 			constraint0 = 0;
 			constraint1 = 0;
 			constraint2 = 2;
+		} else if (level == 1) {
+			constraint0 = 1;
+			constraint1 = 0;
+			constraint2 = 0;
+		} else if (level == 2) {
+			constraint0 = 2;
+			constraint1 = 0;
+			constraint2 = 0;
 		}
+
+		// Luxing's levels
+		if (level == 20) {
+			constraint0 = 1;
+			constraint1 = 1;
+			constraint2 = 0;
+		} else if (level == 21) {
+			constraint0 = 0;
+			constraint1 = 0;
+			constraint2 = 4;
+		} else if (level == 22) {
+			constraint0 = 0;
+			constraint1 = 1;
+			constraint2 = 3;
+		} else if (level == 23) {
+			constraint0 = 0;
+			constraint1 = 2;
+			constraint2 = 0;
+		}			
 	}
 
+
 	// add enemies
-	private void addEnemies()
-    {
-		if (level == 0)
-        {
-			addEnemy (2, -1, 5);
-			addEnemy (2, -3, 5);
+	private void addEnemies(){
+		// Noel's levels
+		if (level == 0) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (2, (i * -2) - 1, 5);
+			}
+		} else if (level == 1) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 5);
+			}
+		} else if (level == 2) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 5);
+				addEnemy (3, (i * -2) - 2, 5);
+			}
 		}
+
+		// Luxing's levels
+		if (level == 20) {
+			addEnemy (3, -1, 5);
+			addEnemy (3, -3, 5);
+			addEnemy (1, -1, 6);
+		} else if (level == 21) {
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 5);
+			}
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 3);
+			}
+			for (int i = 0; i < 10; i++) {
+				addEnemy (3, (i * -2) - 1, 1);			
+			}
+		} else if (level == 22){
+			addEnemy (3, -1, 3);
+			addEnemy (1, -1, 4);
+			addEnemy (0, -1, 5);
+		} else if (level == 23){
+			addEnemy (3, -1, 5);
+			addEnemy (3, -2, 5);
+			addEnemy (3, -1, 6);
+			addEnemy (3, -2, 6);
+		}
+
 	}
 
 	// add a single enemy
