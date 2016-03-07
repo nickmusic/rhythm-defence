@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour
     private GameObject tileFolder, towerFolder, enemyFolder;// folders for object organization
     private int numTiles; // # of tiles for labeling each tile
     private Tile[,] board; // 2d array containing all tiles
-    private List<Tower> towers; // list of all placed towers 
-    private List<Enemy> enemies; // list of all placed towers 
+    private List<Tower> towers; // list of all placed towers
+    private List<Enemy> enemies; // list of all placed towers
     private List<int> currentbullets; //list of current bullets on the board
     private Tower currentTower; // tower currently being placed
     private bool placing; // whether a tower is being placed
@@ -242,7 +242,12 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	// 
+	// get the current beat speed
+	public float getBeat(){
+		return BEAT;
+	}
+
+	//
 	private void makeLevel() {
 		addEnemies ();
 		buildBoard ();
@@ -298,7 +303,7 @@ public class GameManager : MonoBehaviour
 			constraint0 = 0;
 			constraint1 = 2;
 			constraint2 = 0;
-		}			
+		}
 	}
 
 
@@ -307,54 +312,85 @@ public class GameManager : MonoBehaviour
 		// Noel's levels
 		if (level == 0) {
 			for (int i = 0; i < 10; i++) {
-				addEnemy (2, (i * -2) - 1, 5);
+				addEnemy (2, 2, (i * -2) - 1, 5);
 			}
 		} else if (level == 1) {
 			for (int i = 0; i < 10; i++) {
-				addEnemy (3, (i * -2) - 1, 5);
+				addEnemy (3, 1, (i * -2) - 1, 5);
 			}
 		} else if (level == 2) {
 			for (int i = 0; i < 10; i++) {
-				addEnemy (3, (i * -2) - 1, 5);
-				addEnemy (3, (i * -2) - 2, 5);
+				addEnemy (3, 1, (i * -2) - 1, 5);
+				addEnemy (3, 1, (i * -2) - 2, 5);
 			}
 		}
 
+		// Jun's levels
+		else if (level == 10) {
+			addEnemy (2, 1, -1, 3);
+			addEnemy (2, 1, -1, 4);
+			addEnemy (2, 1, -1, 5);
+			addEnemy (2, 1, -3, 3);
+			constraint0 = 1;
+			constraint1 = 0;
+			constraint2 = 1;
+		} else if (level == 11) {
+			addEnemy (2, 1, -2, 3);
+			addEnemy (2, 1, -2, 4);
+			addEnemy (2, 1, -2, 5);
+			addEnemy (2, 1, -1, 4);
+			addEnemy (2, 1, -3, 4);
+			constraint0 = 0;
+			constraint1 = 1;
+			constraint2 = 1;
+		} else if (level == 12) {
+			addEnemy(2, 1, -1, 4);
+			addEnemy(2, 1, -1, 5);
+			addEnemy(2, 1, -3, 3);
+			addEnemy(2, 1, -3, 4);
+			addEnemy(2, 1, -3, 5);
+			addEnemy(2, 1, -3, 6);
+			constraint0 = 0;
+			constraint1 = 0;
+			constraint2 = 2;
+		} 
+
+
 		// Luxing's levels
 		if (level == 20) {
-			addEnemy (3, -1, 5);
-			addEnemy (3, -3, 5);
-			addEnemy (1, -1, 6);
+			addEnemy (3, 1, -1, 5);
+			addEnemy (3, 1, -3, 5);
+			addEnemy (1, 3, -1, 6);
 		} else if (level == 21) {
 			for (int i = 0; i < 10; i++) {
-				addEnemy (3, (i * -2) - 1, 5);
+				addEnemy (3, 1, (i * -2) - 1, 5);
 			}
 			for (int i = 0; i < 10; i++) {
-				addEnemy (3, (i * -2) - 1, 3);
+				addEnemy (3, 1, (i * -2) - 1, 3);
 			}
 			for (int i = 0; i < 10; i++) {
-				addEnemy (3, (i * -2) - 1, 1);			
+				addEnemy (3, 1, (i * -2) - 1, 1);
 			}
 		} else if (level == 22){
-			addEnemy (3, -1, 3);
-			addEnemy (1, -1, 4);
-			addEnemy (0, -1, 5);
+			addEnemy (3, 1, -1, 3);
+			addEnemy (1, 3, -1, 4);
+			addEnemy (0, 4, -1, 5);
 		} else if (level == 23){
-			addEnemy (3, -1, 5);
-			addEnemy (3, -2, 5);
-			addEnemy (3, -1, 6);
-			addEnemy (3, -2, 6);
+			addEnemy (3, 1, -1, 5);
+			addEnemy (3, 1, -2, 5);
+			addEnemy (3, 1, -1, 6);
+			addEnemy (3, 1, -2, 6);
 		}
 
 	}
 
 	// add a single enemy
-	public void addEnemy(int enemyType, int x, int y){
+	public void addEnemy(int enemyType, int initHealth, int x, int y){
 		GameObject enemyObject = new GameObject();
 		Enemy enemy = enemyObject.AddComponent<Enemy>();
 		enemy.transform.parent = enemyFolder.transform;
 		enemy.transform.position = new Vector3 (x, y, 0);
-		enemy.init(enemyType, this, x, y);
+		enemy.init(enemyType, initHealth, this, x, y);
 		enemies.Add(enemy);
 		enemy.name = "Enemy " + enemies.Count;
 	}
@@ -510,7 +546,7 @@ public class GameManager : MonoBehaviour
                 constraint2 = constraint2 - 1;
                 placing = true;
             }
-            
+
 		}
 	}
 }

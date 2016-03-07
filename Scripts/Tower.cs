@@ -155,7 +155,9 @@ public class Tower : MonoBehaviour
 		GameObject bulletObject = new GameObject();			// Create a new empty game object that will hold a bullet.
 		Bullet bullet = bulletObject.AddComponent<Bullet>();			// Add the bullet.cs script to the object.
 		// We can now refer to the object via this script.
-		bullet.transform.position = new Vector3(x,y,0);		// Position the bullet at x,y.								
+		//bullet.transform.position = new Vector3(this.transform.position.x, this.transform.position.y,0);		// Position the bullet at x,y.
+		//bullet.move(x, y, this.manager.getBeat());
+		bullet.transform.position = new Vector3(x, y, 0);
 
 		bullet.init(this);							// Initialize the bullet script.
 
