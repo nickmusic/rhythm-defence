@@ -43,9 +43,7 @@ public class enemyModel : MonoBehaviour
 			moverhythm = 4;
 		} else if (enemyType == 1) {
 			moverhythm = 2;
-		} else if (enemyType == 2) {
-			moverhythm = 1;
-		} else if (enemyType == 3) {
+		} else if (enemyType == 2 || enemyType == 3) {
 			moverhythm = 1;
 		}
 
@@ -54,23 +52,23 @@ public class enemyModel : MonoBehaviour
 		transform.parent = owner.transform;	
 		transform.localPosition = new Vector3(0,0,0);
 		name = "Enemy Model";
-		//if (enemyType == 0) {
+		if (enemyType == 0) {
 			mat = GetComponent<Renderer> ().material;	
 			mat.shader = Shader.Find ("Sprites/Default");
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/ghoul");
 			mat.color = new Color (1, 1, 1, 1);
-		/*} else if (enemyType == 1) {
+		} else if (enemyType == 1) {
 			mat = GetComponent<Renderer> ().material;		
 			mat.shader = Shader.Find ("Sprites/Default");	
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");	
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/spider");	
 
 			mat.color = new Color (1, 1, 1, 1);
-		} else if (enemyType == 2) {
+		} else if (enemyType == 2 || enemyType == 3) {
 			mat = GetComponent<Renderer> ().material;								
 			mat.shader = Shader.Find ("Sprites/Default");						
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slime");	
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slimeGrey");	
 			mat.color = new Color (1, 1, 1, 1);
-		}*/
+		}
 	}
 
 	void Start(){
@@ -79,6 +77,14 @@ public class enemyModel : MonoBehaviour
 
 	void Update(){
 		clock += Time.deltaTime;
+
+		if (healthval >= 30) {
+			mat.color = new Color (1, 8, 1);
+		} else if (healthval == 20) {
+			mat.color = new Color (8, 8, 1);
+		} else if (healthval  == 10) {
+			mat.color = new Color (8, 1, 1);
+		}
 	}
 
 	public void damage(int numBeats){
