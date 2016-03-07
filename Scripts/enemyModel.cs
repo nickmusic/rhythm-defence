@@ -29,11 +29,11 @@ public class enemyModel : MonoBehaviour
 
 		// set up health of enemies
 		if (enemyType == 0) {
-			healthval = 40;
-		} else if (enemyType == 1) {
 			healthval = 30;
-		} else if (enemyType == 2) {
+		} else if (enemyType == 1) {
 			healthval = 20;
+		} else if (enemyType == 2) {
+			healthval = 10;
 		}
 
 		// set up rhythm of enemy

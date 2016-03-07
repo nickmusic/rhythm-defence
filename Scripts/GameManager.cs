@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     private int numBeats = 0;
 
     // Level number
-    public int level = 0;
+    public int level = 20;
 
     // Use this for initialization
     void Start()
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
         numTiles = 0;
         placing = false;
         started = false;
-        currentbullets = new List<int>();	// list of current bullets on the board in terms of tile number
+        currentbullets = new List<int>();   // list of current bullets on the board in terms of tile number
 
         redtexture = Resources.Load<Texture2D>("Textures/redTower");
         greentexture = Resources.Load<Texture2D>("Textures/greenTower");
@@ -207,45 +207,45 @@ public class GameManager : MonoBehaviour
         towers = new List<Tower>();
     }
 
-	// returns the tower whcih is currently being placed
-	public Tower getCurrent()
-	{
-		return currentTower;
-	}
+    // returns the tower whcih is currently being placed
+    public Tower getCurrent()
+    {
+        return currentTower;
+    }
 
-	// returns true if there is currently a tower being placed
-	public bool isPlacing()
-	{
-		return placing;
-	}
+    // returns true if there is currently a tower being placed
+    public bool isPlacing()
+    {
+        return placing;
+    }
 
-	// changes the sprite color of the board at location x,y to green
-	public void highlight(int x, int y)
-	{
-		if ((x >= 0) && (x < boardWidth) && (y >= 0) && (y < boardHeight))
-		{
-			board[x, y].getModel().getMat().color = Color.green;
-		}
-	}
+    // changes the sprite color of the board at location x,y to green
+    public void highlight(int x, int y)
+    {
+        if ((x >= 0) && (x < boardWidth) && (y >= 0) && (y < boardHeight))
+        {
+            board[x, y].getModel().getMat().color = Color.green;
+        }
+    }
 
-	// sets the color of all the tiles back to (1,1,1,1)
-	public void resetColors()
-	{
-		for (int x = 0; x < boardWidth; x++)
-		{
-			for (int y = 0; y < boardHeight; y++)
-			{
-				board[x, y].getModel().getMat().color = new Color(1, 1, 1, 1);
-			}
-		}
-	}
+    // sets the color of all the tiles back to (1,1,1,1)
+    public void resetColors()
+    {
+        for (int x = 0; x < boardWidth; x++)
+        {
+            for (int y = 0; y < boardHeight; y++)
+            {
+                board[x, y].getModel().getMat().color = new Color(1, 1, 1, 1);
+            }
+        }
+    }
 
-	// 
-	private void makeLevel() {
-		addEnemies ();
-		buildBoard ();
-		setConstraints ();
-	}
+    // 
+    private void makeLevel() {
+        addEnemies ();
+        buildBoard ();
+        setConstraints ();
+    }
 
     public void resetLevel()
     {
@@ -262,35 +262,126 @@ public class GameManager : MonoBehaviour
 
     }
 
-	// set constraints based on level
-	private void setConstraints() {
-		if (level == 0) {
-			constraint0 = 0;
-			constraint1 = 0;
-			constraint2 = 2;
-		}
-	}
+    // set constraints based on level
+    private void setConstraints() {
+        if (level == 20) {
+            constraint0 = 0;
+            constraint1 = 2;
+            constraint2 = 0;
+        } else if (level == 21) {
+            constraint0 = 0;
+            constraint1 = 0;
+            constraint2 = 4;
+        } else if (level == 22) {
+            constraint0 = 0;
+            constraint1 = 0;
+            constraint2 = 3;
+        } else if (level == 23) {
+            constraint0 = 2;
+            constraint1 = 2;
+            constraint2 = 0;
+        } else if (level == 24) {
+            constraint0 = 8;
+            constraint1 = 8;
+            constraint2 = 8;
+        } else if (level == 25) {
+            constraint0 = 8;
+            constraint1 = 8;
+            constraint2 = 8;
+        } else if (level == 26) {
+            constraint0 = 8;
+            constraint1 = 8;
+            constraint2 = 8;
+        } else if (level == 27) {
+            constraint0 = 8;
+            constraint1 = 8;
+            constraint2 = 8;
+        } else if (level == 28) {
+            constraint0 = 8;
+            constraint1 = 8;
+            constraint2 = 8;
+        }              
+    }
 
-	// add enemies
-	private void addEnemies()
+    // add enemies
+    private void addEnemies()
     {
-		if (level == 0)
-        {
-			addEnemy (2, -1, 5);
-			addEnemy (2, -3, 5);
-		}
-	}
+        if (level == 20) {
+            addEnemy (2, -1, 5);
+            addEnemy (2, -3, 5);
+            addEnemy (1, -1, 6);
+        } else if (level == 21) {
+            for (int i = 0; i < 6; i++) {
+                addEnemy (2, (i * -2) - 1, 5);
+            }
+            for (int i = 0; i < 2; i++) {
+                addEnemy (0, (i * -2) - 1, 3);
+            }
+            for (int i = 0; i < 6; i++) {
+                addEnemy (2, (i * -2) - 1, 1);          
+            }
+        } else if (level == 22){
+            addEnemy (2, -1, 3);
+            addEnemy (1, -1, 4);
+            addEnemy (0, -1, 5);
+            addEnemy (2, -3, 5);
+            addEnemy (1, -3, 4);
+            addEnemy (0, -3, 3);            
+        } else if (level == 23){
+            addEnemy (2, -1, 5);
+            addEnemy (2, -2, 5);
+            addEnemy (2, -1, 6);
+            addEnemy (2, -2, 6);
+            addEnemy (1, -1, 2);
 
-	// add a single enemy
-	public void addEnemy(int enemyType, int x, int y){
-		GameObject enemyObject = new GameObject();
-		Enemy enemy = enemyObject.AddComponent<Enemy>();
-		enemy.transform.parent = enemyFolder.transform;
-		enemy.transform.position = new Vector3 (x, y, 0);
-		enemy.init(enemyType, this, x, y);
-		enemies.Add(enemy);
-		enemy.name = "Enemy " + enemies.Count;
-	}
+
+
+
+
+        } else if (level == 24){
+            addEnemy (2, -1, 5);
+            addEnemy (2, -2, 5);
+            addEnemy (2, -1, 6);
+            addEnemy (2, -2, 6);
+            addEnemy (1, -1, 2);
+        } else if (level == 25){
+            addEnemy (2, -1, 5);
+            addEnemy (2, -2, 5);
+            addEnemy (2, -1, 6);
+            addEnemy (2, -2, 6);
+            addEnemy (1, -1, 2);
+        } else if (level == 26){
+            addEnemy (2, -1, 5);
+            addEnemy (2, -2, 5);
+            addEnemy (2, -1, 6);
+            addEnemy (2, -2, 6);
+            addEnemy (1, -1, 2);
+        } else if (level == 27){
+            addEnemy (2, -1, 5);
+            addEnemy (2, -2, 5);
+            addEnemy (2, -1, 6);
+            addEnemy (2, -2, 6);
+            addEnemy (1, -1, 2);
+        } else if (level == 28){
+            addEnemy (2, -1, 5);
+            addEnemy (2, -2, 5);
+            addEnemy (2, -1, 6);
+            addEnemy (2, -2, 6);
+            addEnemy (1, -1, 2);
+        }
+
+    }
+
+    // add a single enemy
+    public void addEnemy(int enemyType, int x, int y){
+        GameObject enemyObject = new GameObject();
+        Enemy enemy = enemyObject.AddComponent<Enemy>();
+        enemy.transform.parent = enemyFolder.transform;
+        enemy.transform.position = new Vector3 (x, y, 0);
+        enemy.init(enemyType, this, x, y);
+        enemies.Add(enemy);
+        enemy.name = "Enemy " + enemies.Count;
+    }
 
     private void destroyEnemies()
     {
@@ -302,13 +393,13 @@ public class GameManager : MonoBehaviour
         enemies = new List<Enemy>();
     }
 
-	// check the tile the object is on
-	int onTile(float x, float y){
-		int a = (int) Math.Round(x);
-		int b = (int) Math.Round(y);
-		int ontile = a * boardWidth + b;
-		return ontile;
-	}
+    // check the tile the object is on
+    int onTile(float x, float y){
+        int a = (int) Math.Round(x);
+        int b = (int) Math.Round(y);
+        int ontile = a * boardWidth + b;
+        return ontile;
+    }
 
     public bool isStarted()
     {
@@ -337,35 +428,36 @@ public class GameManager : MonoBehaviour
 
     // logic for the GUI
     void OnGUI()
-	{
+    {
         //labels for how many towers are left
+        GUI.Label(new Rect(540, 25, 110, 110), "LEVEL "+level.ToString());
         GUI.Label(new Rect(Screen.width - 155, 70, 110, 110), constraint0.ToString());
         GUI.Label(new Rect(Screen.width - 155, 205, 110, 110), constraint1.ToString());
         GUI.Label(new Rect(Screen.width - 155, 340, 110, 110), constraint2.ToString());
 
         if (!started)
         {
-            if (GUI.Button(new Rect(25, 25, 110, 30), "START")) {
+            if (GUI.Button(new Rect(25, 25, 110, 30), "START") || Input.GetKeyDown(KeyCode.S)) {
                 started = true;
             }
         }
-		if (placing)
-		{
-			// if the rotate button is pressed
-			if (GUI.Button(new Rect(Screen.width-135, Screen.height - 55, 110, 30), "ROTATE"))
-			{
-				currentTower.rotate(); // rotate the tower being placed
-			}
-		}
+        if (placing)
+        {
+            // if the rotate button is pressed
+            if (GUI.Button(new Rect(Screen.width-135, Screen.height - 55, 110, 30), "ROTATE")|| Input.GetKeyDown(KeyCode.Q))
+            {
+                currentTower.rotate(); // rotate the tower being placed
+            }
+        }
 
-        if (GUI.Button(new Rect(25, 80, 110, 30), "RESTART"))
+        if (GUI.Button(new Rect(25, 80, 110, 30), "RESTART") || Input.GetKeyDown(KeyCode.R))
         {
             resetLevel();
         }
 
             // button for RED tower
-            if (GUI.Button(new Rect(Screen.width - 135, 25, 110, 110), image: redtexture))
-		{
+            if (GUI.Button(new Rect(Screen.width - 135, 25, 110, 110), image: redtexture)|| Input.GetKeyDown(KeyCode.Alpha1))
+        {
             if (placing)
             {
                 int type = currentTower.getTowerType();
@@ -389,10 +481,10 @@ public class GameManager : MonoBehaviour
                 constraint0 = constraint0 - 1;
                 placing = true;
             }
-		}
+        }
         // button for GREEN tower
-        if (GUI.Button(new Rect(Screen.width - 135, 160, 110, 110), image: greentexture))
-		{
+        if (GUI.Button(new Rect(Screen.width - 135, 160, 110, 110), image: greentexture)|| Input.GetKeyDown(KeyCode.Alpha2))
+        {
             if (placing)
             {
                 int type = currentTower.getTowerType();
@@ -416,10 +508,10 @@ public class GameManager : MonoBehaviour
                 constraint1 = constraint1 - 1;
                 placing = true;
             }
-		}
-		// button for BLUE tower
-		if (GUI.Button(new Rect(Screen.width - 135, 295, 110, 110), image: bluetexture))
-		{
+        }
+        // button for BLUE tower
+        if (GUI.Button(new Rect(Screen.width - 135, 295, 110, 110), image: bluetexture)|| Input.GetKeyDown(KeyCode.Alpha3))
+        {
             if (placing)
             {
                 int type = currentTower.getTowerType(); // previous tower type
@@ -444,6 +536,6 @@ public class GameManager : MonoBehaviour
                 placing = true;
             }
             
-		}
-	}
+        }
+    }
 }
