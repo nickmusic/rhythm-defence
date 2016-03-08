@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
     private float startTime;
     private float BEAT = .5f;
     private int numBeats = 0;
+    int enemybeaten = 0;
+    int enemynum=0;
 
     // Level number
 
@@ -118,6 +120,7 @@ public class GameManager : MonoBehaviour
                         if (enemy.getHealth() == 0) {
                             enemy.destroy();
                             enemies.Remove(enemy);
+                            enemybeaten +=1;
                         }
                         break;
                     }
@@ -303,30 +306,14 @@ public class GameManager : MonoBehaviour
             constraint1 = 0;
             constraint2 = 3;
         } else if (level == 23) {
-            constraint0 = 2;
+            constraint0 = 0;
             constraint1 = 2;
             constraint2 = 0;
         } else if (level == 24) {
             constraint0 = 1;
             constraint1 = 3;
             constraint2 = 0;
-        } else if (level == 25) {
-            constraint0 = 8;
-            constraint1 = 8;
-            constraint2 = 8;
-        } else if (level == 26) {
-            constraint0 = 8;
-            constraint1 = 8;
-            constraint2 = 8;
-        } else if (level == 27) {
-            constraint0 = 8;
-            constraint1 = 8;
-            constraint2 = 8;
-        } else if (level == 28) {
-            constraint0 = 8;
-            constraint1 = 8;
-            constraint2 = 8;
-        }              
+        }             
     }
 
 
@@ -384,15 +371,19 @@ public class GameManager : MonoBehaviour
 			addEnemy (2, 1, -1, 5);
 			addEnemy (2, 1, -3, 5);
 			addEnemy (1, 2, -1, 6);
+			enemynum+=3;
 		} else if (level == 21) {
 			for (int i = 0; i < 6; i++) {
 				addEnemy (2, 1, (i * -2) - 1, 5);
+				enemynum+=1;
 			}
-			for (int i = 0; i < 2; i++) {
-				addEnemy (0, 3, (i * -2) - 1, 3);
+			for (int i = 0; i < 4; i++) {
+				addEnemy (2, 2, (i * -2) - 1, 3);
+				enemynum+=1;
 			}
 			for (int i = 0; i < 6; i++) {
 				addEnemy (2, 1, (i * -2) - 1, 1);
+				enemynum+=1;
 			}
 		} else if (level == 22){
             addEnemy (2,1, -1, 3);
@@ -401,19 +392,25 @@ public class GameManager : MonoBehaviour
             addEnemy (2,1, -3, 5);
             addEnemy (1,2, -3, 4);
             addEnemy (0,3, -3, 3);
+			enemynum+=6;
 		} else if (level == 23){
-			addEnemy (3, 1, -1, 5);
-			addEnemy (3, 1, -2, 5);
-			addEnemy (3, 1, -1, 6);
-			addEnemy (3, 1, -2, 6);
+			for (int i = 0; i < 6; i++) {
+				addEnemy (2, 1, (i * -2) - 1, 5);
+				enemynum+=1;
+			}
+			for (int i = 0; i < 4; i++) {
+				addEnemy (2, 2, (i * -2) - 1, 3);
+				enemynum+=1;
+			}		
 		} else if (level == 24){
             addEnemy (2,1, -1, 5);
             addEnemy (2,1, -2, 5);
             addEnemy (2,1, -1, 6);
             addEnemy (2,1, -2, 6);
             addEnemy (1,2, -1, 2);
+			enemynum+=5;
 		}
-
+		print(enemynum);
 
 	}
 
@@ -493,6 +490,14 @@ public class GameManager : MonoBehaviour
             if (GUI.Button(new Rect(25, 25, 110, 30), "START (S)") || Input.GetKeyDown(KeyCode.S)) {
                 started = true;
             }
+        }
+        if (enemybeaten==enemynum){
+
+        	if (GUI.Button(new Rect(25, 200, 110, 30), "NextLevel") ) {
+        		enemynum=0;
+        		Application.LoadLevel (Application.loadedLevel + 1);
+                	//Application.LoadLevel("22");
+        	}
         }
 
         if (placing)
