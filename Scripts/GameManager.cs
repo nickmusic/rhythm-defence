@@ -358,9 +358,11 @@ public class GameManager : MonoBehaviour
 				}
 			}
 		} else if (level == 6) {
-			addEnemy (3, 1, (i * -4) - 1, 5);
-			addEnemy (3, 1, (i * -4) - 1, 4);
-			addEnemy (3, 1, (i * -4) - 3, 3);
+			for (int i = 0; i < 6; i++) {
+				addEnemy (3, 1, (i * -4) - 1, 5);
+				addEnemy (3, 1, (i * -4) - 1, 4);
+				addEnemy (3, 1, (i * -4) - 3, 3);
+			}
 
 		}
 
