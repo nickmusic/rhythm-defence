@@ -271,6 +271,7 @@ public class GameManager : MonoBehaviour
 
 	// set constraints based on level
 	private void setConstraints() {
+		
 		// RED: constraint0
 		// GREEN: constraint1
 		// BLUE: constraint2
@@ -305,7 +306,6 @@ public class GameManager : MonoBehaviour
 			constraint1 = 0;
 			constraint2 = 1;
 		}
-
 		// Luxing's levels
 		if (level == 20) {
 			constraint0 = 1;
