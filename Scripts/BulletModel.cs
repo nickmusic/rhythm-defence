@@ -6,7 +6,6 @@ public class BulletModel : MonoBehaviour {
 	private Bullet owner;			// Pointer to the parent object.
 	private Material mat;		// Material for setting/changing texture and color.
 	float clock;
-	int ismoving;
 	float x;
 	float y;
 	float beat;
@@ -23,7 +22,6 @@ public class BulletModel : MonoBehaviour {
 		mat.shader = Shader.Find ("Sprites/Default");	
 		mat.mainTexture = Resources.Load<Texture2D>("Textures/explosion");	// Set the texture.  Must be in Resources folder.
 		mat.color = new Color (1, 1, 1);
-		ismoving = 0;
 		x = transform.position.x;
 		y = transform.position.y;
 		beat = 0f;
@@ -38,6 +36,7 @@ public class BulletModel : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		clock = clock + Time.deltaTime;
+
 
 		// go up
 		/*if (Mathf.Abs (x - transform.position.x) >= 0.1 || Mathf.Abs (y - transform.position.y) >= 0.1) {
@@ -58,6 +57,9 @@ public class BulletModel : MonoBehaviour {
 			transform.position = new Vector3 (transform.position.x+beat*2, transform.position.y, 0);
 			print ("aa");
 		}*/
+		//transform.position = new Vector3 (transform.position.x+beat/2, transform.position.y, 0);
+		//print (transform.position.x);
+
 	}
 
 	public void move(float x, float y, float beat, int direction){

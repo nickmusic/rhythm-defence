@@ -101,7 +101,8 @@ public class enemyModel : MonoBehaviour
 		if (this != null) {
 			if ((numBeats % moverhythm == 0) && owner.m.isStarted()) {
 				if (transform.position.x < owner.m.boardWidth) {
-					moveto += 1;
+					transform.position = new Vector3 (transform.position.x+1, transform.position.y, 0);
+					//moveto += 1;
 				}
 			}
 		}
