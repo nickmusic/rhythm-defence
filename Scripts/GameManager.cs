@@ -277,10 +277,6 @@ public class GameManager : MonoBehaviour
 
 	// set constraints based on level
 	private void setConstraints() {
-		// RED: constraint0
-		// GREEN: constraint1
-		// BLUE: constraint2
-
 		// Noel's levels
 		if (level == 0) {
 			constraint0 = 0;
@@ -294,22 +290,6 @@ public class GameManager : MonoBehaviour
 			constraint0 = 2;
 			constraint1 = 0;
 			constraint2 = 0;
-		} else if (level == 3) {
-			constraint0 = 0;
-			constraint1 = 2;
-			constraint2 = 0;
-		} else if (level == 4) {
-			constraint0 = 2;
-			constraint1 = 0;
-			constraint2 = 0;
-		} else if (level == 5) {
-			constraint0 = 1;
-			constraint1 = 2;
-			constraint2 = 0;
-		} else if (level == 6) {
-			constraint0 = 0;
-			constraint1 = 0;
-			constraint2 = 1;
 		}
 
 		// Luxing's levels
@@ -352,23 +332,6 @@ public class GameManager : MonoBehaviour
 			for (int i = 0; i < 10; i++) {
 				addEnemy (3, 1, (i * -2) - 1, 5);
 				addEnemy (3, 1, (i * -2) - 2, 5);
-			}
-		} else if (level == 3 || level == 4) {
-			for (int i = 0; i < 6; i++) {
-				addEnemy (3, 1, (i * -2) - 1, 5);
-				addEnemy (3, 1, (i * -2) - 1, 4);
-			}
-		} else if (level == 5) {
-			for (int i = 0; i < 6; i++) {
-				addEnemy (3, 1, (i * -2) - 1, 5);
-				addEnemy (3, 1, (i * -2) - 1, 4);
-				addEnemy (3, 1, (i * -2) - 1, 3);
-			}
-		} else if (level == 6) {
-			for (int i = 0; i < 6; i++) {
-				addEnemy (3, 1, (i * -4) - 1, 5);
-				addEnemy (3, 1, (i * -4) - 1, 4);
-				addEnemy (3, 1, (i * -4) - 3, 3);
 			}
 		}
 
