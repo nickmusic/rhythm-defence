@@ -27,7 +27,7 @@ public class Bullet : MonoBehaviour {
 
 	}
 
-	public void move(float x, float y, float beat){
-		model.move (x, y, beat);
+	public void move(float x, float y, float beat, int direction){
+		this.model.move (x, y, beat, direction);
 	}
 }
