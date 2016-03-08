@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 using System.Collections;
 using UnityEngine;
 using System.Collections;
@@ -314,7 +314,15 @@ public class GameManager : MonoBehaviour
 			constraint0 = 0;
 			constraint1 = 0;
 			constraint2 = 2;
-		} 
+		} else if (level == 13) {
+			constraint0 = 0;
+			constraint1 = 0;
+			constraint2 = 2;
+		} else if (level == 14) {
+			constraint0 = 8;
+			constraint1 = 0;
+			constraint2 = 0;
+		}
 
 		// Luxing's levels
 		if (level == 20) {
@@ -333,7 +341,7 @@ public class GameManager : MonoBehaviour
 			constraint0 = 0;
 			constraint1 = 2;
 			constraint2 = 0;
-		}
+		} 
 	}
 
 
@@ -371,6 +379,7 @@ public class GameManager : MonoBehaviour
 		}
 
 		// Jun's levels
+
 		else if (level == 10) {
 			addEnemy (2, 1, -1, 3);
 			addEnemy (2, 1, -1, 4);
@@ -383,13 +392,33 @@ public class GameManager : MonoBehaviour
 			addEnemy (2, 1, -1, 4);
 			addEnemy (2, 1, -3, 4);
 		} else if (level == 12) {
-			addEnemy(2, 1, -1, 4);
-			addEnemy(2, 1, -1, 5);
-			addEnemy(2, 1, -3, 3);
-			addEnemy(2, 1, -3, 4);
-			addEnemy(2, 1, -3, 5);
-			addEnemy(2, 1, -3, 6);
-		} 
+			addEnemy (2, 1, -1, 4);
+			addEnemy (2, 1, -1, 5);
+			addEnemy (2, 1, -3, 3);
+			addEnemy (2, 1, -3, 4);
+			addEnemy (2, 1, -3, 5);
+			addEnemy (2, 1, -3, 6);
+		} else if (level == 13) {
+			for (int i = 0; i < 6; i++) {
+				addEnemy (2, 1, (i * -4) - 1, 4);
+				addEnemy (2, 1, (i * -4) - 1, 5);
+				addEnemy (2, 1, (i * -4) - 1, 6);
+				addEnemy (2, 1, (i * -4) - 3, 2);
+				addEnemy (2, 1, (i * -4) - 1, 3);
+				addEnemy (2, 1, (i * -4) - 3, 4);
+			}
+		} else if (level == 14) {
+			for (int i = 0; i < 6; i++) {
+				addEnemy (2, 1, (i * -3) - 1, 0);
+				addEnemy (2, 1, (i * -3) - 2, 1);
+				addEnemy (2, 1, (i * -3) - 1, 2);
+				addEnemy (2, 1, (i * -3) - 2, 3);
+				addEnemy (2, 1, (i * -3) - 1, 4);
+				addEnemy (2, 1, (i * -3) - 2, 5);
+				addEnemy (2, 1, (i * -3) - 1, 6);
+				addEnemy (2, 1, (i * -3) - 2, 7);
+			}
+		}
 
 
 		// Luxing's levels
