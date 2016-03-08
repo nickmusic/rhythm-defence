@@ -20,6 +20,7 @@ public class enemyModel : MonoBehaviour
 	private int healthval;
 	private int beat;
 	private int damagebuf;
+	private float moveto;
 
 	public void init(int enemyType, int initHealth, Enemy owner) {
 		this.owner = owner;
@@ -28,6 +29,7 @@ public class enemyModel : MonoBehaviour
 		healthval = initHealth;
 		beat = 0;
 		damagebuf = 0;
+		moveto = owner.enemyx;
 
 		// set up rhythm of enemy
 		if (enemyType == 0) {
@@ -75,6 +77,10 @@ public class enemyModel : MonoBehaviour
 		} else if (healthval  == 1) {
 			mat.color = new Color (8, 1, 1);
 		}
+
+		if (transform.position.x < moveto) {
+			transform.position = new Vector3 (transform.position.x+owner.m.getBeat(), transform.position.y, 0);
+		}
 	}
 
 	public void damage(int numBeats){
@@ -95,7 +101,7 @@ public class enemyModel : MonoBehaviour
 		if (this != null) {
 			if ((numBeats % moverhythm == 0) && owner.m.isStarted()) {
 				if (transform.position.x < owner.m.boardWidth) {
-					transform.position = new Vector3 (transform.position.x + 1, transform.position.y);
+					moveto += 1;
 				}
 			}
 		}

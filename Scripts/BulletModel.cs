@@ -10,6 +10,7 @@ public class BulletModel : MonoBehaviour {
 	float x;
 	float y;
 	float beat;
+	int direction;
 
 	public void init(Bullet owner) {
 		this.owner = owner;
@@ -23,10 +24,9 @@ public class BulletModel : MonoBehaviour {
 		mat.mainTexture = Resources.Load<Texture2D>("Textures/explosion");	// Set the texture.  Must be in Resources folder.
 		mat.color = new Color (1, 1, 1);
 		ismoving = 0;
-		x = 0;
-		y = 0;
+		x = transform.position.x;
+		y = transform.position.y;
 		beat = 0f;
-
 	}
 
 
@@ -38,22 +38,32 @@ public class BulletModel : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		clock = clock + Time.deltaTime;
-		if (ismoving == 1) {
-			if (transform.position.x != x) {
-				transform.position = new Vector3 (transform.position.x + beat*(x - transform.position.x), transform.position.y, 0);
-			}
-			if (transform.position.y != y) {
-				transform.position = new Vector3 (transform.position.x, transform.position.y + beat*(y - transform.position.y), 0);
-			}
+
+		// go up
+		/*if (Mathf.Abs (x - transform.position.x) >= 0.1 || Mathf.Abs (y - transform.position.y) >= 0.1) {
+			print ("aa");
+			transform.position = new Vector3 (this.transform.position.x + beat * (direction % 2) * (direction - 2), 
+				this.transform.position.y + beat * ((1 + direction) % 2) * (1 - direction));
+			print (transform.position.y);
+			print ("y: " + y);
 		}
+
+		/*if (transform.position.x != x) {
+			transform.position = new Vector3 (transform.position.x+beat, transform.position.y, 0);
+		}
+		if (transform.position.y != y) {
+			transform.position = new Vector3 (transform.position.x, transform.position.y+beat, 0);
+		}*/
+		/*if (transform.position.x < x) {
+			transform.position = new Vector3 (transform.position.x+beat*2, transform.position.y, 0);
+			print ("aa");
+		}*/
 	}
 
-	public void move(float x, float y, float beat){
-		ismoving = 1;
+	public void move(float x, float y, float beat, int direction){
 		this.x = x;
 		this.y = y;
-		if (Mathf.Abs (x - transform.position.x) == 2 || Mathf.Abs (y - transform.position.y) == 2) {
-			beat = beat * 2;
-		}
+		this.beat = beat;
+		this.direction = direction;
 	}
 }

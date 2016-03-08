@@ -11,6 +11,7 @@ public class Tower : MonoBehaviour
     private RedTower redModel;
     private GreenTower greenModel;
     private BlueTower blueModel;
+	private int beatbuf;
 
     private int towerType, direction;
 
@@ -24,6 +25,7 @@ public class Tower : MonoBehaviour
         towerType = type;
         direction = 0;
 		bullets = new List<Bullet> ();
+		beatbuf = -1;
 
         var modelObject = GameObject.CreatePrimitive(PrimitiveType.Quad); // create quad
         modelObject.SetActive(true); // amkes sure the quad is active
@@ -89,12 +91,15 @@ public class Tower : MonoBehaviour
 	public void shoot (int numBeats) {
 		if (this.placed()) {
 		// Pattern<Number> refers to the shooting pattern for each type of tower
-			if (towerType == 0) {
-				patternZero (numBeats);
-			} else if (towerType == 1) {
-				patternOne (numBeats);
-			} else if (towerType == 2) {
-				patternTwo (numBeats);
+			if (beatbuf != numBeats) {
+				if (towerType == 0) {
+					patternZero (numBeats);
+				} else if (towerType == 1) {
+					patternOne (numBeats);
+				} else if (towerType == 2) {
+					patternTwo (numBeats);
+				}
+				beatbuf = numBeats;
 			}
 		}
 	}
@@ -102,64 +107,76 @@ public class Tower : MonoBehaviour
 	private void patternZero(int numBeats) { // RED: Shoots 1  in front of it every 2 beats
 		if (numBeats % 2 == 0) {
 			if (direction == 0) { // makes sure 1 in front corresponds with tower direction
-				addBullet (this.transform.position.x, this.transform.position.y + 1);
+				addBullet (this.transform.position.x, this.transform.position.y + 1, 0);
 			} else if (direction == 1) {
-				addBullet (this.transform.position.x - 1, this.transform.position.y);
+				addBullet (this.transform.position.x - 1, this.transform.position.y, 1);
 			} else if (direction == 2) {
-				addBullet (this.transform.position.x, this.transform.position.y - 1);
+				addBullet (this.transform.position.x, this.transform.position.y - 1, 2);
 			} else {
-				addBullet (this.transform.position.x + 1, this.transform.position.y);
+				addBullet (this.transform.position.x + 1, this.transform.position.y, 3);
 			}
 		} else {
 			eraseBullets ();
 		}
+
+		/*if (numBeats % 2 == 0) {
+			addBullet (this.transform.position.x + (direction%2)*(direction-2), 
+				this.transform.position.y + ((1+direction)%2)*(1-direction));
+		} else {
+			eraseBullets ();
+		}*/
 	}
 
 	private void patternOne(int numBeats) { // GREEN: Shoots 2 in front every 4 beats
 		if (numBeats % 4 == 0) {
 			if (direction == 0) { // makes sure shooting corresponds with tower direction
-				addBullet (this.transform.position.x, this.transform.position.y + 1);
-				addBullet (this.transform.position.x, this.transform.position.y + 2);
+				addBullet (this.transform.position.x, this.transform.position.y + 1, 0);
+				addBullet (this.transform.position.x, this.transform.position.y + 2, 0);
 			} else if (direction == 1) {
-				addBullet (this.transform.position.x - 1, this.transform.position.y);
-				addBullet (this.transform.position.x - 2, this.transform.position.y);
+				addBullet (this.transform.position.x - 1, this.transform.position.y, 1);
+				addBullet (this.transform.position.x - 2, this.transform.position.y, 1);
 			} else if (direction == 2) {
-				addBullet (this.transform.position.x, this.transform.position.y - 1);
-				addBullet (this.transform.position.x, this.transform.position.y - 2);
+				addBullet (this.transform.position.x, this.transform.position.y - 1, 2);
+				addBullet (this.transform.position.x, this.transform.position.y - 2, 2);
 			} else {
-				addBullet (this.transform.position.x + 1, this.transform.position.y);
-				addBullet (this.transform.position.x + 2, this.transform.position.y);
+				addBullet (this.transform.position.x + 1, this.transform.position.y, 3);
+				addBullet (this.transform.position.x + 2, this.transform.position.y, 3);
 			}		
 		} else {
 			eraseBullets ();
 		}
+
 	}
 
 	private void patternTwo(int numBeats) { // BLUE: Cycles directions
-		if (numBeats % 4 == 0) {
+		if (numBeats % 4 == (0 + direction) % 4) {
 			eraseBullets ();
-			addBullet (this.transform.position.x, this.transform.position.y + 1);
-		} else if (numBeats % 4 == 1) {
+			addBullet (this.transform.position.x, this.transform.position.y + 1, 0);
+		} else if (numBeats % 4 == (1 + direction) % 4) {
 			eraseBullets ();
-			addBullet (this.transform.position.x + 1, this.transform.position.y);
-		} else if (numBeats % 4 == 2) {
+			addBullet (this.transform.position.x + 1, this.transform.position.y, 3);
+		} else if (numBeats % 4 == (2 + direction) % 4) {
 			eraseBullets ();
-			addBullet (this.transform.position.x, this.transform.position.y - 1);
-		} else if (numBeats % 4 == 3) {
+			addBullet (this.transform.position.x, this.transform.position.y - 1, 2);
+		} else if (numBeats % 4 == (3 + direction) % 4) {
 			eraseBullets ();
-			addBullet (this.transform.position.x - 1, this.transform.position.y);
+			addBullet (this.transform.position.x - 1, this.transform.position.y, 1);
 		}
 	}
 
-	private void addBullet (float x, float y) {
+	private void addBullet (float x, float y, int bdirection) {
 		GameObject bulletObject = new GameObject();			// Create a new empty game object that will hold a bullet.
 		Bullet bullet = bulletObject.AddComponent<Bullet>();			// Add the bullet.cs script to the object.
 		// We can now refer to the object via this script.
+
 		//bullet.transform.position = new Vector3(this.transform.position.x, this.transform.position.y,0);		// Position the bullet at x,y.
 		//bullet.move(x, y, this.manager.getBeat());
 		bullet.transform.position = new Vector3(x, y, 0);
 
 		bullet.init(this);							// Initialize the bullet script.
+
+		//bullet.transform.position = new Vector3(this.transform.position.x, this.transform.position.y,0);		// Position the bullet at x,y.
+		//bullet.move(x, y, this.manager.getBeat(), bdirection);
 
 		bullets.Add(bullet);										// Add the bullet to the Bullets list for future access.
 		bullet.name = "Bullet "+bullets.Count;						// Give the bullet object a name in the Hierarchy pane.
