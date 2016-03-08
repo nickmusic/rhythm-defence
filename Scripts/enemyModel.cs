@@ -1,8 +1,4 @@
-﻿// Jun Li
-// Model for the Enemy class
-// 2/22/16
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
