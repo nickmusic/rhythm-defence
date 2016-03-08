@@ -339,22 +339,27 @@ public class GameManager : MonoBehaviour
 		if (level == 0) {
 			for (int i = 0; i < 10; i++) {
 				addEnemy (2, 2, (i * -2) - 1, 5);
+				enemynum+=1;
 			}
 		} else if (level == 1) {
 			for (int i = 0; i < 10; i++) {
 				addEnemy (3, 1, (i * -2) - 1, 5);
+				enemynum+=1;
 			}
 		} else if (level == 2) {
 			for (int i = 0; i < 10; i++) {
 				addEnemy (3, 1, (i * -2) - 1, 5);
 				addEnemy (3, 1, (i * -2) - 2, 5);
+			    enemynum+=2;
 			}
 		} else if (level >= 3 && level <= 5) {
 			for (int i = 0; i < 6; i++) {
 				addEnemy (3, 1, (i * -2) - 1, 5);
 				addEnemy (3, 1, (i * -2) - 1, 4);
+				enemynum+=2;
 				if (level == 5) {
 					addEnemy (3, 1, (i * -2) - 1, 3);
+					enemynum+=1;
 				}
 			}
 		} else if (level == 6) {
@@ -362,6 +367,7 @@ public class GameManager : MonoBehaviour
 				addEnemy (3, 1, (i * -4) - 1, 5);
 				addEnemy (3, 1, (i * -4) - 1, 4);
 				addEnemy (3, 1, (i * -4) - 3, 3);
+				enemynum+=3;
 			}
 
 		}
@@ -375,6 +381,7 @@ public class GameManager : MonoBehaviour
 			constraint0 = 1;
 			constraint1 = 0;
 			constraint2 = 1;
+			enemynum+=4;
 		} else if (level == 11) {
 			addEnemy (2, 1, -2, 3);
 			addEnemy (2, 1, -2, 4);
@@ -384,6 +391,7 @@ public class GameManager : MonoBehaviour
 			constraint0 = 0;
 			constraint1 = 1;
 			constraint2 = 1;
+			enemynum+=5;
 		} else if (level == 12) {
 			addEnemy(2, 1, -1, 4);
 			addEnemy(2, 1, -1, 5);
@@ -394,6 +402,8 @@ public class GameManager : MonoBehaviour
 			constraint0 = 0;
 			constraint1 = 0;
 			constraint2 = 2;
+			enemynum+=6;
+
 		} 
 
 
@@ -527,7 +537,7 @@ public class GameManager : MonoBehaviour
         	if (GUI.Button(new Rect(25, 200, 110, 30), "NextLevel") ) {
         		enemynum=0;
         		Application.LoadLevel (Application.loadedLevel + 1);
-                	//Application.LoadLevel("22");
+
         	}
         }
 
