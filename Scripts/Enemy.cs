@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour {
 
 	private enemyModel model;		// The model object.
 	private int enemyType;
+	private int initHealth;
 	private float enemyx;
 	private float enemyy;
 	public GameManager m;		// A pointer to the manager (not needed here, but potentially useful in general).
@@ -17,15 +18,16 @@ public class Enemy : MonoBehaviour {
 	// The Start function is good for initializing objects, but doesn't allow you to pass in parameters.
 	// For any initialization that requires input, you'll probably want your own init function. 
 
-	public void init(int enemyType, GameManager m, float x, float y) {
+	public void init(int enemyType, int initHealth, GameManager m, float x, float y) {
 		this.enemyType = enemyType;
+		this.initHealth = initHealth;
 		this.m = m;
 		this.enemyx = x;
 		this.enemyy = y;
 
 		var modelObject = GameObject.CreatePrimitive(PrimitiveType.Quad);	// Create a quad object for holding the gem texture.
 		model = modelObject.AddComponent<enemyModel>();						// Add an enemyModel script to control visuals of the gem.
-		model.init(enemyType, this);						
+		model.init(enemyType, initHealth, this);						
 	}
 
 	public void damage(int numBeats){

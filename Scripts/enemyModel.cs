@@ -13,6 +13,7 @@ public class enemyModel : MonoBehaviour
 	private Enemy owner;	// object that created it
 	private Material mat;	// material (for texture)
 	private int enemyType;	// the type of the enemy(0, 1, 2)
+	private int initHealth;
 	private float moverhythm;	
 	private float movebuf;
 	private float healthcolor;
@@ -20,13 +21,15 @@ public class enemyModel : MonoBehaviour
 	private int beat;
 	private int damagebuf;
 
-	public void init(int enemyType, Enemy owner) {
+	public void init(int enemyType, int initHealth, Enemy owner) {
 		this.owner = owner;
 		healthcolor = 1;
 		this.enemyType = enemyType;
+		healthval = initHealth;
 		beat = 0;
 		damagebuf = 0;
 
+<<<<<<< HEAD
 		// set up health of enemies
 		if (enemyType == 0) {
 			healthval = 30;
@@ -36,12 +39,18 @@ public class enemyModel : MonoBehaviour
 			healthval = 10;
 		}
 
+=======
+>>>>>>> eb1e778033c7c27ed58d6600b760a7f8f90cfe58
 		// set up rhythm of enemy
 		if (enemyType == 0) {
 			moverhythm = 4;
 		} else if (enemyType == 1) {
 			moverhythm = 2;
+<<<<<<< HEAD
 		} else if (enemyType == 2) {
+=======
+		} else if (enemyType == 2 || enemyType == 3) {
+>>>>>>> eb1e778033c7c27ed58d6600b760a7f8f90cfe58
 			moverhythm = 1;
 		}
 
@@ -59,9 +68,8 @@ public class enemyModel : MonoBehaviour
 			mat = GetComponent<Renderer> ().material;		
 			mat.shader = Shader.Find ("Sprites/Default");	
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/spider");	
-
 			mat.color = new Color (1, 1, 1, 1);
-		} else if (enemyType == 2) {
+		} else if (enemyType == 2 || enemyType == 3) {
 			mat = GetComponent<Renderer> ().material;								
 			mat.shader = Shader.Find ("Sprites/Default");						
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slimeGrey");	
@@ -75,6 +83,14 @@ public class enemyModel : MonoBehaviour
 
 	void Update(){
 		clock += Time.deltaTime;
+
+		if (healthval >= 3) {
+			mat.color = new Color (1, 8, 1);
+		} else if (healthval == 2) {
+			mat.color = new Color (8, 8, 1);
+		} else if (healthval  == 1) {
+			mat.color = new Color (8, 1, 1);
+		}
 	}
 
 	public void damage(int numBeats){
@@ -82,7 +98,7 @@ public class enemyModel : MonoBehaviour
 			damagebuf = numBeats;
 			healthcolor -= (float)(0.4-0.1*(moverhythm/2));
 			mat.color = new Color (1, 1, 1, healthcolor);
-			healthval -= 10;
+			healthval -= 1;
 		}
 
 	}

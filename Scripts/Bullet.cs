@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Bullet : MonoBehaviour {
 
@@ -23,6 +24,10 @@ public class Bullet : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+
+	}
+
+	public void move(float x, float y, float beat){
+		model.move (x, y, beat);
 	}
 }
