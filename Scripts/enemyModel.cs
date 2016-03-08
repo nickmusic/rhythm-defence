@@ -1,8 +1,4 @@
-﻿// Jun Li
-// Model for the Enemy class
-// 2/22/16
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -29,28 +25,12 @@ public class enemyModel : MonoBehaviour
 		beat = 0;
 		damagebuf = 0;
 
-<<<<<<< HEAD
-		// set up health of enemies
-		if (enemyType == 0) {
-			healthval = 30;
-		} else if (enemyType == 1) {
-			healthval = 20;
-		} else if (enemyType == 2) {
-			healthval = 10;
-		}
-
-=======
->>>>>>> eb1e778033c7c27ed58d6600b760a7f8f90cfe58
 		// set up rhythm of enemy
 		if (enemyType == 0) {
 			moverhythm = 4;
 		} else if (enemyType == 1) {
 			moverhythm = 2;
-<<<<<<< HEAD
-		} else if (enemyType == 2) {
-=======
 		} else if (enemyType == 2 || enemyType == 3) {
->>>>>>> eb1e778033c7c27ed58d6600b760a7f8f90cfe58
 			moverhythm = 1;
 		}
 
