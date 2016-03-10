@@ -74,6 +74,15 @@ public class GameManager : MonoBehaviour
         enemies = new List<Enemy>();
 
         makeLevel();
+
+		var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+		Material mat = background.GetComponent<Renderer>().material;
+		mat.shader = Shader.Find("Sprites/Default");
+		mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
+		mat.color = new Color(1, 1, 1);
+		background.transform.position = new Vector3(5, 3, 1);
+		background.transform.localScale = new Vector3(20, 10, 0);
+
     }
 
     // Update is called once per frame
