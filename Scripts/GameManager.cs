@@ -291,8 +291,10 @@ public class GameManager : MonoBehaviour
         started = false;
         placing = false;
         numTiles = 0;
-
+        enemynum = 0;
+        enemybeaten = 0;
         makeLevel();
+
 
     }
 
@@ -564,13 +566,13 @@ public class GameManager : MonoBehaviour
     if (level !=100 && level !=99){
         //labels for how many towers are left
 
-        GUI.Label(new Rect(540, 25, 110, 110), "LEVEL "+level.ToString());
+        GUI.Label(new Rect(100, 15, 110, 110), "LEVEL "+level.ToString());
 
         GUI.Label(new Rect(Screen.width - 155, 70, 110, 110), constraint0.ToString());
         GUI.Label(new Rect(Screen.width - 155, 205, 110, 110), constraint1.ToString());
         GUI.Label(new Rect(Screen.width - 155, 340, 110, 110), constraint2.ToString());
 
-       if (GUI.Button(new Rect(165, 15, 60, 60), image: levels) )
+       if (GUI.Button(new Rect(400+165, 15, 60, 60), image: levels) )
         {
                Application.LoadLevel (1);
         }
@@ -581,7 +583,7 @@ public class GameManager : MonoBehaviour
         }
         if (!started)
         {
-            if (GUI.Button(new Rect(15, 15, 60, 60), image: start) || Input.GetKeyDown(KeyCode.S)) {
+            if (GUI.Button(new Rect(400+15, 15, 60, 60), image: start) || Input.GetKeyDown(KeyCode.S)) {
                 started = true;
             }
         }
@@ -591,8 +593,8 @@ public class GameManager : MonoBehaviour
             GUIStyle myStyle2 = new GUIStyle (GUI.skin.GetStyle("label"));         	
          	myStyle2.fontSize = 30;
      		GUI.Label(new Rect(Screen.width/2-600/2, 100, 600, 100), "YOU GOT IT!",myStyle);
-        	GUI.Label(new Rect(Screen.width/2-250, 200, 500, 100), "Press 'Enter' to next level",myStyle2);   
-        	if (GUI.Button(new Rect(Screen.width/2-80, 300, 80, 80), image: next)|| Input.GetKeyDown(KeyCode.Return) ) {      		
+        	GUI.Label(new Rect(Screen.width/2-250, 200, 500, 100), "Press 'Space' to next level",myStyle2);   
+        	if (GUI.Button(new Rect(Screen.width/2-80, 300, 80, 80), image: next)|| Input.GetKeyDown(KeyCode.Space) ) {      		
         		enemynum=0;      	
         		Application.LoadLevel (Application.loadedLevel + 1);
 
@@ -608,7 +610,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (GUI.Button(new Rect(90, 15, 60, 60), image: restart) || Input.GetKeyDown(KeyCode.R))
+        if (GUI.Button(new Rect(400+90, 15, 60, 60), image: restart) || Input.GetKeyDown(KeyCode.R))
 
         {
             resetLevel();
