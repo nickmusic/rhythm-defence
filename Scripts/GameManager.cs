@@ -331,9 +331,9 @@ public class GameManager : MonoBehaviour
             constraint1 = 0;
             constraint2 = 4;
         } else if (level == 22) {
-            constraint0 = 0;
+            constraint0 = 1;
             constraint1 = 0;
-            constraint2 = 3;
+            constraint2 = 2;
         } else if (level == 23) {
             constraint0 = 0;
             constraint1 = 2;
@@ -453,7 +453,7 @@ public class GameManager : MonoBehaviour
 				enemynum+=1;
 			}
 			for (int i = 0; i < 4; i++) {
-				addEnemy (2, 2, (i * -2) - 1, 3);
+				addEnemy (1, 2, (i * -2) - 1, 4);
 				enemynum+=1;
 			}		
 		} else if (level == 24){
@@ -539,9 +539,11 @@ public class GameManager : MonoBehaviour
     }
 
     if (level == 99){ //level selction
+         GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
+         myStyle.fontSize = 40;
 
-    	GUI.Label(new Rect(Screen.width/2-330/2, 100, 330, 100), "RHYTHM-DEFENCE");
-        GUI.Label(new Rect(Screen.width/2+100, 200, 330, 30), "Red Panda Games ");
+    	GUI.Label(new Rect(Screen.width/2-400/2, 100, 400, 100), "RHYTHM  DEFENCE",myStyle);
+        GUI.Label(new Rect(Screen.width/2-50, 200, 330, 30), "Red Panda Games ");
         if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2, 200, 50), "START GAME")) {
             Application.LoadLevel (2);      
             }
@@ -576,9 +578,14 @@ public class GameManager : MonoBehaviour
             }
         }
         if (enemybeaten==enemynum){
-
-        	if (GUI.Button(new Rect(25, 200, 110, 30), "NextLevel") ) {
-        		enemynum=0;
+            GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
+         	myStyle.fontSize = 80;
+            GUIStyle myStyle2 = new GUIStyle (GUI.skin.GetStyle("label"));         	
+         	myStyle2.fontSize = 30;
+     		GUI.Label(new Rect(Screen.width/2-600/2, 100, 600, 100), "YOU GOT IT!",myStyle);
+        	GUI.Label(new Rect(Screen.width/2-250, 200, 500, 100), "Press 'Enter' to next level",myStyle2);   
+        	if (GUI.Button(new Rect(25, 200, 110, 30), "NextLevel (Return)")|| Input.GetKeyDown(KeyCode.Return) ) {      		
+        		enemynum=0;      	
         		Application.LoadLevel (Application.loadedLevel + 1);
 
         	}
@@ -587,7 +594,7 @@ public class GameManager : MonoBehaviour
         if (placing)
         {
             // if the rotate button is pressed
-            if (GUI.Button(new Rect(Screen.width-135, Screen.height - 55, 110, 30), "ROTATE")|| Input.GetKeyDown(KeyCode.Q))
+            if (GUI.Button(new Rect(Screen.width-135, Screen.height - 55, 110, 30), "ROTATE") || Input.GetKeyDown(KeyCode.Q))
             {
                 currentTower.rotate(); // rotate the tower being placed
             }
