@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
 
     // Level number
 
-    public int level = 20;
+    public int level = 100;
 
 
     // Use this for initialization
@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
 
         makeLevel();
 
+        if (level != 100 && level !=99){
 		var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
 		Material mat = background.GetComponent<Renderer>().material;
 		mat.shader = Shader.Find("Sprites/Default");
@@ -82,6 +83,7 @@ public class GameManager : MonoBehaviour
 		mat.color = new Color(1, 1, 1);
 		background.transform.position = new Vector3(5, 3, 1);
 		background.transform.localScale = new Vector3(20, 10, 0);
+	}
 
     }
 
@@ -263,9 +265,11 @@ public class GameManager : MonoBehaviour
 
     // 
     private void makeLevel() {
+    	if (level != 100 && level !=99){
         addEnemies ();
         buildBoard ();
         setConstraints ();
+    }
     }
 
 
@@ -460,8 +464,6 @@ public class GameManager : MonoBehaviour
             addEnemy (1,2, -1, 2);
 			enemynum+=5;
 		}
-		print(enemynum);
-
 	}
 
 	// add a single enemy
@@ -525,13 +527,45 @@ public class GameManager : MonoBehaviour
     void OnGUI()
 
     {
+	if (level == 100){ //level selction
+		for (int i = 1; i < 7; i++) {
+			for (int j = 1; j<4;j++){
+				int t=(j-1)*6+i;
+            if (GUI.Button(new Rect(i*150, 150*j-50, 110, 110), t.ToString())) {
+                Application.LoadLevel (t+1);
+            }
+            }
+        }
+    }
+
+    if (level == 99){ //level selction
+
+    	GUI.Label(new Rect(Screen.width/2-330/2, 100, 330, 100), "RHYTHM-DEFENCE");
+        GUI.Label(new Rect(Screen.width/2+100, 200, 330, 30), "Red Panda Games ");
+        if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2, 200, 50), "START GAME")) {
+            Application.LoadLevel (2);      
+            }
+        if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2+150, 200, 50), "SELECT LEVEL")) {
+            Application.LoadLevel (1);      
+            }
+    }
+
+
+    if (level !=100 && level !=99){
         //labels for how many towers are left
+
         GUI.Label(new Rect(540, 25, 110, 110), "LEVEL "+level.ToString());
 
         GUI.Label(new Rect(Screen.width - 155, 70, 110, 110), constraint0.ToString());
         GUI.Label(new Rect(Screen.width - 155, 205, 110, 110), constraint1.ToString());
         GUI.Label(new Rect(Screen.width - 155, 340, 110, 110), constraint2.ToString());
-        if (Input.GetKeyDown(KeyCode.Escape))
+
+        if (GUI.Button(new Rect(540, 50, 110, 30), "Level Manu") )
+        {
+               Application.LoadLevel (1);
+        }
+
+        if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
         }
@@ -649,6 +683,9 @@ public class GameManager : MonoBehaviour
             }
             
         }
+   }
     }
+
+
 }
 
