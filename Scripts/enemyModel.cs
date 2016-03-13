@@ -97,6 +97,15 @@ public class enemyModel : MonoBehaviour
 		}
 	}
 
+	void OnGUI(){
+		if(transform.position.x == owner.m.boardWidth){
+            GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
+         	myStyle.fontSize = 70;
+     		GUI.Label(new Rect(Screen.width/2-600/2, 100, 600, 100), "Press 'R' to restart",myStyle);
+
+	}
+	}
+
 	public float getX(){
 		return transform.position.x;
 	}
