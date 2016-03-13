@@ -42,6 +42,12 @@ public class GameManager : MonoBehaviour
 
     public int level = 20;
 
+	// Music 
+	public AudioSource music;
+	public AudioSource sfx;
+
+	private AudioClip idle = Resources.Load<AudioClip> ("Music/title song");
+	private AudioClip gametrack = Resources.Load<AudioClip> ("Music/Main song loop");
 
     // Use this for initialization
     void Start()
@@ -83,6 +89,9 @@ public class GameManager : MonoBehaviour
 		background.transform.position = new Vector3(5, 3, 1);
 		background.transform.localScale = new Vector3(20, 10, 0);
 
+		// setting up music
+
+		PlayMusic (idle);
     }
 
     // Update is called once per frame
@@ -280,6 +289,8 @@ public class GameManager : MonoBehaviour
         placing = false;
         numTiles = 0;
 
+		PlayMusic (idle);
+
         makeLevel();
 
     }
@@ -305,8 +316,8 @@ public class GameManager : MonoBehaviour
 			constraint2 = 0;
 		} else if (level == 4) {
 			constraint0 = 0;
-			constraint1 = 0;
-			constraint2 = 2;
+			constraint1 = 2;
+			constraint2 = 0;
 		} else if (level == 5) {
 			constraint0 = 1;
 			constraint1 = 2;
@@ -529,6 +540,7 @@ public class GameManager : MonoBehaviour
         {
             if (GUI.Button(new Rect(25, 25, 110, 30), "START (S)") || Input.GetKeyDown(KeyCode.S)) {
                 started = true;
+				PlayMusic (gametrack);
             }
         }
         if (enemybeaten==enemynum){
@@ -640,5 +652,17 @@ public class GameManager : MonoBehaviour
             
         }
     }
+
+	// Music section
+	public void PlayEffect (AudioClip clip) {
+		sfx.clip = clip;
+		sfx.Play ();
+	}
+
+	public void PlayMusic (AudioClip clip) {
+		this.music.loop = true;
+		this.music.clip = clip;
+		this.music.Play ();
+	}
 }
 
