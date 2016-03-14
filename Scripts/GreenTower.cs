@@ -8,6 +8,10 @@ public class GreenTower : MonoBehaviour
     private Material mat; // material (for texture)
     private bool isPlaced; // whether the tower has been placed
 
+	// sfx
+	private AudioClip place;
+	private AudioClip hover;
+
     // called by the parent object
     public void init(Tower t)
     {
@@ -21,6 +25,12 @@ public class GreenTower : MonoBehaviour
         mat.shader = Shader.Find("Sprites/Default"); // set shader
         mat.mainTexture = Resources.Load<Texture2D>("Textures/greenTower"); // set greenTower.png as textre
         mat.color = new Color(1, 1, 1); // set color
+
+		// sfx
+		place = Resources.Load<AudioClip> ("Music/select & place tower");
+		hover = Resources.Load<AudioClip> ("Music/mousing over tiles(each tile)");
+
+
     }
 
     // Use this for initialization
@@ -50,6 +60,8 @@ public class GreenTower : MonoBehaviour
 
     void OnMouseOver()
     {
+		//owner.manager.PlayEffect (hover);
+
         // instruct manager which tiles to highlight
         int x = (int)owner.transform.position.x;
         int y = (int)owner.transform.position.y;
@@ -78,6 +90,8 @@ public class GreenTower : MonoBehaviour
 	// if the player clicks the tower
         if (Input.GetMouseButtonDown(0))
         {
+			owner.manager.PlayEffect (place);
+
             if (!isPlaced)
             {
                 bool test = owner.manager.placeTower();
