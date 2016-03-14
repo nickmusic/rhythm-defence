@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < towers.Count; i++) {
                 List<Bullet> bullets = towers[i].getBullets();
                 for (int j = 0; j < bullets.Count; j++) {
-                    int a = onTile(bullets[j].transform.position.x, bullets[j].transform.position.y);
+					int a = onTile(bullets[j].getX(), bullets[j].getY());
                     if (!currentbullets.Contains(a)) {
                         currentbullets.Add(a);
                     }
@@ -206,6 +206,7 @@ public class GameManager : MonoBehaviour
         towers.Remove(tower);
         Destroy(tower.gameObject);
     }
+		
 
     private void destroyTowers()
     {
@@ -277,6 +278,17 @@ public class GameManager : MonoBehaviour
         makeLevel();
 
     }
+
+	public void restartLevel()
+	{
+		destroyEnemies();
+		destroyBoard();
+		destroyBullets ();
+		numBeats = 0;
+		started = false;
+		addEnemies ();
+		buildBoard ();
+	}
 
 	// set constraints based on level
 	private void setConstraints() {
@@ -508,7 +520,10 @@ public class GameManager : MonoBehaviour
 
     private void destroyBullets()
     {
-
+		for (int i = 0; i < towers.Count; i++)
+		{
+			towers[i].eraseBullets();
+		}
         currentbullets.Clear();
     }
 
@@ -535,10 +550,16 @@ public class GameManager : MonoBehaviour
 			}
 		}
 
-        if (GUI.Button(new Rect(25, 80, 110, 30), "RESTART"))
+        if (GUI.Button(new Rect(25, 80, 110, 30), "RESET"))
         {
             resetLevel();
         }
+
+		if (GUI.Button(new Rect(900, 80, 110, 30), "RESTART"))
+		{
+			restartLevel();
+		}
+
 
             // button for RED tower
             if (GUI.Button(new Rect(Screen.width - 135, 25, 110, 110), image: redtexture))

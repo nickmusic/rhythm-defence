@@ -1,6 +1,3 @@
-// Jun Li
-// Enemy class
-// 2/22/16
 
 using UnityEngine;
 using System.Collections;

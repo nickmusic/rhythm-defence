@@ -21,13 +21,21 @@ public class Bullet : MonoBehaviour {
 	void Start () {
 		
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
 	}
 
-	public void move(float x, float y, float beat, int direction){
+	public void move(int x, int y, float beat, int direction){
 		this.model.move (x, y, beat, direction);
+	}
+
+	public int getX(){
+		return this.model.getX ();
+	}
+
+	public int getY(){
+		return this.model.getY ();
 	}
 }

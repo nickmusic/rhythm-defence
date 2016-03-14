@@ -10,6 +10,8 @@ public class BulletModel : MonoBehaviour {
 	float y;
 	float beat;
 	int direction;
+	private int movetoX;
+	private int movetoY;
 
 	public void init(Bullet owner) {
 		this.owner = owner;
@@ -25,6 +27,8 @@ public class BulletModel : MonoBehaviour {
 		x = transform.position.x;
 		y = transform.position.y;
 		beat = 0f;
+		movetoX = (int)transform.position.x;
+		movetoY = (int)transform.position.y;
 	}
 
 
@@ -57,15 +61,31 @@ public class BulletModel : MonoBehaviour {
 			transform.position = new Vector3 (transform.position.x+beat*2, transform.position.y, 0);
 			print ("aa");
 		}*/
-		//transform.position = new Vector3 (transform.position.x+beat/2, transform.position.y, 0);
+	if (Mathf.Abs(transform.position.x - movetoX)>=0.0001) {
+			float diff = movetoX - transform.position.x;
+			transform.position = new Vector3 (transform.position.x + (Mathf.Abs(diff)/diff)*beat / 5, transform.position.y, -1);
+		}
+	if (Mathf.Abs(transform.position.y - movetoY)>=0.0001) {
+		float diff = movetoY - transform.position.y;
+		transform.position = new Vector3 (transform.position.x, transform.position.y + (Mathf.Abs(diff)/diff)*beat / 5, -1);
+	}
+		//transform.position = new Vector3 (transform.position.x+owner.m.getBeat()/5, transform.position.y, 0);
 		//print (transform.position.x);
 
 	}
 
-	public void move(float x, float y, float beat, int direction){
-		this.x = x;
-		this.y = y;
+	public void move(int x, int y, float beat, int direction){
+		movetoX = x;
+		movetoY = y;
 		this.beat = beat;
 		this.direction = direction;
+	}
+
+	public int getX(){
+		return movetoX;
+	}
+
+	public int getY(){
+		return movetoY;
 	}
 }
