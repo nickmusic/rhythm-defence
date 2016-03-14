@@ -691,8 +691,8 @@ public class GameManager : MonoBehaviour
 	background.transform.localScale = newVector3(4, 8, 0);
 
 	//decoration under the game board (also beat box)
-	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-	Material mat = background.GetComponent<Renderer>().material;
+	background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	mat = background.GetComponent<Renderer>().material;
 	mat.shader = Shader.Find("Sprites/Default");
 	mat.mainTexture = Resources.Load<Texture2D>("Textures/wires");
 	mat.color = new Color(1, 1, 1);
@@ -700,8 +700,8 @@ public class GameManager : MonoBehaviour
 	background.transform.localScale = newVector3(9, 2, 0);
 
 	//panel on the right of the board for towers (includes port thing)
-	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-	Material mat = background.GetComponent<Renderer>().material;
+	background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	mat = background.GetComponent<Renderer>().material;
 	mat.shader = Shader.Find("Sprites/Default");
 	mat.mainTexture = Resources.Load<Texture2D>("Textures/towerTray");
 	mat.color = new Color(1, 1, 1);
@@ -709,8 +709,8 @@ public class GameManager : MonoBehaviour
 	background.transform.localScale = newVector3(7, 14, 0);
 
 	//the background (currently just grey)
-	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-	Material mat = background.GetComponent<Renderer>().material;
+	background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	mat = background.GetComponent<Renderer>().material;
 	mat.shader = Shader.Find("Sprites/Default");
 	mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
 	mat.color = new Color(1, 1, 1);
@@ -718,8 +718,8 @@ public class GameManager : MonoBehaviour
 	background.transform.localScale = newVector3(24, 12, 0);
 
 	//panel to conceal enemies
-	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-	Material mat = background.GetComponent<Renderer>().material;
+	background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	mat = background.GetComponent<Renderer>().material;
 	mat.shader = Shader.Find("Sprites/Default");
 	mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
 	mat.color = new Color(1, 1, 1);
