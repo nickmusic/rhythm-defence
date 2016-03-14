@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
 	makeOverlay();
 
 	//set the camera based on aspect ratio
-	Camrea cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+	Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
 	float aspect = (float)Math.Round(cam.aspect,2);
 	if (aspect == 1.25) //5:4
 	{
@@ -115,7 +115,7 @@ public class GameManager : MonoBehaviour
 	else if (aspect == 1.78f) //16:9
 	{
 	    cam.orthographicSize = 4.85f; // 5:4
-	    trayx = Screen.width - (screen.width / 8);
+	    trayx = Screen.width - (Screen.width / 8);
 	    traywidth = Screen.width / 9;
 	    trayspace = Screen.height / 30;
 	}
@@ -679,7 +679,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void make Overlay()
+    private void makeOverlay()
     {
 	//the indicator to the left of the board
 	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -725,5 +725,6 @@ public class GameManager : MonoBehaviour
 	mat.color = new Color(1, 1, 1);
 	background.transform.position = new Vector3(-3, 3, -.5f);
 	background.transform.localScale = newVector3(5, 7, 0);
+    }
 }
 
