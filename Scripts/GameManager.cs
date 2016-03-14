@@ -587,7 +587,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (GUI.Button(new Rect(trayx, traywidth*3 + trayspace*4, traywidth, traywidth/3), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
+        if (GUI.Button(new Rect(trayspace*2 + traywidth, trayspace, traywidth, traywidth/3), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
 
         {
             resetLevel();
@@ -688,7 +688,7 @@ public class GameManager : MonoBehaviour
 	mat.mainTexture = Resources.Load<Texture2D>("Textures/indicator");
 	mat.color = new Color(1, 1, 1);
 	background.transform.position = new Vector3(-2.2f, 3, -1);
-	background.transform.localScale = newVector3(4, 8, 0);
+	background.transform.localScale = new Vector3(4, 8, 0);
 
 	//decoration under the game board (also beat box)
 	background = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -697,7 +697,7 @@ public class GameManager : MonoBehaviour
 	mat.mainTexture = Resources.Load<Texture2D>("Textures/wires");
 	mat.color = new Color(1, 1, 1);
 	background.transform.position = new Vector3(4, -1.5f, 1);
-	background.transform.localScale = newVector3(9, 2, 0);
+	background.transform.localScale = new Vector3(9, 2, 0);
 
 	//panel on the right of the board for towers (includes port thing)
 	background = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -706,7 +706,7 @@ public class GameManager : MonoBehaviour
 	mat.mainTexture = Resources.Load<Texture2D>("Textures/towerTray");
 	mat.color = new Color(1, 1, 1);
 	background.transform.position = new Vector3(12, 3, 1);
-	background.transform.localScale = newVector3(7, 14, 0);
+	background.transform.localScale = new Vector3(7, 14, 0);
 
 	//the background (currently just grey)
 	background = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -715,7 +715,7 @@ public class GameManager : MonoBehaviour
 	mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
 	mat.color = new Color(1, 1, 1);
 	background.transform.position = new Vector3(5, 3, 1);
-	background.transform.localScale = newVector3(24, 12, 0);
+	background.transform.localScale = new Vector3(24, 12, 0);
 
 	//panel to conceal enemies
 	background = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -724,7 +724,7 @@ public class GameManager : MonoBehaviour
 	mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
 	mat.color = new Color(1, 1, 1);
 	background.transform.position = new Vector3(-3, 3, -.5f);
-	background.transform.localScale = newVector3(5, 7, 0);
+	background.transform.localScale = new Vector3(5, 7, 0);
     }
 }
 
