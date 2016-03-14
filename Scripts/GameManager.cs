@@ -361,27 +361,33 @@ public class GameManager : MonoBehaviour
 	// set constraints based on level
 	private void setConstraints() {
 		// Noel's levels
-		if (level == 0) {
+		if (level == 9) {
+			// 2 health blobs, every other beat
 			constraint0 = 0;
 			constraint1 = 0;
 			constraint2 = 2;
 		} else if (level == 1) {
+			// 1 health blobs, every other beat
 			constraint0 = 1;
 			constraint1 = 0;
 			constraint2 = 0;
 		} else if (level == 2) {
+			// 1 health blobs, every beat
 			constraint0 = 2;
 			constraint1 = 0;
 			constraint2 = 0;
 		} else if (level == 3) {
+			// Stack of two 1 health blobs
 			constraint0 = 2;
 			constraint1 = 0;
 			constraint2 = 0;
 		} else if (level == 4) {
+			// same as previous (stack of two)
 			constraint0 = 0;
 			constraint1 = 2;
 			constraint2 = 0;
-		} else if (level == 5) {
+		} else if (level == 8) {
+			// stack of three 1 health blobs
 			constraint0 = 1;
 			constraint1 = 2;
 			constraint2 = 0;
@@ -391,24 +397,39 @@ public class GameManager : MonoBehaviour
 			constraint2 = 1;
 		}
 
+		// Jun's levels
+		else if (level == 11) {
+			constraint0 = 1;
+			constraint1 = 0;
+			constraint2 = 1;
+		} else if (level == 13) {
+			constraint0 = 0;
+			constraint1 = 1;
+			constraint2 = 1;
+		} else if (level == 12) {
+			constraint0 = 0;
+			constraint1 = 0;
+			constraint2 = 2;
+		}
+
 		// Luxing's levels
-        if (level == 20) {
+        if (level == 5) {
             constraint0 = 0;
             constraint1 = 2;
             constraint2 = 0;
-        } else if (level == 21) {
+        } else if (level == 14) {
             constraint0 = 0;
             constraint1 = 0;
             constraint2 = 4;
-        } else if (level == 22) {
+        } else if (level == 15) {
             constraint0 = 0;
             constraint1 = 0;
             constraint2 = 3;
-        } else if (level == 23) {
+        } else if (level == 7) {
             constraint0 = 0;
             constraint1 = 2;
             constraint2 = 0;
-        } else if (level == 24) {
+        } else if (level == 10) {
             constraint0 = 1;
             constraint1 = 3;
             constraint2 = 0;
@@ -419,24 +440,24 @@ public class GameManager : MonoBehaviour
 	// add enemies
 	private void addEnemies(){
 		// Noel's levels
-		if (level == 0) {
-			for (int i = 0; i < 10; i++) {
+		if (level == 9) {
+			for (int i = 0; i < 6; i++) {
 				addEnemy (2, 2, (i * -2) - 1, 5);
 			}
 		} else if (level == 1) {
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 6; i++) {
 				addEnemy (3, 1, (i * -2) - 1, 5);
 			}
 		} else if (level == 2) {
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 6; i++) {
 				addEnemy (3, 1, (i * -2) - 1, 5);
 				addEnemy (3, 1, (i * -2) - 2, 5);
 			}
-		} else if (level >= 3 && level <= 5) {
+		} else if (level == 3 || level == 4 || level == 8) {
 			for (int i = 0; i < 6; i++) {
 				addEnemy (3, 1, (i * -2) - 1, 5);
 				addEnemy (3, 1, (i * -2) - 1, 4);
-				if (level == 5) {
+				if (level == 8) {
 					addEnemy (3, 1, (i * -2) - 1, 3);
 				}
 			}
@@ -450,77 +471,73 @@ public class GameManager : MonoBehaviour
 		}
 
 		// Jun's levels
-		else if (level == 10) {
-			addEnemy (2, 1, -1, 3);
-			addEnemy (2, 1, -1, 4);
-			addEnemy (2, 1, -1, 5);
-			addEnemy (2, 1, -3, 3);
-			constraint0 = 1;
-			constraint1 = 0;
-			constraint2 = 1;
-		} else if (level == 11) {
+		else if (level == 11) {
+			for (int i = 0; i < 6; i++) {
+				addEnemy (3, 1, (i * -4) - 1, 5);
+				addEnemy (3, 1, (i * -4) - 1, 4);
+				addEnemy (3, 1, (i * -2) - 1, 3);
+			}
+		} else if (level == 13) {
+			// TODO: test repeating pattern?
 			addEnemy (2, 1, -2, 3);
 			addEnemy (2, 1, -2, 4);
 			addEnemy (2, 1, -2, 5);
 			addEnemy (2, 1, -1, 4);
 			addEnemy (2, 1, -3, 4);
-			constraint0 = 0;
-			constraint1 = 1;
-			constraint2 = 1;
 		} else if (level == 12) {
-			addEnemy(2, 1, -1, 4);
+			/*addEnemy(2, 1, -1, 4);
 			addEnemy(2, 1, -1, 5);
 			addEnemy(2, 1, -3, 3);
 			addEnemy(2, 1, -3, 4);
 			addEnemy(2, 1, -3, 5);
-			addEnemy(2, 1, -3, 6);
-			constraint0 = 0;
-			constraint1 = 0;
-			constraint2 = 2;
+			addEnemy(2, 1, -3, 6);*/
+
+			for (int i = 0; i < 6; i++) {
+				addEnemy (2, 1, (i * -2) - 1, 5);
+				addEnemy (2, 1, (i * -2) - 1, 4);
+				addEnemy (3, 1, (i * -4) - 3, 3);
+				addEnemy (3, 1, (i * -4) - 3, 6);
+
+			}
 		} 
 
 
 		// Luxing's levels
-		else if (level == 20) {
-			addEnemy (2, 1, -1, 5);
-			addEnemy (2, 1, -3, 5);
-			addEnemy (1, 2, -1, 6);
-			//enemynum+=3;
-		} else if (level == 21) {
+		else if (level == 5) {
+			addEnemy (2, 1, -1, 3);
+			addEnemy (2, 1, -3, 3);
+			addEnemy (1, 2, -1, 4);
+		} else if (level == 14) {
 			for (int i = 0; i < 6; i++) {
 				addEnemy (2, 1, (i * -2) - 1, 5);
-				//enemynum+=1;
 			}
 			for (int i = 0; i < 4; i++) {
 				addEnemy (2, 2, (i * -2) - 1, 3);
-				//enemynum+=1;
 			}
 			for (int i = 0; i < 6; i++) {
 				addEnemy (2, 1, (i * -2) - 1, 1);
-				//enemynum+=1;
 			}
-		} else if (level == 22){
+		} else if (level == 15){
             addEnemy (2,1, -1, 3);
             addEnemy (1,2, -1, 4);
             addEnemy (0,3, -1, 5);
             addEnemy (2,1, -3, 5);
             addEnemy (1,2, -3, 4);
             addEnemy (0,3, -3, 3);
-		} else if (level == 23){
+		} else if (level == 7){
 			for (int i = 0; i < 6; i++) {
 				addEnemy (2, 1, (i * -2) - 1, 5);
 			}
 			for (int i = 0; i < 4; i++) {
 				addEnemy (2, 2, (i * -2) - 1, 3);
 			}		
-		} else if (level == 24){
+		} else if (level == 10){
             addEnemy (2,1, -1, 5);
             addEnemy (2,1, -2, 5);
             addEnemy (2,1, -1, 6);
             addEnemy (2,1, -2, 6);
             addEnemy (1,2, -1, 2);
 		}
-		print(enemynum);
 
 	}
 
