@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
         enemies = new List<Enemy>();
 
         makeLevel();
+		buildBoard ();
 
         makeOverlay();
 
@@ -228,7 +229,7 @@ public class GameManager : MonoBehaviour
         GameObject tileObject = new GameObject(); // create empty game object
         Tile tile = tileObject.AddComponent<Tile>(); // add tile script to object
         tile.transform.parent = tileFolder.transform; // make the tile folder its parent
-        tile.transform.position = new Vector3(x, y, 0);
+        tile.transform.position = new Vector3(x, y, 1);
         tile.init(x, y, this); // initialize the tile
         board[x, y] = tile; // store the tile in board
         tile.name = "Tile " + numTiles; // name tile for easy finding
@@ -348,7 +349,6 @@ public class GameManager : MonoBehaviour
     private void makeLevel()
     {
         addEnemies();
-        buildBoard();
         setConstraints();
     }
 
@@ -358,11 +358,11 @@ public class GameManager : MonoBehaviour
         destroyTowers();
         if (placing) { DestroyImmediate(currentTower.gameObject); }
         destroyEnemies();
-        destroyBoard();
+        //destroyBoard();
         numBeats = 0;
         started = false;
         placing = false;
-        numTiles = 0;
+        //numTiles = 0;
 
         PlayMusic(idle);
 
@@ -709,9 +709,8 @@ public class GameManager : MonoBehaviour
                 enemynum = 0;
                 //Application.LoadLevel(Application.loadedLevel + 1);
                 //Application.LoadLevel("22");
-				resetLevel() ;
 				level++;
-				makeLevel ();
+				resetLevel() ;
             }
         }
 
