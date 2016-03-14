@@ -707,15 +707,18 @@ public class GameManager : MonoBehaviour
             if (GUI.Button(new Rect(trayspace * 3 + traywidth * 2, trayspace, traywidth, traywidth / 3), "NEXT LEVEL"))
             {
                 enemynum = 0;
-                Application.LoadLevel(Application.loadedLevel + 1);
+                //Application.LoadLevel(Application.loadedLevel + 1);
                 //Application.LoadLevel("22");
+				resetLevel() ;
+				level++;
+				makeLevel ();
             }
         }
 
         if (placing)
         {
             // if the rotate button is pressed
-            if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") || Input.GetKeyDown(KeyCode.Q))
+			if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE (Q)") || Input.GetKeyDown(KeyCode.Q))
             {
                 PlayEffect(click);
                 currentTower.rotate(); // rotate the tower being placed
