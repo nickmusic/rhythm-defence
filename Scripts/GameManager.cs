@@ -39,8 +39,12 @@ public class GameManager : MonoBehaviour
     int enemynum=0;
 
     // Level number
-
     public int level = 20;
+
+    //button locations
+    float trayx = 0;
+    float traywidth = 0;
+    float trayspace = 0;
 
 
     // Use this for initialization
@@ -75,13 +79,47 @@ public class GameManager : MonoBehaviour
 
         makeLevel();
 
-		var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-		Material mat = background.GetComponent<Renderer>().material;
-		mat.shader = Shader.Find("Sprites/Default");
-		mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
-		mat.color = new Color(1, 1, 1);
-		background.transform.position = new Vector3(5, 3, 1);
-		background.transform.localScale = new Vector3(20, 10, 0);
+	makeOverlay();
+
+	//set the camera based on aspect ratio
+	Camrea cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+	float aspect = (float)Math.Round(cam.aspect,2);
+	if (aspect == 1.25) //5:4
+	{
+	    cam.orthographicSize = 6.75f;
+	    trayx = Screen.width - (Screen.width / 8);
+	    traywidth = Screen.width / 9;
+	    trayspace = Screen.height / 48;
+	}
+	else if (aspect == 1.33f) //4:3
+	{
+	    cam.orthographicSize = 6.25f;
+	    trayx = Screen.width - (Screen.width / 8.5f);
+	    traywidth = Screen.width / 9.5f;
+	    trayspace = Screen.height / 46;
+	}
+	else if (aspect == 1.5f) //3:2
+	{
+	    cam.orthographicSize = 5.75f;
+	    trayx = Screen.width - (Screen.width / 8);
+	    traywidth = Screen.width / 9;
+	    trayspace = Screen.height / 36;
+	}
+	else if (aspect == 1.6f) //16:10
+	{
+	    cam.orthographicSize = 5.25f;
+	    trayx = Screen.width - (Screen.width / 8.5f);
+	    traywidth = Screen.width / 9.5f;
+	    trayspace = Screen.height / 44;
+	}
+	else if (aspect == 1.78f) //16:9
+	{
+	    cam.orthographicSize = 4.85f; // 5:4
+	    trayx = Screen.width - (screen.width / 8);
+	    traywidth = Screen.width / 9;
+	    trayspace = Screen.height / 30;
+	}
+
 
     }
 
@@ -518,22 +556,22 @@ public class GameManager : MonoBehaviour
         //labels for how many towers are left
         GUI.Label(new Rect(540, 25, 110, 110), "LEVEL "+level.ToString());
 
-        GUI.Label(new Rect(Screen.width - 155, 70, 110, 110), constraint0.ToString());
-        GUI.Label(new Rect(Screen.width - 155, 205, 110, 110), constraint1.ToString());
-        GUI.Label(new Rect(Screen.width - 155, 340, 110, 110), constraint2.ToString());
+        GUI.Label(new Rect(trayx + (traywidth /2.17f), trayspace + traywidth, 110, 110), constraint0.ToString());
+        GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace*2 + traywidth*2, 110, 110), constraint1.ToString());
+        GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace*3 + traywidth*3, 110, 110), constraint2.ToString());
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
         }
         if (!started)
         {
-            if (GUI.Button(new Rect(25, 25, 110, 30), "START (S)") || Input.GetKeyDown(KeyCode.S)) {
+            if (GUI.Button(new Rect(trayspace, trayspace, traywidth, traywidth/3), "START (S)") || Input.GetKeyDown(KeyCode.S)) {
                 started = true;
             }
         }
         if (enemybeaten==enemynum){
 
-        	if (GUI.Button(new Rect(25, 200, 110, 30), "NextLevel") ) {
+        	if (GUI.Button(new Rect(trayspace*3 + traywidth*2, trayspace, traywidth, traywidth/3), "NEXT LEVEL") ) {
         		enemynum=0;
         		Application.LoadLevel (Application.loadedLevel + 1);
                 	//Application.LoadLevel("22");
@@ -543,13 +581,13 @@ public class GameManager : MonoBehaviour
         if (placing)
         {
             // if the rotate button is pressed
-            if (GUI.Button(new Rect(Screen.width-135, Screen.height - 55, 110, 30), "ROTATE")|| Input.GetKeyDown(KeyCode.Q))
+            if (GUI.Button(new Rect(trayx, traywidth*3 + trayspace*4, traywidth, traywidth/3), "ROTATE")|| Input.GetKeyDown(KeyCode.Q))
             {
                 currentTower.rotate(); // rotate the tower being placed
             }
         }
 
-        if (GUI.Button(new Rect(25, 80, 110, 30), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
+        if (GUI.Button(new Rect(trayx, traywidth*3 + trayspace*4, traywidth, traywidth/3), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
 
         {
             resetLevel();
@@ -557,7 +595,7 @@ public class GameManager : MonoBehaviour
 
             // button for RED tower
 
-            if (GUI.Button(new Rect(Screen.width - 135, 25, 110, 110), image: redtexture)|| Input.GetKeyDown(KeyCode.Alpha1))
+            if (GUI.Button(new Rect(trayx, trayspace, traywidth, traywidth), image: redtexture)|| Input.GetKeyDown(KeyCode.Alpha1))
         {
 
             if (placing)
@@ -585,7 +623,7 @@ public class GameManager : MonoBehaviour
             }
         }
         // button for GREEN tower
-        if (GUI.Button(new Rect(Screen.width - 135, 160, 110, 110), image: greentexture)|| Input.GetKeyDown(KeyCode.Alpha2))
+        if (GUI.Button(new Rect(trayx, traywidth + trayspace*2, traywidth, traywidth), image: greentexture)|| Input.GetKeyDown(KeyCode.Alpha2))
         {
             if (placing)
             {
@@ -612,7 +650,7 @@ public class GameManager : MonoBehaviour
             }
         }
         // button for BLUE tower
-        if (GUI.Button(new Rect(Screen.width - 135, 295, 110, 110), image: bluetexture)|| Input.GetKeyDown(KeyCode.Alpha3))
+        if (GUI.Button(new Rect(trayx, traywidth*2 + trayspace*3, traywidth, traywidth), image: bluetexture)|| Input.GetKeyDown(KeyCode.Alpha3))
         {
             if (placing)
             {
@@ -640,5 +678,52 @@ public class GameManager : MonoBehaviour
             
         }
     }
+
+    private void make Overlay()
+    {
+	//the indicator to the left of the board
+	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	Material mat = background.GetComponent<Renderer>().material;
+	mat.shader = Shader.Find("Sprites/Default");
+	mat.mainTexture = Resources.Load<Texture2D>("Textures/indicator");
+	mat.color = new Color(1, 1, 1);
+	background.transform.position = new Vector3(-2.2f, 3, -1);
+	background.transform.localScale = newVector3(4, 8, 0);
+
+	//decoration under the game board (also beat box)
+	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	Material mat = background.GetComponent<Renderer>().material;
+	mat.shader = Shader.Find("Sprites/Default");
+	mat.mainTexture = Resources.Load<Texture2D>("Textures/wires");
+	mat.color = new Color(1, 1, 1);
+	background.transform.position = new Vector3(4, -1.5f, 1);
+	background.transform.localScale = newVector3(9, 2, 0);
+
+	//panel on the right of the board for towers (includes port thing)
+	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	Material mat = background.GetComponent<Renderer>().material;
+	mat.shader = Shader.Find("Sprites/Default");
+	mat.mainTexture = Resources.Load<Texture2D>("Textures/towerTray");
+	mat.color = new Color(1, 1, 1);
+	background.transform.position = new Vector3(12, 3, 1);
+	background.transform.localScale = newVector3(7, 14, 0);
+
+	//the background (currently just grey)
+	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	Material mat = background.GetComponent<Renderer>().material;
+	mat.shader = Shader.Find("Sprites/Default");
+	mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+	mat.color = new Color(1, 1, 1);
+	background.transform.position = new Vector3(5, 3, 1);
+	background.transform.localScale = newVector3(24, 12, 0);
+
+	//panel to conceal enemies
+	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	Material mat = background.GetComponent<Renderer>().material;
+	mat.shader = Shader.Find("Sprites/Default");
+	mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+	mat.color = new Color(1, 1, 1);
+	background.transform.position = new Vector3(-3, 3, -.5f);
+	background.transform.localScale = newVector3(5, 7, 0);
 }
 
