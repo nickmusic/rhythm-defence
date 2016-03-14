@@ -36,18 +36,25 @@ public class GameManager : MonoBehaviour
     private float BEAT = .5f;
     private int numBeats = 0;
     int enemybeaten = 0;
-    int enemynum=0;
+	int enemynum = 0;
 
     // Level number
 
     public int level = 20;
 
-	// Music 
+	// Sound stuff 
 	public AudioSource music;
 	public AudioSource sfx;
 
-	private AudioClip idle = Resources.Load<AudioClip> ("Music/title song");
-	private AudioClip gametrack = Resources.Load<AudioClip> ("Music/Main song loop");
+	// Music clips
+	private AudioClip idle;
+	private AudioClip gametrack;
+	private AudioClip winmusic;
+
+	// Sound effect clips
+	private AudioClip enemyDead;
+	private AudioClip enemyHit;
+	private AudioClip click;
 
     // Use this for initialization
     void Start()
@@ -90,13 +97,30 @@ public class GameManager : MonoBehaviour
 		background.transform.localScale = new Vector3(20, 10, 0);
 
 		// setting up music
+		SoundSetUp();
 
 		PlayMusic (idle);
     }
 
+	private void SoundSetUp() {
+		// music
+		idle = Resources.Load<AudioClip> ("Music/title song");
+		gametrack = Resources.Load<AudioClip> ("Music/Main song loop");
+		winmusic = Resources.Load<AudioClip> ("Music/You Win Song");
+			
+		// sfx
+		enemyDead = Resources.Load<AudioClip> ("Music/enemy defeated");
+		enemyHit = Resources.Load<AudioClip> ("Music/enemy hit by tower");
+		click = Resources.Load<AudioClip> ("Music/Mouse Click");
+	}
+
     // Update is called once per frame
     void Update()
     {
+		if (enemybeaten > 0 && enemynum == enemybeaten && music.clip != winmusic) {
+			PlayMusic (winmusic);
+		}
+
         if (this.started) {
             // Beat counting
             clock = clock + Time.deltaTime;
@@ -135,11 +159,12 @@ public class GameManager : MonoBehaviour
                     int b = onTile(enemy.getX(), enemy.getY());
                     if (b == currentbullets[j]) {
                         enemy.damage(numBeats);
-                        if (enemy.getHealth() == 0) {
-                            enemy.destroy();
-                            enemies.Remove(enemy);
-                            enemybeaten +=1;
-                        }
+						if (enemy.getHealth () == 0) {
+							PlayEffect (enemyDead);
+							enemy.destroy ();
+							enemies.Remove (enemy);
+							enemybeaten += 1;
+						} 
                         break;
                     }
                 }
@@ -422,19 +447,19 @@ public class GameManager : MonoBehaviour
 			addEnemy (2, 1, -1, 5);
 			addEnemy (2, 1, -3, 5);
 			addEnemy (1, 2, -1, 6);
-			enemynum+=3;
+			//enemynum+=3;
 		} else if (level == 21) {
 			for (int i = 0; i < 6; i++) {
 				addEnemy (2, 1, (i * -2) - 1, 5);
-				enemynum+=1;
+				//enemynum+=1;
 			}
 			for (int i = 0; i < 4; i++) {
 				addEnemy (2, 2, (i * -2) - 1, 3);
-				enemynum+=1;
+				//enemynum+=1;
 			}
 			for (int i = 0; i < 6; i++) {
 				addEnemy (2, 1, (i * -2) - 1, 1);
-				enemynum+=1;
+				//enemynum+=1;
 			}
 		} else if (level == 22){
             addEnemy (2,1, -1, 3);
@@ -443,15 +468,12 @@ public class GameManager : MonoBehaviour
             addEnemy (2,1, -3, 5);
             addEnemy (1,2, -3, 4);
             addEnemy (0,3, -3, 3);
-			enemynum+=6;
 		} else if (level == 23){
 			for (int i = 0; i < 6; i++) {
 				addEnemy (2, 1, (i * -2) - 1, 5);
-				enemynum+=1;
 			}
 			for (int i = 0; i < 4; i++) {
 				addEnemy (2, 2, (i * -2) - 1, 3);
-				enemynum+=1;
 			}		
 		} else if (level == 24){
             addEnemy (2,1, -1, 5);
@@ -459,7 +481,6 @@ public class GameManager : MonoBehaviour
             addEnemy (2,1, -1, 6);
             addEnemy (2,1, -2, 6);
             addEnemy (1,2, -1, 2);
-			enemynum+=5;
 		}
 		print(enemynum);
 
@@ -473,6 +494,7 @@ public class GameManager : MonoBehaviour
 		enemy.transform.position = new Vector3 (x, y, 0);
 		enemy.init(enemyType, initHealth, this, x, y);
 		enemies.Add(enemy);
+		enemynum++;
 		enemy.name = "Enemy " + enemies.Count;
 	}
 
@@ -540,6 +562,7 @@ public class GameManager : MonoBehaviour
         {
             if (GUI.Button(new Rect(25, 25, 110, 30), "START (S)") || Input.GetKeyDown(KeyCode.S)) {
                 started = true;
+				PlayEffect (click);
 				PlayMusic (gametrack);
             }
         }
@@ -557,6 +580,7 @@ public class GameManager : MonoBehaviour
             // if the rotate button is pressed
             if (GUI.Button(new Rect(Screen.width-135, Screen.height - 55, 110, 30), "ROTATE")|| Input.GetKeyDown(KeyCode.Q))
             {
+				PlayEffect (click);
                 currentTower.rotate(); // rotate the tower being placed
             }
         }
@@ -564,6 +588,7 @@ public class GameManager : MonoBehaviour
         if (GUI.Button(new Rect(25, 80, 110, 30), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
 
         {
+			PlayEffect (click);
             resetLevel();
         }
 
@@ -571,6 +596,7 @@ public class GameManager : MonoBehaviour
 
             if (GUI.Button(new Rect(Screen.width - 135, 25, 110, 110), image: redtexture)|| Input.GetKeyDown(KeyCode.Alpha1))
         {
+			PlayEffect (click);
 
             if (placing)
             {
@@ -599,6 +625,8 @@ public class GameManager : MonoBehaviour
         // button for GREEN tower
         if (GUI.Button(new Rect(Screen.width - 135, 160, 110, 110), image: greentexture)|| Input.GetKeyDown(KeyCode.Alpha2))
         {
+			PlayEffect (click);
+
             if (placing)
             {
                 int type = currentTower.getTowerType();
@@ -626,6 +654,8 @@ public class GameManager : MonoBehaviour
         // button for BLUE tower
         if (GUI.Button(new Rect(Screen.width - 135, 295, 110, 110), image: bluetexture)|| Input.GetKeyDown(KeyCode.Alpha3))
         {
+			PlayEffect (click);
+
             if (placing)
             {
                 int type = currentTower.getTowerType(); // previous tower type
