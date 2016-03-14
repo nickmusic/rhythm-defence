@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
 
 	//set the camera based on aspect ratio
 	Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+	cam.transform.position = new Vector3(4, 3, -10);
 	float aspect = (float)Math.Round(cam.aspect,2);
 	if (aspect == 1.25) //5:4
 	{
@@ -133,24 +134,23 @@ public class GameManager : MonoBehaviour
 	    trayspace = Screen.height / 30;
 	}
 
+	// setting up music
+	SoundSetUp();
 
-		// setting up music
-		SoundSetUp();
-
-		PlayMusic (idle);
+	PlayMusic (idle);
     }
 
-	private void SoundSetUp() {
-		// music
-		idle = Resources.Load<AudioClip> ("Music/title song");
-		gametrack = Resources.Load<AudioClip> ("Music/Main song loop");
-		winmusic = Resources.Load<AudioClip> ("Music/You Win Song");
+    private void SoundSetUp() {
+	// music
+	idle = Resources.Load<AudioClip> ("Music/title song");
+	gametrack = Resources.Load<AudioClip> ("Music/Main song loop");
+	winmusic = Resources.Load<AudioClip> ("Music/You Win Song");
 			
-		// sfx
-		enemyDead = Resources.Load<AudioClip> ("Music/enemy defeated");
-		enemyHit = Resources.Load<AudioClip> ("Music/enemy hit by tower");
-		click = Resources.Load<AudioClip> ("Music/Mouse Click");
-	}
+	// sfx
+	enemyDead = Resources.Load<AudioClip> ("Music/enemy defeated");
+	enemyHit = Resources.Load<AudioClip> ("Music/enemy hit by tower");
+	click = Resources.Load<AudioClip> ("Music/Mouse Click");
+    }
 
     // Update is called once per frame
     void Update()
