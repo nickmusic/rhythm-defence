@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using System.Collections;
 
@@ -6,6 +7,10 @@ public class RedTower : MonoBehaviour {
     private Tower owner;
     private Material mat;
     private bool isPlaced;
+
+	// sfx
+	private AudioClip click;
+	private AudioClip hover;
 
     public void init(Tower t)
     {
@@ -19,13 +24,18 @@ public class RedTower : MonoBehaviour {
         mat.shader = Shader.Find("Sprites/Default");
         mat.mainTexture = Resources.Load<Texture2D>("Textures/redTower");
         mat.color = new Color(1, 1, 1);
+
+		// sfx
+		click = Resources.Load<AudioClip> ("Music/Mouse Click");
+		hover = Resources.Load<AudioClip> ("Music/mousing over tiles(each tile)");
+
     }
 
     // Use this for initialization
     void Start () {
-	
+
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
@@ -45,6 +55,8 @@ public class RedTower : MonoBehaviour {
 
     void OnMouseOver()
     {
+		owner.manager.PlayEffect (hover);
+
             int x = (int)owner.transform.position.x;
             int y = (int)owner.transform.position.y;
         if ((int)owner.transform.eulerAngles.z == 0)
@@ -65,6 +77,8 @@ public class RedTower : MonoBehaviour {
         }
         if (Input.GetMouseButtonDown(0))
         {
+			owner.manager.PlayEffect (click);
+
             if (!isPlaced)
             {
                 bool test = owner.manager.placeTower();
@@ -80,7 +94,7 @@ public class RedTower : MonoBehaviour {
             }
         }
     }
-		
+
 	public bool placed() {
 		return isPlaced;
 	}

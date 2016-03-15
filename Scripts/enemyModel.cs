@@ -14,7 +14,7 @@ public class enemyModel : MonoBehaviour
 	private Material mat;	// material (for texture)
 	private int enemyType;	// the type of the enemy(0, 1, 2)
 	private int initHealth;
-	private float moverhythm;	
+	private float moverhythm;
 	private float movebuf;
 	private float healthcolor;
 	private int healthval;
@@ -25,6 +25,10 @@ public class enemyModel : MonoBehaviour
 	private float healthbuf;
 	private float beatspeed;
 
+
+	// sfx
+	private bool atEnd;
+	private AudioClip endsound;
 
 	public void init(int enemyType, int initHealth, Enemy owner) {
 		this.owner = owner;
@@ -49,25 +53,28 @@ public class enemyModel : MonoBehaviour
 
 		movebuf = 0;
 
-		transform.parent = owner.transform;	
+		transform.parent = owner.transform;
 		transform.localPosition = new Vector3(0,0,0);
 		name = "Enemy Model";
 		if (enemyType == 0) {
-			mat = GetComponent<Renderer> ().material;	
+			mat = GetComponent<Renderer> ().material;
 			mat.shader = Shader.Find ("Sprites/Default");
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/ghoul");
 			mat.color = new Color (1, 1, 1, 1);
 		} else if (enemyType == 1) {
-			mat = GetComponent<Renderer> ().material;		
-			mat.shader = Shader.Find ("Sprites/Default");	
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/spider");	
+			mat = GetComponent<Renderer> ().material;
+			mat.shader = Shader.Find ("Sprites/Default");
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/spider");
 			mat.color = new Color (1, 1, 1, 1);
 		} else if (enemyType == 2 || enemyType == 3) {
-			mat = GetComponent<Renderer> ().material;								
-			mat.shader = Shader.Find ("Sprites/Default");						
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slimeGrey");	
+			mat = GetComponent<Renderer> ().material;
+			mat.shader = Shader.Find ("Sprites/Default");
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slimeGrey");
 			mat.color = new Color (1, 1, 1, 1);
 		}
+
+		atEnd = false;
+		endsound = Resources.Load<AudioClip> ("Music/Enemy reaches finish");
 	}
 
 	void Start(){
@@ -100,14 +107,14 @@ public class enemyModel : MonoBehaviour
 				healthbuf = clock;
 			}
 		}
-			
+
 	}
 
 	public void damage(int numBeats){
 		if (numBeats >= damagebuf ) {
 			damagebuf = numBeats;
 			healthbuf = clock;
-			damageint = 1;	
+			damageint = 1;
 		}
 	}
 
@@ -119,8 +126,10 @@ public class enemyModel : MonoBehaviour
 		if (this != null) {
 			if ((numBeats % moverhythm == 0) && owner.m.isStarted()) {
 				if (transform.position.x < owner.m.boardWidth) {
-					//transform.position = new Vector3 (transform.position.x+1, transform.position.y, 0);
 					moveto += 1;
+					if (moveto == owner.m.boardWidth) {
+						owner.m.PlayEffect (endsound);
+					}
 				}
 			}
 		}

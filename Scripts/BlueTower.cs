@@ -1,3 +1,4 @@
+
 ﻿using UnityEngine;
 using System.Collections;
 
@@ -7,6 +8,10 @@ public class BlueTower : MonoBehaviour
     private Tower owner; // parent object
     private Material mat; // material (for texture)
     private bool isPlaced; // whther the tower has been placed
+
+	// sfx
+	private AudioClip click;
+	private AudioClip hover;
 
     // called by the parent object when quad is created
     public void init(Tower t)
@@ -21,6 +26,10 @@ public class BlueTower : MonoBehaviour
         mat.shader = Shader.Find("Sprites/Default"); // set shader
         mat.mainTexture = Resources.Load<Texture2D>("Textures/blueTower"); // use blueTower texture
         mat.color = new Color(1, 1, 1); // set color
+
+		// sfx
+		click = Resources.Load<AudioClip> ("Music/Mouse Click");
+		hover = Resources.Load<AudioClip> ("Music/mousing over tiles(each tile)");
     }
 
     // Use this for initialization
@@ -50,6 +59,8 @@ public class BlueTower : MonoBehaviour
 
     void OnMouseOver()
     {
+		owner.manager.PlayEffect (hover);
+
         // tell the manager which tiles to highlight
         int x = (int)owner.transform.position.x;
         int y = (int)owner.transform.position.y;
@@ -58,10 +69,11 @@ public class BlueTower : MonoBehaviour
         owner.manager.highlight(x - 1, y);
         owner.manager.highlight(x, y - 1);
         owner.manager.highlight(x + 1, y);
-	
+
 	// if the tower is clicked
         if (Input.GetMouseButtonDown(0))
         {
+			owner.manager.PlayEffect (click);
             if (!isPlaced)
             {
                 bool test = owner.manager.placeTower();
