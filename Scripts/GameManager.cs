@@ -322,7 +322,6 @@ public class GameManager : MonoBehaviour
     {
         towers.Remove(tower);
         Destroy(tower.gameObject);
-		print ("destroy 1");
     }
 
     private void destroyTowers()
@@ -334,7 +333,6 @@ public class GameManager : MonoBehaviour
 			int y = (int)towers [i].transform.position.y;
 			board [x, y].setHasTower (false);
             DestroyImmediate(towers[i].gameObject);
-			print ("destroy 2");
         }
         towers = null;
         towers = new List<Tower>();
@@ -729,9 +727,10 @@ public class GameManager : MonoBehaviour
 			for (int j = 1; j<4;j++){
 				int t=(j-1)*6+i;
             if (GUI.Button(new Rect(i*150, 150*j-50, 110, 110), t.ToString())) {
-                level = t;
-				makeLevel();
-            }
+					resetLevel ();
+	                level = t;
+					makeLevel();
+	            }
             }
         }
             if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
@@ -772,7 +771,7 @@ public class GameManager : MonoBehaviour
             makeLevel();
        }
         //labels for how many towers are left
-        GUI.Label(new Rect(540, 25, 110, 110), "LEVEL " + level.ToString());
+       	GUI.Label(new Rect(540, 25, 110, 110), "LEVEL " + level.ToString());
 
         GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace + traywidth, 110, 110), constraint0.ToString());
         GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 2 + traywidth * 2, 110, 110), constraint1.ToString());
@@ -920,8 +919,8 @@ public class GameManager : MonoBehaviour
             }
 
         }
-    	GUI.color=Color.black;
-        GUI.Label(new Rect(90, 20, 110, 110), "LEVEL "+level.ToString());
+    	//GUI.color=Color.black;
+        //GUI.Label(new Rect(90, 20, 110, 110), "LEVEL "+level.ToString());
    }
     }
 
