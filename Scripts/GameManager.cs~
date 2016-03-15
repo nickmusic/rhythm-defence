@@ -1,4 +1,4 @@
-// The gamemanager of the rhythm-defense game
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -100,6 +100,7 @@ public class GameManager : MonoBehaviour
         makeLevel();
 		buildBoard ();
 
+
         makeOverlay();
 
         //set the camera based on aspect ratio
@@ -161,9 +162,9 @@ public class GameManager : MonoBehaviour
 	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
 	Material mat = background.GetComponent<Renderer>().material;
 	mat.shader = Shader.Find("Sprites/Default");
-	mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
+	mat.mainTexture = Resources.Load<Texture2d>("Textures/background10x20");
 	mat.color = new Color(1, 1, 1);
-	background.transform.position = new Vector3(5, 3, 1);
+	background.transform.position = new Vecotr3(5, 3, 1);
 	background.transform.localScale = new Vector3(20, 10, 0);
 
 
@@ -931,6 +932,70 @@ public class GameManager : MonoBehaviour
    }
     }
 
+
+    //creates quads for backround images
+    private void makeOverlay()
+    {
+        //the indicator to the left of the board
+        var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        Material mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/indicator");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(-2.2f, 3, -1);
+        background.transform.localScale = new Vector3(4, 8, 0);
+
+        //decoration under the game board (also beat box)
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/wires");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(4, -1.5f, 1);
+        background.transform.localScale = new Vector3(9, 2, 0);
+
+        //panel on the right of the board for towers (includes port thing)
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/towerTray");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(12, 3, 1);
+        background.transform.localScale = new Vector3(7, 14, 0);
+
+        //the background (currently just grey)
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(5, 3, 1);
+        background.transform.localScale = new Vector3(24, 12, 0);
+
+        //panel to conceal enemies
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(-3, 3, -.5f);
+        background.transform.localScale = new Vector3(5, 7, 0);
+    }
+
+    // Music section
+    public void PlayEffect(AudioClip clip)
+    {
+        sfx.clip = clip;
+        sfx.Play();
+    }
+
+    public void PlayMusic(AudioClip clip)
+    {
+        this.music.loop = true;
+        this.music.clip = clip;
+        this.music.Play();
+    }
+}
 
     //creates quads for backround images
     private void makeOverlay()
