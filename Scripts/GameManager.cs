@@ -743,31 +743,44 @@ public class GameManager : MonoBehaviour
 
     {
 
-        if (level == 100)
-        { //level selction
-            for (int i = 1; i < 7; i++)
-            {
-                for (int j = 1; j < 4; j++)
-                {
-                    int t = (j - 1) * 6 + i;
-                    if (GUI.Button(new Rect(i * 150, 150 * j - 50, 110, 110), t.ToString()))
-                    {
-                        resetLevel();
-                        level = t;
-                        makeLevel();
-                    }
-                }
+
+	if (level == 100){ //level selction
+		for (int i = 1; i < 7; i++) {
+			for (int j = 1; j<3;j++){
+				int t=(j-1)*6+i;
+			GUIStyle BStyle = new GUIStyle (GUI.skin.GetStyle("Button"));
+        	BStyle.fontSize = 25;
+            if (GUI.Button(new Rect(Screen.width/8+(i-1)*Screen.width/8, Screen.height/5+(j-1)*Screen.height/5, Screen.width/8-Screen.width/8/4, Screen.width/8-Screen.width/8/4), t.ToString(), BStyle)) {
+					resetLevel ();
+	                level = t;
+					makeLevel();
+	            }
             }
-            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") || Input.GetKeyDown(KeyCode.Escape))
-            {
-                Application.Quit();
-            }
+        }
+		for (int i = 1; i < 4; i++) {
+			 int j = 3;
+				int t=(j-1)*6+i;
+			GUIStyle BStyle = new GUIStyle (GUI.skin.GetStyle("Button"));
+        	BStyle.fontSize = 25;
+            if (GUI.Button(new Rect(Screen.width/8+(i-1)*Screen.width/8, Screen.height/5+(j-1)*Screen.height/5, Screen.width/8-Screen.width/8/4, Screen.width/8-Screen.width/8/4), t.ToString(), BStyle)) {
+					resetLevel ();
+	                level = t;
+					makeLevel();
+	            }
+            
+        }
+
+            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
 
         }
 
         if (level == 99)
         { //level selction
-            GUIStyle myStyle = new GUIStyle(GUI.skin.GetStyle("label"));
+             GUIStyle myStyle = new GUIStyle(GUI.skin.GetStyle("label"));
             myStyle.fontSize = 40;
 
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2, 200, 50), "START GAME"))
@@ -788,6 +801,7 @@ public class GameManager : MonoBehaviour
                 Application.Quit();
             }
 
+
         }
 
 
@@ -795,13 +809,16 @@ public class GameManager : MonoBehaviour
         {
 
 
-            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels"))
-            {
-                level = 100;
-                makeLevel();
-            }
-            //labels for how many towers are left
-            GUI.Label(new Rect(Screen.width / 2 - traywidth / 2, trayspace, traywidth, traywidth), "LEVEL " + level.ToString());
+
+       if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels") ){
+       	    level = 100;
+            makeLevel();
+       }
+        //labels for how many towers are left
+        GUIStyle MyStyle = new GUIStyle (GUI.skin.GetStyle("label"));
+        MyStyle.fontSize = 25;
+            GUI.Label(new Rect(Screen.width / 2 - traywidth / 2, trayspace, traywidth*2, traywidth*2), "LEVEL " + level.ToString(),MyStyle);
+
 
             GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace + traywidth, 110, 110), constraint0.ToString());
             GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 2 + traywidth * 2, 110, 110), constraint1.ToString());
@@ -842,11 +859,13 @@ public class GameManager : MonoBehaviour
 
 
 
+
             if (placing)
+
             {
                 // if the rotate button is pressed
 
-                if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") || Input.GetKeyDown(KeyCode.Q))
+                if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") )
                 {
                     PlayEffect(click);
                     currentTower.rotate(); // rotate the tower being placed
@@ -854,7 +873,9 @@ public class GameManager : MonoBehaviour
             }
 
 
-            if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
+
+
+            if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART") )
 
             {
                 PlayEffect(click);
@@ -862,9 +883,9 @@ public class GameManager : MonoBehaviour
 
             }
 
-            // button for RED tower
 
-            if (GUI.Button(new Rect(trayx, trayspace, traywidth, traywidth), image: redtexture) || Input.GetKeyDown(KeyCode.Alpha1))
+
+            if (GUI.Button(new Rect(trayx, trayspace, traywidth, traywidth), image: redtexture) )
             {
                 PlayEffect(click);
 
@@ -892,10 +913,14 @@ public class GameManager : MonoBehaviour
                     placing = true;
                 }
             }
-            // button for GREEN tower
-            if (GUI.Button(new Rect(trayx, traywidth + trayspace * 2, traywidth, traywidth), image: greentexture) || Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                PlayEffect(click);
+  
+            
+        
+        // button for GREEN tower
+        if (GUI.Button(new Rect(trayx, traywidth + trayspace * 2, traywidth, traywidth), image: greentexture) )
+        {
+            PlayEffect(click);
+
 
                 if (placing)
                 {
@@ -921,10 +946,12 @@ public class GameManager : MonoBehaviour
                     placing = true;
                 }
             }
-            // button for BLUE tower
-            if (GUI.Button(new Rect(trayx, traywidth * 2 + trayspace * 3, traywidth, traywidth), image: bluetexture) || Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                PlayEffect(click);
+
+        // button for BLUE tower
+        if (GUI.Button(new Rect(trayx, traywidth * 2 + trayspace * 3, traywidth, traywidth), image: bluetexture) )
+        {
+            PlayEffect(click);
+
 
                 if (placing)
                 {
@@ -951,8 +978,7 @@ public class GameManager : MonoBehaviour
                 }
 
             }
-            //GUI.color=Color.black;
-            //GUI.Label(new Rect(90, 20, 110, 110), "LEVEL "+level.ToString());
+
         }
     }
 
