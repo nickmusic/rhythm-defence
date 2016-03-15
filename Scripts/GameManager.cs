@@ -1,4 +1,4 @@
-// The gamemanager of the rhythm-defense game
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,11 +28,6 @@ public class GameManager : MonoBehaviour
     Texture2D greentexture; // texture for green tower
     Texture2D bluetexture; // texture for blue tower
 
-    Texture2D levels; // texture for blue tower
-	Texture2D restart;
-	Texture2D start;
-	Texture2D next;
-
     // Beat tracking
     private float clock;
     private float startTime;
@@ -42,16 +37,14 @@ public class GameManager : MonoBehaviour
     int enemynum = 0;
 
     // Level number
-
-    private int level = 99;
-
+    public int level = 20;
 
     //button locations
     float trayx = 0;
     float traywidth = 0;
     float trayspace = 0;
 
-    // Sound stuff
+    // Sound stuff 
     public AudioSource music;
     public AudioSource sfx;
 
@@ -65,6 +58,10 @@ public class GameManager : MonoBehaviour
     private AudioClip enemyHit;
     private AudioClip click;
 
+    //stuff for indicator
+    private GameObject indicatorFolder;
+    private List<IndicatorTile> indicatorTiles;
+
     // Use this for initialization
     void Start()
     {
@@ -72,16 +69,14 @@ public class GameManager : MonoBehaviour
         numTiles = 0;
         placing = false;
         started = false;
+
         currentbullets = new List<int>();   // list of current bullets on the board in terms of tile number
 
 
         redtexture = Resources.Load<Texture2D>("Textures/redTower");
         greentexture = Resources.Load<Texture2D>("Textures/greenTower");
         bluetexture = Resources.Load<Texture2D>("Textures/blueTower");
-        levels = Resources.Load<Texture2D>("Textures/levels");
-        restart = Resources.Load<Texture2D>("Textures/restart");
-        start = Resources.Load<Texture2D>("Textures/start");
-        next = Resources.Load<Texture2D>("Textures/next");
+
         // set up folder for tiles
         tileFolder = new GameObject();
         tileFolder.name = "Tiles";
@@ -97,8 +92,15 @@ public class GameManager : MonoBehaviour
         enemyFolder.name = "Enemies";
         enemies = new List<Enemy>();
 
+        //create indicator stuff
+        indicatorFolder = new GameObject();
+        indicatorFolder.name = "Indicator Tiles";
+        //indicator = new IndicatorTile[4, boardHeight];
+        indicatorTiles = new List<IndicatorTile>();
+
         makeLevel();
-		    buildBoard ();
+		buildBoard ();
+
         makeOverlay();
 
         //set the camera based on aspect ratio
@@ -141,28 +143,11 @@ public class GameManager : MonoBehaviour
             trayspace = Screen.height / 30;
         }
 
-
-        if (level != 100 && level !=99){
-			var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-			Material mat = background.GetComponent<Renderer>().material;
-			mat.shader = Shader.Find("Sprites/Default");
-			mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
-			mat.color = new Color(1, 1, 1);
-			background.transform.position = new Vector3(5, 3, 1);
-			background.transform.localScale = new Vector3(20, 10, 0);
-		}
-
         // setting up music
         SoundSetUp();
 
         PlayMusic(idle);
     }
-
-
-	public float getBeat(){
-		return BEAT;
-	}
-
 
     private void SoundSetUp()
     {
@@ -175,7 +160,6 @@ public class GameManager : MonoBehaviour
         enemyDead = Resources.Load<AudioClip>("Music/enemy defeated");
         enemyHit = Resources.Load<AudioClip>("Music/enemy hit by tower");
         click = Resources.Load<AudioClip>("Music/Mouse Click");
-
     }
 
     // Update is called once per frame
@@ -215,7 +199,7 @@ public class GameManager : MonoBehaviour
                 List<Bullet> bullets = towers[i].getBullets();
                 for (int j = 0; j < bullets.Count; j++)
                 {
-					int a = onTile(bullets[j].getX(), bullets[j].getY());
+                    int a = onTile(bullets[j].transform.position.x, bullets[j].transform.position.y);
                     if (!currentbullets.Contains(a))
                     {
                         currentbullets.Add(a);
@@ -224,24 +208,27 @@ public class GameManager : MonoBehaviour
             }
 
             // Update interaction between enemies and bullets
-            for (int i = 0; i < enemies.Count; i++) {
-				          Enemy enemy = enemies [i];
-				          int h = enemy.getHealth ();
-				          if (enemy.getHealth () == 0) {
-							PlayEffect (enemyDead);
-					        enemy.destroy ();
-					        enemies.Remove (enemy);
-					enemybeaten += 1;
-				          } else {
-					            for (int j = 0; j < currentbullets.Count; j++) {
-						              int b = onTile (enemy.getX (), enemy.getY ());
-						              if (b == currentbullets [j]) {
-							                enemy.damage (numBeats);
-							                break;
-						              }
-					            }
-				          }
-			      }
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                Enemy enemy = enemies[i];
+                int h = enemy.getHealth();
+                for (int j = 0; j < currentbullets.Count; j++)
+                {
+                    int b = onTile(enemy.getX(), enemy.getY());
+                    if (b == currentbullets[j])
+                    {
+                        enemy.damage(numBeats);
+                        if (enemy.getHealth() == 0)
+                        {
+                            PlayEffect(enemyDead);
+                            enemy.destroy();
+                            enemies.Remove(enemy);
+                            enemybeaten += 1;
+                        }
+                        break;
+                    }
+                }
+            }
             currentbullets.Clear();
         }
     }
@@ -322,7 +309,6 @@ public class GameManager : MonoBehaviour
     {
         towers.Remove(tower);
         Destroy(tower.gameObject);
-		print ("destroy 1");
     }
 
     private void destroyTowers()
@@ -330,11 +316,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < towers.Count; i++)
         {
             towers[i].eraseBullets();
-			int x = (int)towers [i].transform.position.x;
-			int y = (int)towers [i].transform.position.y;
-			board [x, y].setHasTower (false);
             DestroyImmediate(towers[i].gameObject);
-			print ("destroy 2");
         }
         towers = null;
         towers = new List<Tower>();
@@ -373,14 +355,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    private void makeLevel() {
-    	if (level != 100 && level !=99){
-        addEnemies ();
-        setConstraints ();
-        }
-	}
-
+    // 
+    private void makeLevel()
+    {
+        addEnemies();
+        setConstraints();
+    }
 
 
     public void resetLevel()
@@ -392,27 +372,14 @@ public class GameManager : MonoBehaviour
         numBeats = 0;
         started = false;
         placing = false;
-        enemynum = 0;
-        enemybeaten = 0;
         //numTiles = 0;
+        destoryIndicator();
 
         PlayMusic(idle);
 
         makeLevel();
 
-
     }
-
-    public void restartLevel()
-	  {
-		    destroyEnemies();
-		    destroyBoard();
-		    destroyBullets ();
-		    numBeats = 0;
-		    started = false;
-		    addEnemies ();
-		    buildBoard ();
-	  }
 
     // set constraints based on level
     private void setConstraints()
@@ -476,7 +443,7 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 13)
         {
-            constraint0 = 1;
+            constraint0 = 0;
             constraint1 = 1;
             constraint2 = 1;
         }
@@ -499,7 +466,6 @@ public class GameManager : MonoBehaviour
             constraint0 = 0;
             constraint1 = 0;
             constraint2 = 4;
-
         }
         else if (level == 15)
         {
@@ -520,7 +486,6 @@ public class GameManager : MonoBehaviour
             constraint2 = 0;
         }
     }
-
 
 
     // add enemies
@@ -593,7 +558,12 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 12)
         {
-
+            /*addEnemy(2, 1, -1, 4);
+			addEnemy(2, 1, -1, 5);
+			addEnemy(2, 1, -3, 3);
+			addEnemy(2, 1, -3, 4);
+			addEnemy(2, 1, -3, 5);
+			addEnemy(2, 1, -3, 6);*/
 
             for (int i = 0; i < 6; i++)
             {
@@ -670,6 +640,8 @@ public class GameManager : MonoBehaviour
         enemies.Add(enemy);
         enemynum++;
         enemy.name = "Enemy " + enemies.Count;
+
+        addIndicatorTile(enemyType, initHealth, x, y);
     }
 
 
@@ -723,54 +695,6 @@ public class GameManager : MonoBehaviour
     void OnGUI()
 
     {
-
-	if (level == 100){ //level selction
-		for (int i = 1; i < 7; i++) {
-			for (int j = 1; j<4;j++){
-				int t=(j-1)*6+i;
-            if (GUI.Button(new Rect(i*150, 150*j-50, 110, 110), t.ToString())) {
-                level = t;
-				makeLevel();
-            }
-            }
-        }
-            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
-    }
-
-    if (level == 99){ //level selction
-         GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
-         myStyle.fontSize = 40;
-
-    	GUI.Label(new Rect(Screen.width/2-400/2, 100, 400, 100), "RHYTHM  DEFENCE",myStyle);
-        GUI.Label(new Rect(Screen.width/2-50, 200, 330, 30), "Red Panda Games ");
-        if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2, 200, 50), "START GAME")) {
-            level = 1;
-            makeLevel();
-            }
-        if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2+150, 200, 50), "SELECT LEVEL")) {
-            level = 100;
-            makeLevel();
-            }
-
-            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
-    }
-
-
-    if (level !=100 && level !=99){
-
-
-       if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels") ){
-       	    level = 100;
-            makeLevel();
-       }
         //labels for how many towers are left
         GUI.Label(new Rect(540, 25, 110, 110), "LEVEL " + level.ToString());
 
@@ -779,10 +703,8 @@ public class GameManager : MonoBehaviour
         GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 3 + traywidth * 3, 110, 110), constraint2.ToString());
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-               Application.Quit();
+            Application.Quit();
         }
-
-
         if (!started)
         {
             if (GUI.Button(new Rect(trayspace, trayspace, traywidth, traywidth / 3), "START (S)") || Input.GetKeyDown(KeyCode.S))
@@ -792,43 +714,34 @@ public class GameManager : MonoBehaviour
                 PlayMusic(gametrack);
             }
         }
-        if (enemybeaten==enemynum){
-            GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
-         	myStyle.fontSize = 80;
-            GUIStyle myStyle2 = new GUIStyle (GUI.skin.GetStyle("label"));
-         	myStyle2.fontSize = 30;
-     		GUI.Label(new Rect(Screen.width/2-600/2, 100, 600, 100), "YOU GOT IT!",myStyle);
-        	GUI.Label(new Rect(Screen.width/2-250, 200, 500, 100), "Press 'Space' to next level",myStyle2);
-        	if (GUI.Button(new Rect(Screen.width/2-80, 300, 80, 80), image: next)|| Input.GetKeyDown(KeyCode.Space) ) {
-        		enemynum=0;
-                enemybeaten = 0;
-                level++;
-                resetLevel() ;
+        if (enemybeaten == enemynum)
+        {
 
-        	}
-
+            if (GUI.Button(new Rect(trayspace * 3 + traywidth * 2, trayspace, traywidth, traywidth / 3), "NEXT LEVEL"))
+            {
+                enemynum = 0;
+                //Application.LoadLevel(Application.loadedLevel + 1);
+                //Application.LoadLevel("22");
+				level++;
+				resetLevel() ;
+            }
         }
-
-
 
         if (placing)
         {
             // if the rotate button is pressed
-
-			if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") || Input.GetKeyDown(KeyCode.Q))
+			if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE (Q)") || Input.GetKeyDown(KeyCode.Q))
             {
                 PlayEffect(click);
                 currentTower.rotate(); // rotate the tower being placed
             }
         }
 
-
         if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
 
         {
             PlayEffect(click);
             resetLevel();
-
         }
 
         // button for RED tower
@@ -920,11 +833,7 @@ public class GameManager : MonoBehaviour
             }
 
         }
-    	GUI.color=Color.black;
-        GUI.Label(new Rect(90, 20, 110, 110), "LEVEL "+level.ToString());
-   }
     }
-
 
     //creates quads for backround images
     private void makeOverlay()
@@ -988,4 +897,29 @@ public class GameManager : MonoBehaviour
         this.music.clip = clip;
         this.music.Play();
     }
+
+    private void addIndicatorTile(int type, int health, int x, int y)
+    {
+        if ((x < 0) && (x > -5))
+        {
+            GameObject indicatorObject = new GameObject(); // create empty game object
+            IndicatorTile tile4 = indicatorObject.AddComponent<IndicatorTile>(); // add tile script to object
+            tile4.transform.parent = tileFolder.transform; // make the tile folder its parent
+            tile4.transform.position = new Vector3(x / 2 - 2.25f, y, -2);
+            tile4.init(type, health, this); // initialize the tile
+            indicatorTiles.Add(tile4);
+            tile4.name = "Indicator Tile " + indicatorTiles.Count; // name tile for easy finding
+        }
+    }
+
+    private void destoryIndicator()
+    {
+        for (int i = 0; i < indicatorTiles.Count; i++)
+        {
+            DestroyImmediate(indicatorTiles[i].gameObject);
+        }
+        indicatorTiles = null;
+        indicatorTiles = new List<IndicatorTile>();
+    }
 }
+

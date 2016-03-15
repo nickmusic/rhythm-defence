@@ -1,4 +1,3 @@
-
 ﻿using UnityEngine;
 using System.Collections;
 
@@ -69,7 +68,7 @@ public class BlueTower : MonoBehaviour
         owner.manager.highlight(x - 1, y);
         owner.manager.highlight(x, y - 1);
         owner.manager.highlight(x + 1, y);
-
+	
 	// if the tower is clicked
         if (Input.GetMouseButtonDown(0))
         {

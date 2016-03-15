@@ -1,4 +1,3 @@
-
 ﻿using UnityEngine;
 using System.Collections;
 
@@ -87,7 +86,7 @@ public class GreenTower : MonoBehaviour
 			owner.manager.highlight(x + 1, y);
 			owner.manager.highlight(x + 2, y);
 		}
-
+	
 	// if the player clicks the tower
         if (Input.GetMouseButtonDown(0))
         {
