@@ -1,3 +1,6 @@
+// Jun Li
+// Enemy class
+// 2/22/16
 
 using UnityEngine;
 using System.Collections;
@@ -8,7 +11,7 @@ public class Enemy : MonoBehaviour {
 	private enemyModel model;		// The model object.
 	private int enemyType;
 	private int initHealth;
-	public float enemyx;
+	private float enemyx;
 	private float enemyy;
 	public GameManager m;		// A pointer to the manager (not needed here, but potentially useful in general).
 
