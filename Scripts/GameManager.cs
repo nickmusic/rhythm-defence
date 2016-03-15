@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour
         enemies = new List<Enemy>();
 
         makeLevel();
-		    buildBoard ();
+		buildBoard ();
         makeOverlay();
 
         //set the camera based on aspect ratio
@@ -308,6 +308,7 @@ public class GameManager : MonoBehaviour
     {
         towers.Remove(tower);
         Destroy(tower.gameObject);
+		print ("destroy 1");
     }
 
     private void destroyTowers()
@@ -315,7 +316,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < towers.Count; i++)
         {
             towers[i].eraseBullets();
+			int x = (int)towers [i].transform.position.x;
+			int y = (int)towers [i].transform.position.y;
+			board [x, y].setHasTower (false);
             DestroyImmediate(towers[i].gameObject);
+			print ("destroy 2");
         }
         towers = null;
         towers = new List<Tower>();
