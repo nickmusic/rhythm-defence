@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// Jun Li
+// Model for the Enemy class
+// 2/22/16
+
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -10,12 +14,17 @@ public class enemyModel : MonoBehaviour
 	private Material mat;	// material (for texture)
 	private int enemyType;	// the type of the enemy(0, 1, 2)
 	private int initHealth;
-	private float moverhythm;	
+	private float moverhythm;
 	private float movebuf;
 	private float healthcolor;
 	private int healthval;
 	private int beat;
 	private int damagebuf;
+	private int moveto;
+	private int damageint;
+	private float healthbuf;
+	private float beatspeed;
+
 
 	// sfx
 	private bool atEnd;
@@ -28,6 +37,10 @@ public class enemyModel : MonoBehaviour
 		healthval = initHealth;
 		beat = 0;
 		damagebuf = 0;
+		damageint = 0;
+		moveto = (int)owner.enemyx;
+		healthbuf = -1*(this.owner.m.getBeat());
+		beatspeed = this.owner.m.getBeat ();
 
 		// set up rhythm of enemy
 		if (enemyType == 0) {
@@ -40,23 +53,23 @@ public class enemyModel : MonoBehaviour
 
 		movebuf = 0;
 
-		transform.parent = owner.transform;	
+		transform.parent = owner.transform;
 		transform.localPosition = new Vector3(0,0,0);
 		name = "Enemy Model";
 		if (enemyType == 0) {
-			mat = GetComponent<Renderer> ().material;	
+			mat = GetComponent<Renderer> ().material;
 			mat.shader = Shader.Find ("Sprites/Default");
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/ghoul");
 			mat.color = new Color (1, 1, 1, 1);
 		} else if (enemyType == 1) {
-			mat = GetComponent<Renderer> ().material;		
-			mat.shader = Shader.Find ("Sprites/Default");	
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/spider");	
+			mat = GetComponent<Renderer> ().material;
+			mat.shader = Shader.Find ("Sprites/Default");
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/spider");
 			mat.color = new Color (1, 1, 1, 1);
 		} else if (enemyType == 2 || enemyType == 3) {
-			mat = GetComponent<Renderer> ().material;								
-			mat.shader = Shader.Find ("Sprites/Default");						
-			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slimeGrey");	
+			mat = GetComponent<Renderer> ().material;
+			mat.shader = Shader.Find ("Sprites/Default");
+			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slimeGrey");
 			mat.color = new Color (1, 1, 1, 1);
 		}
 
@@ -78,16 +91,31 @@ public class enemyModel : MonoBehaviour
 		} else if (healthval  == 1) {
 			mat.color = new Color (8, 1, 1);
 		}
+
+		if (transform.position.x < moveto) {
+			transform.position = new Vector3 (transform.position.x + owner.m.getBeat () / 8, transform.position.y, 0);
+		} else {
+			transform.position = new Vector3 (moveto, transform.position.y, 0);
+		}
+
+		if (damageint == 1) {
+			if (Mathf.Abs(transform.position.x - moveto)<=0.2) {
+				healthcolor -= (float)(0.4-0.1*(moverhythm/2));
+				mat.color = new Color (1, 1, 1, healthcolor);
+				healthval -= 1;
+				damageint = 0;
+				healthbuf = clock;
+			}
+		}
+
 	}
 
 	public void damage(int numBeats){
-		if (numBeats >= 1 + damagebuf) {
+		if (numBeats >= damagebuf ) {
 			damagebuf = numBeats;
-			healthcolor -= (float)(0.4-0.1*(moverhythm/2));
-			mat.color = new Color (1, 1, 1, healthcolor);
-			healthval -= 1;
+			healthbuf = clock;
+			damageint = 1;
 		}
-
 	}
 
 	public void destroy(){
@@ -98,8 +126,8 @@ public class enemyModel : MonoBehaviour
 		if (this != null) {
 			if ((numBeats % moverhythm == 0) && owner.m.isStarted()) {
 				if (transform.position.x < owner.m.boardWidth) {
-					transform.position = new Vector3 (transform.position.x + 1, transform.position.y);
-					if (transform.position.x == owner.m.boardWidth) {
+					moveto += 1;
+					if (moveto == owner.m.boardWidth) {
 						owner.m.PlayEffect (endsound);
 					}
 				}
@@ -108,7 +136,7 @@ public class enemyModel : MonoBehaviour
 	}
 
 	public float getX(){
-		return transform.position.x;
+		return moveto;
 	}
 
 	public float getY(){

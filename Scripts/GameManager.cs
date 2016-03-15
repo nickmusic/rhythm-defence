@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     float traywidth = 0;
     float trayspace = 0;
 
-    // Sound stuff 
+    // Sound stuff
     public AudioSource music;
     public AudioSource sfx;
 
@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour
         numTiles = 0;
         placing = false;
         started = false;
-
         currentbullets = new List<int>();   // list of current bullets on the board in terms of tile number
 
 
@@ -90,6 +89,7 @@ public class GameManager : MonoBehaviour
 
         makeLevel();
 		buildBoard ();
+<<<<<<< HEAD
 
         makeOverlay();
 
@@ -148,6 +148,10 @@ public class GameManager : MonoBehaviour
         PlayMusic(idle);
     }
 
+	public float getBeat(){
+		return BEAT;
+	}
+
     private void SoundSetUp()
     {
         // music
@@ -199,7 +203,7 @@ public class GameManager : MonoBehaviour
                 List<Bullet> bullets = towers[i].getBullets();
                 for (int j = 0; j < bullets.Count; j++)
                 {
-                    int a = onTile(bullets[j].transform.position.x, bullets[j].transform.position.y);
+					int a = onTile(bullets[j].getX(), bullets[j].getY());
                     if (!currentbullets.Contains(a))
                     {
                         currentbullets.Add(a);
@@ -208,27 +212,24 @@ public class GameManager : MonoBehaviour
             }
 
             // Update interaction between enemies and bullets
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                Enemy enemy = enemies[i];
-                int h = enemy.getHealth();
-                for (int j = 0; j < currentbullets.Count; j++)
-                {
-                    int b = onTile(enemy.getX(), enemy.getY());
-                    if (b == currentbullets[j])
-                    {
-                        enemy.damage(numBeats);
-                        if (enemy.getHealth() == 0)
-                        {
-                            PlayEffect(enemyDead);
-                            enemy.destroy();
-                            enemies.Remove(enemy);
-                            enemybeaten += 1;
-                        }
-                        break;
-                    }
-                }
-            }
+            for (int i = 0; i < enemies.Count; i++) {
+				          Enemy enemy = enemies [i];
+				          int h = enemy.getHealth ();
+				          if (enemy.getHealth () == 0) {
+							PlayEffect (enemyDead);
+					        enemy.destroy ();
+					        enemies.Remove (enemy);
+					enemybeaten += 1;
+				          } else {
+					            for (int j = 0; j < currentbullets.Count; j++) {
+						              int b = onTile (enemy.getX (), enemy.getY ());
+						              if (b == currentbullets [j]) {
+							                enemy.damage (numBeats);
+							                break;
+						              }
+					            }
+				          }
+			      }
             currentbullets.Clear();
         }
     }
@@ -355,7 +356,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 
     private void makeLevel()
     {
         addEnemies();
@@ -379,6 +379,17 @@ public class GameManager : MonoBehaviour
         makeLevel();
 
     }
+
+    public void restartLevel()
+	  {
+		    destroyEnemies();
+		    destroyBoard();
+		    destroyBullets ();
+		    numBeats = 0;
+		    started = false;
+		    addEnemies ();
+		    buildBoard ();
+	  }
 
     // set constraints based on level
     private void setConstraints()
@@ -442,7 +453,7 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 13)
         {
-            constraint0 = 0;
+            constraint0 = 1;
             constraint1 = 1;
             constraint2 = 1;
         }
@@ -896,3 +907,66 @@ public class GameManager : MonoBehaviour
     }
 }
 
+    //creates quads for backround images
+    private void makeOverlay()
+    {
+        //the indicator to the left of the board
+        var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        Material mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/indicator");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(-2.2f, 3, -1);
+        background.transform.localScale = new Vector3(4, 8, 0);
+
+        //decoration under the game board (also beat box)
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/wires");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(4, -1.5f, 1);
+        background.transform.localScale = new Vector3(9, 2, 0);
+
+        //panel on the right of the board for towers (includes port thing)
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/towerTray");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(12, 3, 1);
+        background.transform.localScale = new Vector3(7, 14, 0);
+
+        //the background (currently just grey)
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(5, 3, 1);
+        background.transform.localScale = new Vector3(24, 12, 0);
+
+        //panel to conceal enemies
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(-3, 3, -.5f);
+        background.transform.localScale = new Vector3(5, 7, 0);
+    }
+
+    // Music section
+    public void PlayEffect(AudioClip clip)
+    {
+        sfx.clip = clip;
+        sfx.Play();
+    }
+
+    public void PlayMusic(AudioClip clip)
+    {
+        this.music.loop = true;
+        this.music.clip = clip;
+        this.music.Play();
+    }
+}
