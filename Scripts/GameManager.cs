@@ -65,6 +65,10 @@ public class GameManager : MonoBehaviour
     private AudioClip enemyHit;
     private AudioClip click;
 
+    //stuff for indicator
+    private GameObject indicatorFolder;
+    private List<IndicatorTile> indicatorTiles;
+
     // Use this for initialization
     void Start()
     {
@@ -97,8 +101,14 @@ public class GameManager : MonoBehaviour
         enemyFolder.name = "Enemies";
         enemies = new List<Enemy>();
 
+        //create indicator stuff
+        indicatorFolder = new GameObject();
+        indicatorFolder.name = "Indicator Tiles";
+        //indicator = new IndicatorTile[4, boardHeight];
+        indicatorTiles = new List<IndicatorTile>();
+
         makeLevel();
-		    buildBoard ();
+		buildBoard ();
         makeOverlay();
 
         //set the camera based on aspect ratio
@@ -393,6 +403,7 @@ public class GameManager : MonoBehaviour
         enemynum = 0;
         enemybeaten = 0;
         //numTiles = 0;
+        destoryIndicator();
 
         PlayMusic(idle);
 
@@ -402,15 +413,16 @@ public class GameManager : MonoBehaviour
     }
 
     public void restartLevel()
-	  {
-		    destroyEnemies();
-		    destroyBoard();
-		    destroyBullets ();
-		    numBeats = 0;
-		    started = false;
-		    addEnemies ();
-		    buildBoard ();
-	  }
+    {
+        destroyEnemies();
+        destroyBoard();
+        destroyBullets();
+        destoryIndicator();
+        numBeats = 0;
+        started = false;
+        addEnemies();
+        buildBoard();
+    }
 
     // set constraints based on level
     private void setConstraints()
@@ -668,6 +680,8 @@ public class GameManager : MonoBehaviour
         enemies.Add(enemy);
         enemynum++;
         enemy.name = "Enemy " + enemies.Count;
+
+        addIndicatorTile(enemyType, initHealth, x, y);
     }
 
 
@@ -771,7 +785,7 @@ public class GameManager : MonoBehaviour
             makeLevel();
        }
         //labels for how many towers are left
-       	GUI.Label(new Rect(540, 25, 110, 110), "LEVEL " + level.ToString());
+       	GUI.Label(new Rect(Screen.width / 2 - traywidth / 2, trayspace, traywidth, traywidth), "LEVEL " + level.ToString());
 
         GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace + traywidth, 110, 110), constraint0.ToString());
         GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 2 + traywidth * 2, 110, 110), constraint1.ToString());
@@ -962,7 +976,7 @@ public class GameManager : MonoBehaviour
         mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
         mat.color = new Color(1, 1, 1);
         background.transform.position = new Vector3(5, 3, 1);
-        background.transform.localScale = new Vector3(24, 12, 0);
+        background.transform.localScale = new Vector3(24, 18, 0);
 
         //panel to conceal enemies
         background = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -986,5 +1000,31 @@ public class GameManager : MonoBehaviour
         this.music.loop = true;
         this.music.clip = clip;
         this.music.Play();
+    }
+
+    //fills in the rectangle on the indicator that corresponds to the enemy
+    private void addIndicatorTile(int type, int health, int x, int y)
+    {
+        if ((x < 0) && (x > -5))
+        {
+            GameObject indicatorObject = new GameObject(); // create empty game object
+            IndicatorTile tile4 = indicatorObject.AddComponent<IndicatorTile>(); // add tile script to object
+            tile4.transform.parent = indicatorFolder.transform; // make the tile folder its parent
+            tile4.transform.position = new Vector3(x / 2f - 1.75f, y, -.75f);
+            tile4.init(type, health, this); // initialize the tile
+            indicatorTiles.Add(tile4);
+            tile4.name = "Indicator Tile " + indicatorTiles.Count; // name tile for easy finding
+        }
+    }
+
+    //removes all the indicator tiles and resets the list
+    private void destoryIndicator()
+    {
+        for (int i = 0; i < indicatorTiles.Count; i++)
+        {
+            DestroyImmediate(indicatorTiles[i].gameObject);
+        }
+        indicatorTiles = null;
+        indicatorTiles = new List<IndicatorTile>();
     }
 }
