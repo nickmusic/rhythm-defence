@@ -21,6 +21,9 @@ public class enemyModel : MonoBehaviour
 	private int beat;
 	private int damagebuf;
 	private int moveto;
+	private int damageint;
+	private float healthbuf;
+	private float beatspeed;
 
 
 	public void init(int enemyType, int initHealth, Enemy owner) {
@@ -30,7 +33,10 @@ public class enemyModel : MonoBehaviour
 		healthval = initHealth;
 		beat = 0;
 		damagebuf = 0;
+		damageint = 0;
 		moveto = (int)owner.enemyx;
+		healthbuf = -1*(this.owner.m.getBeat());
+		beatspeed = this.owner.m.getBeat ();
 
 		// set up rhythm of enemy
 		if (enemyType == 0) {
@@ -80,18 +86,29 @@ public class enemyModel : MonoBehaviour
 		}
 
 		if (transform.position.x < moveto) {
-			transform.position = new Vector3 (transform.position.x+owner.m.getBeat()/5, transform.position.y, 0);
+			transform.position = new Vector3 (transform.position.x + owner.m.getBeat () / 8, transform.position.y, 0);
+		} else {
+			transform.position = new Vector3 (moveto, transform.position.y, 0);
 		}
+
+		if (damageint == 1) {
+			if (Mathf.Abs(transform.position.x - moveto)<=0.2) {
+				healthcolor -= (float)(0.4-0.1*(moverhythm/2));
+				mat.color = new Color (1, 1, 1, healthcolor);
+				healthval -= 1;
+				damageint = 0;
+				healthbuf = clock;
+			}
+		}
+			
 	}
 
 	public void damage(int numBeats){
-		if (numBeats >= 1 + damagebuf ) {
+		if (numBeats >= damagebuf ) {
 			damagebuf = numBeats;
-			healthcolor -= (float)(0.4-0.1*(moverhythm/2));
-			mat.color = new Color (1, 1, 1, healthcolor);
-			healthval -= 1;
+			healthbuf = clock;
+			damageint = 1;	
 		}
-
 	}
 
 	public void destroy(){
