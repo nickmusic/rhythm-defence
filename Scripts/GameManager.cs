@@ -29,9 +29,9 @@ public class GameManager : MonoBehaviour
     Texture2D bluetexture; // texture for blue tower
 
     Texture2D levels; // texture for blue tower
-	Texture2D restart;
-	Texture2D start;
-	Texture2D next;
+    Texture2D restart;
+    Texture2D start;
+    Texture2D next;
 
     // Beat tracking
     private float clock;
@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour
     //stuff for indicator
     private GameObject indicatorFolder;
     private List<IndicatorTile> indicatorTiles;
+
+    private GameObject titlePage;
 
     // Use this for initialization
     void Start()
@@ -108,7 +110,7 @@ public class GameManager : MonoBehaviour
         indicatorTiles = new List<IndicatorTile>();
 
         makeLevel();
-		buildBoard ();
+        buildBoard();
         makeOverlay();
 
         //set the camera based on aspect ratio
@@ -151,16 +153,13 @@ public class GameManager : MonoBehaviour
             trayspace = Screen.height / 30;
         }
 
-
-        if (level != 100 && level !=99){
-			var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-			Material mat = background.GetComponent<Renderer>().material;
-			mat.shader = Shader.Find("Sprites/Default");
-			mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
-			mat.color = new Color(1, 1, 1);
-			background.transform.position = new Vector3(5, 3, 1);
-			background.transform.localScale = new Vector3(20, 10, 0);
-		}
+        titlePage = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        Material mat = titlePage.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/titlePage");
+        mat.color = new Color(1, 1, 1);
+        titlePage.transform.position = new Vector3(4, 3, -2);
+        titlePage.transform.localScale = new Vector3(20, 14, 0);
 
         // setting up music
         SoundSetUp();
@@ -169,9 +168,10 @@ public class GameManager : MonoBehaviour
     }
 
 
-	public float getBeat(){
-		return BEAT;
-	}
+    public float getBeat()
+    {
+        return BEAT;
+    }
 
 
     private void SoundSetUp()
@@ -225,7 +225,7 @@ public class GameManager : MonoBehaviour
                 List<Bullet> bullets = towers[i].getBullets();
                 for (int j = 0; j < bullets.Count; j++)
                 {
-					int a = onTile(bullets[j].getX(), bullets[j].getY());
+                    int a = onTile(bullets[j].getX(), bullets[j].getY());
                     if (!currentbullets.Contains(a))
                     {
                         currentbullets.Add(a);
@@ -234,24 +234,29 @@ public class GameManager : MonoBehaviour
             }
 
             // Update interaction between enemies and bullets
-            for (int i = 0; i < enemies.Count; i++) {
-				          Enemy enemy = enemies [i];
-				          int h = enemy.getHealth ();
-				          if (enemy.getHealth () == 0) {
-							PlayEffect (enemyDead);
-					        enemy.destroy ();
-					        enemies.Remove (enemy);
-					enemybeaten += 1;
-				          } else {
-					            for (int j = 0; j < currentbullets.Count; j++) {
-						              int b = onTile (enemy.getX (), enemy.getY ());
-						              if (b == currentbullets [j]) {
-							                enemy.damage (numBeats);
-							                break;
-						              }
-					            }
-				          }
-			      }
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                Enemy enemy = enemies[i];
+                int h = enemy.getHealth();
+                if (enemy.getHealth() == 0)
+                {
+                    PlayEffect(enemyDead);
+                    enemy.destroy();
+                    enemies.Remove(enemy);
+                    enemybeaten += 1;
+                }
+                else {
+                    for (int j = 0; j < currentbullets.Count; j++)
+                    {
+                        int b = onTile(enemy.getX(), enemy.getY());
+                        if (b == currentbullets[j])
+                        {
+                            enemy.damage(numBeats);
+                            break;
+                        }
+                    }
+                }
+            }
             currentbullets.Clear();
         }
     }
@@ -339,9 +344,9 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < towers.Count; i++)
         {
             towers[i].eraseBullets();
-			int x = (int)towers [i].transform.position.x;
-			int y = (int)towers [i].transform.position.y;
-			board [x, y].setHasTower (false);
+            int x = (int)towers[i].transform.position.x;
+            int y = (int)towers[i].transform.position.y;
+            board[x, y].setHasTower(false);
             DestroyImmediate(towers[i].gameObject);
         }
         towers = null;
@@ -382,12 +387,14 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void makeLevel() {
-    	if (level != 100 && level !=99){
-        addEnemies ();
-        setConstraints ();
+    private void makeLevel()
+    {
+        if (level != 100 && level != 99)
+        {
+            addEnemies();
+            setConstraints();
         }
-	}
+    }
 
 
 
@@ -736,206 +743,217 @@ public class GameManager : MonoBehaviour
 
     {
 
-	if (level == 100){ //level selction
-		for (int i = 1; i < 7; i++) {
-			for (int j = 1; j<4;j++){
-				int t=(j-1)*6+i;
-            if (GUI.Button(new Rect(i*150, 150*j-50, 110, 110), t.ToString())) {
-					resetLevel ();
-	                level = t;
-					makeLevel();
-	            }
-            }
-        }
-            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
-    }
-
-    if (level == 99){ //level selction
-         GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
-         myStyle.fontSize = 40;
-
-    	GUI.Label(new Rect(Screen.width/2-400/2, 100, 400, 100), "RHYTHM  DEFENCE",myStyle);
-        GUI.Label(new Rect(Screen.width/2-50, 200, 330, 30), "Red Panda Games ");
-        if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2, 200, 50), "START GAME")) {
-            level = 1;
-            makeLevel();
-            }
-        if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2+150, 200, 50), "SELECT LEVEL")) {
-            level = 100;
-            makeLevel();
-            }
-
-            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
-    }
-
-
-    if (level !=100 && level !=99){
-
-
-       if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels") ){
-       	    level = 100;
-            makeLevel();
-       }
-        //labels for how many towers are left
-       	GUI.Label(new Rect(Screen.width / 2 - traywidth / 2, trayspace, traywidth, traywidth), "LEVEL " + level.ToString());
-
-        GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace + traywidth, 110, 110), constraint0.ToString());
-        GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 2 + traywidth * 2, 110, 110), constraint1.ToString());
-        GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 3 + traywidth * 3, 110, 110), constraint2.ToString());
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-               Application.Quit();
-        }
-
-
-        if (!started)
-        {
-            if (GUI.Button(new Rect(trayspace, trayspace, traywidth, traywidth / 3), "START (S)") || Input.GetKeyDown(KeyCode.S))
+        if (level == 100)
+        { //level selction
+            for (int i = 1; i < 7; i++)
             {
-                started = true;
-                PlayEffect(click);
-                PlayMusic(gametrack);
+                for (int j = 1; j < 4; j++)
+                {
+                    int t = (j - 1) * 6 + i;
+                    if (GUI.Button(new Rect(i * 150, 150 * j - 50, 110, 110), t.ToString()))
+                    {
+                        resetLevel();
+                        level = t;
+                        makeLevel();
+                    }
+                }
             }
-        }
-        if (enemybeaten==enemynum){
-            GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
-         	myStyle.fontSize = 80;
-            GUIStyle myStyle2 = new GUIStyle (GUI.skin.GetStyle("label"));
-         	myStyle2.fontSize = 30;
-     		GUI.Label(new Rect(Screen.width/2-600/2, 100, 600, 100), "YOU GOT IT!",myStyle);
-        	GUI.Label(new Rect(Screen.width/2-250, 200, 500, 100), "Press 'Space' to next level",myStyle2);
-        	if (GUI.Button(new Rect(Screen.width/2-80, 300, 80, 80), image: next)|| Input.GetKeyDown(KeyCode.Space) ) {
-        		enemynum=0;
-                enemybeaten = 0;
-                level++;
-                resetLevel() ;
-
-        	}
-
-        }
-
-
-
-        if (placing)
-        {
-            // if the rotate button is pressed
-
-			if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") || Input.GetKeyDown(KeyCode.Q))
+            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") || Input.GetKeyDown(KeyCode.Escape))
             {
-                PlayEffect(click);
-                currentTower.rotate(); // rotate the tower being placed
+                Application.Quit();
             }
-        }
-
-
-        if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
-
-        {
-            PlayEffect(click);
-            resetLevel();
 
         }
 
-        // button for RED tower
+        if (level == 99)
+        { //level selction
+            GUIStyle myStyle = new GUIStyle(GUI.skin.GetStyle("label"));
+            myStyle.fontSize = 40;
 
-        if (GUI.Button(new Rect(trayx, trayspace, traywidth, traywidth), image: redtexture) || Input.GetKeyDown(KeyCode.Alpha1))
+            if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2, 200, 50), "START GAME"))
+            {
+                level = 1;
+                makeLevel();
+                DestroyImmediate(titlePage);
+            }
+            if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 + 150, 200, 50), "SELECT LEVEL"))
+            {
+                level = 100;
+                makeLevel();
+                DestroyImmediate(titlePage);
+            }
+
+            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") || Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+
+        }
+
+
+        if (level != 100 && level != 99)
         {
-            PlayEffect(click);
+
+
+            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels"))
+            {
+                level = 100;
+                makeLevel();
+            }
+            //labels for how many towers are left
+            GUI.Label(new Rect(Screen.width / 2 - traywidth / 2, trayspace, traywidth, traywidth), "LEVEL " + level.ToString());
+
+            GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace + traywidth, 110, 110), constraint0.ToString());
+            GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 2 + traywidth * 2, 110, 110), constraint1.ToString());
+            GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 3 + traywidth * 3, 110, 110), constraint2.ToString());
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+
+
+            if (!started)
+            {
+                if (GUI.Button(new Rect(trayspace, trayspace, traywidth, traywidth / 3), "START (S)") || Input.GetKeyDown(KeyCode.S))
+                {
+                    started = true;
+                    PlayEffect(click);
+                    PlayMusic(gametrack);
+                }
+            }
+            if (enemybeaten == enemynum)
+            {
+                GUIStyle myStyle = new GUIStyle(GUI.skin.GetStyle("label"));
+                myStyle.fontSize = 80;
+                GUIStyle myStyle2 = new GUIStyle(GUI.skin.GetStyle("label"));
+                myStyle2.fontSize = 30;
+                GUI.Label(new Rect(Screen.width / 2 - 600 / 2, 100, 600, 100), "YOU GOT IT!", myStyle);
+                GUI.Label(new Rect(Screen.width / 2 - 250, 200, 500, 100), "Press 'Space' to next level", myStyle2);
+                if (GUI.Button(new Rect(Screen.width / 2 - 80, 300, 80, 80), image: next) || Input.GetKeyDown(KeyCode.Space))
+                {
+                    enemynum = 0;
+                    enemybeaten = 0;
+                    level++;
+                    resetLevel();
+
+                }
+
+            }
+
+
 
             if (placing)
             {
-                int type = currentTower.getTowerType();
-                destroyTower(currentTower);
-                if (type == 0) // if already placing that tower, stop placing
+                // if the rotate button is pressed
+
+                if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") || Input.GetKeyDown(KeyCode.Q))
                 {
-                    placing = false;
-                    constraint0 += 1;
+                    PlayEffect(click);
+                    currentTower.rotate(); // rotate the tower being placed
                 }
-                else if (constraint0 > 0) // if placing another tower, switch to this one if one is left
+            }
+
+
+            if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
+
+            {
+                PlayEffect(click);
+                resetLevel();
+
+            }
+
+            // button for RED tower
+
+            if (GUI.Button(new Rect(trayx, trayspace, traywidth, traywidth), image: redtexture) || Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                PlayEffect(click);
+
+                if (placing)
                 {
-                    if (type == 1) { constraint1 += 1; }
-                    if (type == 2) { constraint2 += 1; }
+                    int type = currentTower.getTowerType();
+                    destroyTower(currentTower);
+                    if (type == 0) // if already placing that tower, stop placing
+                    {
+                        placing = false;
+                        constraint0 += 1;
+                    }
+                    else if (constraint0 > 0) // if placing another tower, switch to this one if one is left
+                    {
+                        if (type == 1) { constraint1 += 1; }
+                        if (type == 2) { constraint2 += 1; }
+                        addTower(0);
+                        constraint0 = constraint0 - 1;
+                    }
+                }
+                else if (constraint0 > 0) // if not already placing, start placing this one if one is left
+                {
                     addTower(0);
                     constraint0 = constraint0 - 1;
+                    placing = true;
                 }
             }
-            else if (constraint0 > 0) // if not already placing, start placing this one if one is left
+            // button for GREEN tower
+            if (GUI.Button(new Rect(trayx, traywidth + trayspace * 2, traywidth, traywidth), image: greentexture) || Input.GetKeyDown(KeyCode.Alpha2))
             {
-                addTower(0);
-                constraint0 = constraint0 - 1;
-                placing = true;
-            }
-        }
-        // button for GREEN tower
-        if (GUI.Button(new Rect(trayx, traywidth + trayspace * 2, traywidth, traywidth), image: greentexture) || Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            PlayEffect(click);
+                PlayEffect(click);
 
-            if (placing)
-            {
-                int type = currentTower.getTowerType();
-                destroyTower(currentTower);
-                if (type == 1) // if already placing that tower, stop placing
+                if (placing)
                 {
-                    placing = false;
-                    constraint1 += 1;
+                    int type = currentTower.getTowerType();
+                    destroyTower(currentTower);
+                    if (type == 1) // if already placing that tower, stop placing
+                    {
+                        placing = false;
+                        constraint1 += 1;
+                    }
+                    else if (constraint1 > 0) // if placing another tower, switch to this one if one is left
+                    {
+                        if (type == 0) { constraint0 += 1; }
+                        if (type == 2) { constraint2 += 1; }
+                        addTower(1);
+                        constraint1 = constraint1 - 1;
+                    }
                 }
-                else if (constraint1 > 0) // if placing another tower, switch to this one if one is left
+                else if (constraint1 > 0) // if not already placing, start placing this one if one is left
                 {
-                    if (type == 0) { constraint0 += 1; }
-                    if (type == 2) { constraint2 += 1; }
                     addTower(1);
                     constraint1 = constraint1 - 1;
+                    placing = true;
                 }
             }
-            else if (constraint1 > 0) // if not already placing, start placing this one if one is left
+            // button for BLUE tower
+            if (GUI.Button(new Rect(trayx, traywidth * 2 + trayspace * 3, traywidth, traywidth), image: bluetexture) || Input.GetKeyDown(KeyCode.Alpha3))
             {
-                addTower(1);
-                constraint1 = constraint1 - 1;
-                placing = true;
-            }
-        }
-        // button for BLUE tower
-        if (GUI.Button(new Rect(trayx, traywidth * 2 + trayspace * 3, traywidth, traywidth), image: bluetexture) || Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            PlayEffect(click);
+                PlayEffect(click);
 
-            if (placing)
-            {
-                int type = currentTower.getTowerType(); // previous tower type
-                destroyTower(currentTower);
-                if (type == 2) // if already placing that tower, stop placing
+                if (placing)
                 {
-                    placing = false;
-                    constraint2 += 1;
+                    int type = currentTower.getTowerType(); // previous tower type
+                    destroyTower(currentTower);
+                    if (type == 2) // if already placing that tower, stop placing
+                    {
+                        placing = false;
+                        constraint2 += 1;
+                    }
+                    else if (constraint2 > 0) // if placing another tower, switch to this one if one is left
+                    {
+                        if (type == 0) { constraint0 += 1; }
+                        if (type == 1) { constraint1 += 1; }
+                        addTower(2);
+                        constraint2 = constraint2 - 1;
+                    }
                 }
-                else if (constraint2 > 0) // if placing another tower, switch to this one if one is left
+                else if (constraint2 > 0) // if not already placing, start placing this one if one is left
                 {
-                    if (type == 0) { constraint0 += 1; }
-                    if (type == 1) { constraint1 += 1; }
                     addTower(2);
                     constraint2 = constraint2 - 1;
+                    placing = true;
                 }
-            }
-            else if (constraint2 > 0) // if not already placing, start placing this one if one is left
-            {
-                addTower(2);
-                constraint2 = constraint2 - 1;
-                placing = true;
-            }
 
+            }
+            //GUI.color=Color.black;
+            //GUI.Label(new Rect(90, 20, 110, 110), "LEVEL "+level.ToString());
         }
-    	//GUI.color=Color.black;
-        //GUI.Label(new Rect(90, 20, 110, 110), "LEVEL "+level.ToString());
-   }
     }
 
 
