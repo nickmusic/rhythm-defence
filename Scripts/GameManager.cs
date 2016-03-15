@@ -78,10 +78,10 @@ public class GameManager : MonoBehaviour
         redtexture = Resources.Load<Texture2D>("Textures/redTower");
         greentexture = Resources.Load<Texture2D>("Textures/greenTower");
         bluetexture = Resources.Load<Texture2D>("Textures/blueTower");
-        levels = Resources.Load<Texture2D>("Textures/levels");        
-        restart = Resources.Load<Texture2D>("Textures/restart");          
+        levels = Resources.Load<Texture2D>("Textures/levels");
+        restart = Resources.Load<Texture2D>("Textures/restart");
         start = Resources.Load<Texture2D>("Textures/start");
-        next = Resources.Load<Texture2D>("Textures/next");    
+        next = Resources.Load<Texture2D>("Textures/next");
         // set up folder for tiles
         tileFolder = new GameObject();
         tileFolder.name = "Tiles";
@@ -98,8 +98,7 @@ public class GameManager : MonoBehaviour
         enemies = new List<Enemy>();
 
         makeLevel();
-		buildBoard ();
-
+		    buildBoard ();
         makeOverlay();
 
         //set the camera based on aspect ratio
@@ -323,6 +322,7 @@ public class GameManager : MonoBehaviour
     {
         towers.Remove(tower);
         Destroy(tower.gameObject);
+		print ("destroy 1");
     }
 
     private void destroyTowers()
@@ -330,7 +330,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < towers.Count; i++)
         {
             towers[i].eraseBullets();
+			int x = (int)towers [i].transform.position.x;
+			int y = (int)towers [i].transform.position.y;
+			board [x, y].setHasTower (false);
             DestroyImmediate(towers[i].gameObject);
+			print ("destroy 2");
         }
         towers = null;
         towers = new List<Tower>();
@@ -746,11 +750,11 @@ public class GameManager : MonoBehaviour
         GUI.Label(new Rect(Screen.width/2-50, 200, 330, 30), "Red Panda Games ");
         if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2, 200, 50), "START GAME")) {
             level = 1;
-            makeLevel();     
+            makeLevel();
             }
         if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2+150, 200, 50), "SELECT LEVEL")) {
             level = 100;
-            makeLevel();      
+            makeLevel();
             }
 
             if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
@@ -760,13 +764,13 @@ public class GameManager : MonoBehaviour
 
     }
 
-        
+
     if (level !=100 && level !=99){
 
 
        if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels") ){
        	    level = 100;
-            makeLevel();      
+            makeLevel();
        }
         //labels for how many towers are left
        	GUI.Label(new Rect(540, 25, 110, 110), "LEVEL " + level.ToString());
@@ -792,13 +796,13 @@ public class GameManager : MonoBehaviour
         if (enemybeaten==enemynum){
             GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
          	myStyle.fontSize = 80;
-            GUIStyle myStyle2 = new GUIStyle (GUI.skin.GetStyle("label"));         	
+            GUIStyle myStyle2 = new GUIStyle (GUI.skin.GetStyle("label"));
          	myStyle2.fontSize = 30;
      		GUI.Label(new Rect(Screen.width/2-600/2, 100, 600, 100), "YOU GOT IT!",myStyle);
-        	GUI.Label(new Rect(Screen.width/2-250, 200, 500, 100), "Press 'Space' to next level",myStyle2);   
-        	if (GUI.Button(new Rect(Screen.width/2-80, 300, 80, 80), image: next)|| Input.GetKeyDown(KeyCode.Space) ) {      		
-        		enemynum=0;  
-                enemybeaten = 0; 	
+        	GUI.Label(new Rect(Screen.width/2-250, 200, 500, 100), "Press 'Space' to next level",myStyle2);
+        	if (GUI.Button(new Rect(Screen.width/2-80, 300, 80, 80), image: next)|| Input.GetKeyDown(KeyCode.Space) ) {
+        		enemynum=0;
+                enemybeaten = 0;
                 level++;
                 resetLevel() ;
 
