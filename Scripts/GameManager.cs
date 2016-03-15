@@ -780,7 +780,7 @@ public class GameManager : MonoBehaviour
 
         if (level == 99)
         { //level selction
-            GUIStyle myStyle = new GUIStyle(GUI.skin.GetStyle("label"));
+             GUIStyle myStyle = new GUIStyle(GUI.skin.GetStyle("label"));
             myStyle.fontSize = 40;
 
             if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2, 200, 50), "START GAME"))
@@ -801,6 +801,7 @@ public class GameManager : MonoBehaviour
                 Application.Quit();
             }
 
+
         }
 
 
@@ -816,7 +817,7 @@ public class GameManager : MonoBehaviour
         //labels for how many towers are left
         GUIStyle MyStyle = new GUIStyle (GUI.skin.GetStyle("label"));
         MyStyle.fontSize = 25;
-            GUI.Label(new Rect(Screen.width / 2 - traywidth / 2, trayspace, traywidth, traywidth), "LEVEL " + level.ToString(),MyStyle);
+            GUI.Label(new Rect(Screen.width / 2 - traywidth / 2, trayspace, traywidth*2, traywidth*2), "LEVEL " + level.ToString(),MyStyle);
 
 
             GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace + traywidth, 110, 110), constraint0.ToString());
