@@ -526,8 +526,8 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 7)
         {
-            constraint0 = 0;
-            constraint1 = 2;
+            constraint0 = 3;
+            constraint1 = 0;
             constraint2 = 0;
         }
         else if (level == 10)
