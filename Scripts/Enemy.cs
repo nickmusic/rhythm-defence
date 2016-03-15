@@ -15,9 +15,6 @@ public class Enemy : MonoBehaviour {
 	private float enemyy;
 	public GameManager m;		// A pointer to the manager (not needed here, but potentially useful in general).
 
-	// The Start function is good for initializing objects, but doesn't allow you to pass in parameters.
-	// For any initialization that requires input, you'll probably want your own init function. 
-
 	public void init(int enemyType, int initHealth, GameManager m, float x, float y) {
 		this.enemyType = enemyType;
 		this.initHealth = initHealth;
@@ -53,6 +50,6 @@ public class Enemy : MonoBehaviour {
 	public void destroy(){
 		model.destroy ();
 	}
-
+		
 }
 
