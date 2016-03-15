@@ -976,7 +976,7 @@ public class GameManager : MonoBehaviour
         mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
         mat.color = new Color(1, 1, 1);
         background.transform.position = new Vector3(5, 3, 1);
-        background.transform.localScale = new Vector3(24, 12, 0);
+        background.transform.localScale = new Vector3(24, 18, 0);
 
         //panel to conceal enemies
         background = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -1009,8 +1009,8 @@ public class GameManager : MonoBehaviour
         {
             GameObject indicatorObject = new GameObject(); // create empty game object
             IndicatorTile tile4 = indicatorObject.AddComponent<IndicatorTile>(); // add tile script to object
-            tile4.transform.parent = tileFolder.transform; // make the tile folder its parent
-            tile4.transform.position = new Vector3(x / 2 - 2.25f, y, -2);
+            tile4.transform.parent = indicatorFolder.transform; // make the tile folder its parent
+            tile4.transform.position = new Vector3(x / 2f - 1.75f, y, -.75f);
             tile4.init(type, health, this); // initialize the tile
             indicatorTiles.Add(tile4);
             tile4.name = "Indicator Tile " + indicatorTiles.Count; // name tile for easy finding
