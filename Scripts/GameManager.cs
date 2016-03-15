@@ -322,7 +322,6 @@ public class GameManager : MonoBehaviour
     {
         towers.Remove(tower);
         Destroy(tower.gameObject);
-		print ("destroy 1");
     }
 
     private void destroyTowers()
@@ -334,7 +333,6 @@ public class GameManager : MonoBehaviour
 			int y = (int)towers [i].transform.position.y;
 			board [x, y].setHasTower (false);
             DestroyImmediate(towers[i].gameObject);
-			print ("destroy 2");
         }
         towers = null;
         towers = new List<Tower>();
