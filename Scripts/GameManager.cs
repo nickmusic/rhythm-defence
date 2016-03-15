@@ -1,8 +1,6 @@
 
 using UnityEngine;
 using System.Collections;
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System;
 
@@ -41,12 +39,31 @@ public class GameManager : MonoBehaviour
     private float BEAT = .5f;
     private int numBeats = 0;
     int enemybeaten = 0;
-    int enemynum=0;
+    int enemynum = 0;
 
     // Level number
 
-    public int level = 100;
+    private int level = 99;
 
+
+    //button locations
+    float trayx = 0;
+    float traywidth = 0;
+    float trayspace = 0;
+
+    // Sound stuff 
+    public AudioSource music;
+    public AudioSource sfx;
+
+    // Music clips
+    private AudioClip idle;
+    private AudioClip gametrack;
+    private AudioClip winmusic;
+
+    // Sound effect clips
+    private AudioClip enemyDead;
+    private AudioClip enemyHit;
+    private AudioClip click;
 
     // Use this for initialization
     void Start()
@@ -82,6 +99,50 @@ public class GameManager : MonoBehaviour
         enemies = new List<Enemy>();
 
         makeLevel();
+		buildBoard ();
+
+        makeOverlay();
+
+        //set the camera based on aspect ratio
+        Camera cam = GameObject.Find("Main Camera").GetComponent<Camera>();
+        cam.transform.position = new Vector3(4, 3, -10);
+        float aspect = (float)Math.Round(cam.aspect, 2);
+        if (aspect == 1.25) //5:4
+        {
+            cam.orthographicSize = 6.75f;
+            trayx = Screen.width - (Screen.width / 8);
+            traywidth = Screen.width / 9;
+            trayspace = Screen.height / 48;
+        }
+        else if (aspect == 1.33f) //4:3
+        {
+            cam.orthographicSize = 6.25f;
+            trayx = Screen.width - (Screen.width / 8.5f);
+            traywidth = Screen.width / 9.5f;
+            trayspace = Screen.height / 46;
+        }
+        else if (aspect == 1.5f) //3:2
+        {
+            cam.orthographicSize = 5.75f;
+            trayx = Screen.width - (Screen.width / 8);
+            traywidth = Screen.width / 9;
+            trayspace = Screen.height / 36;
+        }
+        else if (aspect == 1.6f) //16:10
+        {
+            cam.orthographicSize = 5.25f;
+            trayx = Screen.width - (Screen.width / 8.5f);
+            traywidth = Screen.width / 9.5f;
+            trayspace = Screen.height / 44;
+        }
+        else if (aspect == 1.78f) //16:9
+        {
+            cam.orthographicSize = 4.85f; // 5:4
+            trayx = Screen.width - (Screen.width / 8);
+            traywidth = Screen.width / 9;
+            trayspace = Screen.height / 30;
+        }
+
 
         if (level != 100 && level !=99){
 		var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -93,53 +154,88 @@ public class GameManager : MonoBehaviour
 		background.transform.localScale = new Vector3(20, 10, 0);
 	}
 
+        // setting up music
+        SoundSetUp();
+
+
+        PlayMusic(idle);
+    }
+
+    private void SoundSetUp()
+    {
+        // music
+        idle = Resources.Load<AudioClip>("Music/title song");
+        gametrack = Resources.Load<AudioClip>("Music/Main song loop");
+        winmusic = Resources.Load<AudioClip>("Music/You Win Song");
+
+        // sfx
+        enemyDead = Resources.Load<AudioClip>("Music/enemy defeated");
+        enemyHit = Resources.Load<AudioClip>("Music/enemy hit by tower");
+        click = Resources.Load<AudioClip>("Music/Mouse Click");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (this.started) {
+        if (enemybeaten > 0 && enemynum == enemybeaten && music.clip != winmusic)
+        {
+            PlayMusic(winmusic);
+        }
+
+        if (this.started)
+        {
             // Beat counting
             clock = clock + Time.deltaTime;
 
-            if (clock - startTime >= BEAT) {
+            if (clock - startTime >= BEAT)
+            {
                 startTime = clock; // Resets counter for next beat
 
                 // Makes every tower fire
-                for (int i = 0; i < towers.Count; i++) {
+                for (int i = 0; i < towers.Count; i++)
+                {
                     towers[i].shoot(numBeats);
                 }
 
                 // Makes every enemy move
-                for (int i = 0; i < enemies.Count; i++) {
+                for (int i = 0; i < enemies.Count; i++)
+                {
                     enemies[i].move(numBeats);
                 }
                 numBeats++;
             }
 
             // Update the current bullets
-            for (int i = 0; i < towers.Count; i++) {
+            for (int i = 0; i < towers.Count; i++)
+            {
                 List<Bullet> bullets = towers[i].getBullets();
-                for (int j = 0; j < bullets.Count; j++) {
+                for (int j = 0; j < bullets.Count; j++)
+                {
                     int a = onTile(bullets[j].transform.position.x, bullets[j].transform.position.y);
-                    if (!currentbullets.Contains(a)) {
+                    if (!currentbullets.Contains(a))
+                    {
                         currentbullets.Add(a);
                     }
                 }
             }
 
             // Update interaction between enemies and bullets
-            for (int i = 0; i < enemies.Count; i++) {
+            for (int i = 0; i < enemies.Count; i++)
+            {
                 Enemy enemy = enemies[i];
                 int h = enemy.getHealth();
-                for (int j = 0; j < currentbullets.Count; j++) {
+                for (int j = 0; j < currentbullets.Count; j++)
+                {
                     int b = onTile(enemy.getX(), enemy.getY());
-                    if (b == currentbullets[j]) {
+                    if (b == currentbullets[j])
+                    {
                         enemy.damage(numBeats);
-                        if (enemy.getHealth() == 0) {
+                        if (enemy.getHealth() == 0)
+                        {
+                            PlayEffect(enemyDead);
                             enemy.destroy();
                             enemies.Remove(enemy);
-                            enemybeaten +=1;
+                            enemybeaten += 1;
                         }
                         break;
                     }
@@ -155,7 +251,7 @@ public class GameManager : MonoBehaviour
         GameObject tileObject = new GameObject(); // create empty game object
         Tile tile = tileObject.AddComponent<Tile>(); // add tile script to object
         tile.transform.parent = tileFolder.transform; // make the tile folder its parent
-        tile.transform.position = new Vector3(x, y, 0);
+        tile.transform.position = new Vector3(x, y, 1);
         tile.init(x, y, this); // initialize the tile
         board[x, y] = tile; // store the tile in board
         tile.name = "Tile " + numTiles; // name tile for easy finding
@@ -275,9 +371,8 @@ public class GameManager : MonoBehaviour
     private void makeLevel() {
     	if (level != 100 && level !=99){
         addEnemies ();
-        buildBoard ();
         setConstraints ();
-    }
+        }
     }
 
 
@@ -286,206 +381,278 @@ public class GameManager : MonoBehaviour
         destroyTowers();
         if (placing) { DestroyImmediate(currentTower.gameObject); }
         destroyEnemies();
-        destroyBoard();
+        //destroyBoard();
         numBeats = 0;
         started = false;
         placing = false;
-        numTiles = 0;
         enemynum = 0;
         enemybeaten = 0;
+        //numTiles = 0;
+
+        PlayMusic(idle);
+
         makeLevel();
 
 
     }
 
-	// set constraints based on level
-	private void setConstraints() {
-		// Noel's levels
-		if (level == 0) {
-			constraint0 = 0;
-			constraint1 = 0;
-			constraint2 = 2;
-		} else if (level == 1) {
-			constraint0 = 1;
-			constraint1 = 0;
-			constraint2 = 0;
-		} else if (level == 2) {
-			constraint0 = 2;
-			constraint1 = 0;
-			constraint2 = 0;
-		} else if (level == 3) {
-			constraint0 = 2;
-			constraint1 = 0;
-			constraint2 = 0;
-		} else if (level == 4) {
-			constraint0 = 0;
-			constraint1 = 0;
-			constraint2 = 2;
-		} else if (level == 5) {
-			constraint0 = 1;
-			constraint1 = 2;
-			constraint2 = 0;
-		} else if (level == 6) {
-			constraint0 = 0;
-			constraint1 = 0;
-			constraint2 = 1;
-		}
-
-		// Luxing's levels
-        if (level == 20) {
+    // set constraints based on level
+    private void setConstraints()
+    {
+        // Noel's levels
+        if (level == 9)
+        {
+            // 2 health blobs, every other beat
+            constraint0 = 0;
+            constraint1 = 0;
+            constraint2 = 2;
+        }
+        else if (level == 1)
+        {
+            // 1 health blobs, every other beat
+            constraint0 = 1;
+            constraint1 = 0;
+            constraint2 = 0;
+        }
+        else if (level == 2)
+        {
+            // 1 health blobs, every beat
+            constraint0 = 2;
+            constraint1 = 0;
+            constraint2 = 0;
+        }
+        else if (level == 3)
+        {
+            // Stack of two 1 health blobs
+            constraint0 = 2;
+            constraint1 = 0;
+            constraint2 = 0;
+        }
+        else if (level == 4)
+        {
+            // same as previous (stack of two)
             constraint0 = 0;
             constraint1 = 2;
             constraint2 = 0;
-        } else if (level == 21) {
+        }
+        else if (level == 8)
+        {
+            // stack of three 1 health blobs
+            constraint0 = 1;
+            constraint1 = 2;
+            constraint2 = 0;
+        }
+        else if (level == 6)
+        {
+            constraint0 = 0;
+            constraint1 = 0;
+            constraint2 = 1;
+        }
+
+        // Jun's levels
+        else if (level == 11)
+        {
+            constraint0 = 1;
+            constraint1 = 0;
+            constraint2 = 1;
+        }
+        else if (level == 13)
+        {
+            constraint0 = 0;
+            constraint1 = 1;
+            constraint2 = 1;
+        }
+        else if (level == 12)
+        {
+            constraint0 = 0;
+            constraint1 = 0;
+            constraint2 = 2;
+        }
+
+        // Luxing's levels
+        if (level == 5)
+        {
+            constraint0 = 0;
+            constraint1 = 2;
+            constraint2 = 0;
+        }
+        else if (level == 14)
+        {
             constraint0 = 0;
             constraint1 = 0;
             constraint2 = 4;
-        } else if (level == 22) {
-            constraint0 = 1;
+
+        }
+        else if (level == 15)
+        {
+            constraint0 = 0;
             constraint1 = 0;
-            constraint2 = 2;
-        } else if (level == 23) {
+            constraint2 = 3;
+        }
+        else if (level == 7)
+        {
             constraint0 = 0;
             constraint1 = 2;
             constraint2 = 0;
-        } else if (level == 24) {
+        }
+        else if (level == 10)
+        {
             constraint0 = 1;
             constraint1 = 3;
             constraint2 = 0;
-        }             
+        }
     }
 
 
-	// add enemies
-	private void addEnemies(){
-		// Noel's levels
-		if (level == 0) {
-			for (int i = 0; i < 10; i++) {
-				addEnemy (2, 2, (i * -2) - 1, 5);
-				enemynum+=1;
-			}
-		} else if (level == 1) {
-			for (int i = 0; i < 10; i++) {
-				addEnemy (3, 1, (i * -2) - 1, 5);
-				enemynum+=1;
-			}
-		} else if (level == 2) {
-			for (int i = 0; i < 10; i++) {
-				addEnemy (3, 1, (i * -2) - 1, 5);
-				addEnemy (3, 1, (i * -2) - 2, 5);
-			    enemynum+=2;
-			}
-		} else if (level >= 3 && level <= 5) {
-			for (int i = 0; i < 6; i++) {
-				addEnemy (3, 1, (i * -2) - 1, 5);
-				addEnemy (3, 1, (i * -2) - 1, 4);
-				enemynum+=2;
-				if (level == 5) {
-					addEnemy (3, 1, (i * -2) - 1, 3);
-					enemynum+=1;
-				}
-			}
-		} else if (level == 6) {
-			for (int i = 0; i < 6; i++) {
-				addEnemy (3, 1, (i * -4) - 1, 5);
-				addEnemy (3, 1, (i * -4) - 1, 4);
-				addEnemy (3, 1, (i * -4) - 3, 3);
-				enemynum+=3;
-			}
 
-		}
+    // add enemies
+    private void addEnemies()
+    {
+        // Noel's levels
+        if (level == 9)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(2, 2, (i * -2) - 1, 5);
+            }
+        }
+        else if (level == 1)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(3, 1, (i * -2) - 1, 5);
+            }
+        }
+        else if (level == 2)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(3, 1, (i * -2) - 1, 5);
+                addEnemy(3, 1, (i * -2) - 2, 5);
+            }
+        }
+        else if (level == 3 || level == 4 || level == 8)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(3, 1, (i * -2) - 1, 5);
+                addEnemy(3, 1, (i * -2) - 1, 4);
+                if (level == 8)
+                {
+                    addEnemy(3, 1, (i * -2) - 1, 3);
+                }
+            }
+        }
+        else if (level == 6)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(3, 1, (i * -4) - 1, 5);
+                addEnemy(3, 1, (i * -4) - 1, 4);
+                addEnemy(3, 1, (i * -4) - 3, 3);
+            }
 
-		// Jun's levels
-		else if (level == 10) {
-			addEnemy (2, 1, -1, 3);
-			addEnemy (2, 1, -1, 4);
-			addEnemy (2, 1, -1, 5);
-			addEnemy (2, 1, -3, 3);
-			constraint0 = 1;
-			constraint1 = 0;
-			constraint2 = 1;
-			enemynum+=4;
-		} else if (level == 11) {
-			addEnemy (2, 1, -2, 3);
-			addEnemy (2, 1, -2, 4);
-			addEnemy (2, 1, -2, 5);
-			addEnemy (2, 1, -1, 4);
-			addEnemy (2, 1, -3, 4);
-			constraint0 = 0;
-			constraint1 = 1;
-			constraint2 = 1;
-			enemynum+=5;
-		} else if (level == 12) {
-			addEnemy(2, 1, -1, 4);
-			addEnemy(2, 1, -1, 5);
-			addEnemy(2, 1, -3, 3);
-			addEnemy(2, 1, -3, 4);
-			addEnemy(2, 1, -3, 5);
-			addEnemy(2, 1, -3, 6);
-			constraint0 = 0;
-			constraint1 = 0;
-			constraint2 = 2;
-			enemynum+=6;
+        }
 
-		} 
+        // Jun's levels
+        else if (level == 11)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(3, 1, (i * -4) - 1, 5);
+                addEnemy(3, 1, (i * -4) - 1, 4);
+                addEnemy(3, 1, (i * -2) - 1, 3);
+            }
+        }
+        else if (level == 13)
+        {
+            // TODO: test repeating pattern?
+            addEnemy(2, 1, -2, 3);
+            addEnemy(2, 1, -2, 4);
+            addEnemy(2, 1, -2, 5);
+            addEnemy(2, 1, -1, 4);
+            addEnemy(2, 1, -3, 4);
+        }
+        else if (level == 12)
+        {
 
 
-		// Luxing's levels
-		else if (level == 20) {
-			addEnemy (2, 1, -1, 5);
-			addEnemy (2, 1, -3, 5);
-			addEnemy (1, 2, -1, 6);
-			enemynum+=3;
-		} else if (level == 21) {
-			for (int i = 0; i < 6; i++) {
-				addEnemy (2, 1, (i * -2) - 1, 5);
-				enemynum+=1;
-			}
-			for (int i = 0; i < 4; i++) {
-				addEnemy (2, 2, (i * -2) - 1, 3);
-				enemynum+=1;
-			}
-			for (int i = 0; i < 6; i++) {
-				addEnemy (2, 1, (i * -2) - 1, 1);
-				enemynum+=1;
-			}
-		} else if (level == 22){
-            addEnemy (2,1, -1, 3);
-            addEnemy (1,2, -1, 4);
-            addEnemy (0,3, -1, 5);
-            addEnemy (2,1, -3, 5);
-            addEnemy (1,2, -3, 4);
-            addEnemy (0,3, -3, 3);
-			enemynum+=6;
-		} else if (level == 23){
-			for (int i = 0; i < 6; i++) {
-				addEnemy (2, 1, (i * -2) - 1, 5);
-				enemynum+=1;
-			}
-			for (int i = 0; i < 4; i++) {
-				addEnemy (1, 2, (i * -2) - 1, 4);
-				enemynum+=1;
-			}		
-		} else if (level == 24){
-            addEnemy (2,1, -1, 5);
-            addEnemy (2,1, -2, 5);
-            addEnemy (2,1, -1, 6);
-            addEnemy (2,1, -2, 6);
-            addEnemy (1,2, -1, 2);
-			enemynum+=5;
-		}
-	}
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(2, 1, (i * -2) - 1, 5);
+                addEnemy(2, 1, (i * -2) - 1, 4);
+                addEnemy(3, 1, (i * -4) - 3, 3);
+                addEnemy(3, 1, (i * -4) - 3, 6);
 
-	// add a single enemy
-	public void addEnemy(int enemyType, int initHealth, int x, int y){
-		GameObject enemyObject = new GameObject();
-		Enemy enemy = enemyObject.AddComponent<Enemy>();
-		enemy.transform.parent = enemyFolder.transform;
-		enemy.transform.position = new Vector3 (x, y, 0);
-		enemy.init(enemyType, initHealth, this, x, y);
-		enemies.Add(enemy);
-		enemy.name = "Enemy " + enemies.Count;
-	}
+            }
+        }
+
+
+        // Luxing's levels
+        else if (level == 5)
+        {
+            addEnemy(2, 1, -1, 3);
+            addEnemy(2, 1, -3, 3);
+            addEnemy(1, 2, -1, 4);
+        }
+        else if (level == 14)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(2, 1, (i * -2) - 1, 5);
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                addEnemy(2, 2, (i * -2) - 1, 3);
+            }
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(2, 1, (i * -2) - 1, 1);
+            }
+        }
+        else if (level == 15)
+        {
+            addEnemy(2, 1, -1, 3);
+            addEnemy(1, 2, -1, 4);
+            addEnemy(0, 3, -1, 5);
+            addEnemy(2, 1, -3, 5);
+            addEnemy(1, 2, -3, 4);
+            addEnemy(0, 3, -3, 3);
+        }
+        else if (level == 7)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                addEnemy(2, 1, (i * -2) - 1, 5);
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                addEnemy(2, 2, (i * -2) - 1, 3);
+            }
+        }
+        else if (level == 10)
+        {
+            addEnemy(2, 1, -1, 5);
+            addEnemy(2, 1, -2, 5);
+            addEnemy(2, 1, -1, 6);
+            addEnemy(2, 1, -2, 6);
+            addEnemy(1, 2, -1, 2);
+        }
+
+    }
+
+    // add a single enemy
+    public void addEnemy(int enemyType, int initHealth, int x, int y)
+    {
+        GameObject enemyObject = new GameObject();
+        Enemy enemy = enemyObject.AddComponent<Enemy>();
+        enemy.transform.parent = enemyFolder.transform;
+        enemy.transform.position = new Vector3(x, y, 0);
+        enemy.init(enemyType, initHealth, this, x, y);
+        enemies.Add(enemy);
+        enemynum++;
+        enemy.name = "Enemy " + enemies.Count;
+    }
 
 
     private void destroyEnemies()
@@ -499,13 +666,14 @@ public class GameManager : MonoBehaviour
     }
 
 
-	// check the tile the object is on
-	int onTile(float x, float y){
-		int a = (int) Math.Round(x);
-		int b = (int) Math.Round(y);
-		int ontile = a * boardWidth + b;
-		return ontile;
-	}
+    // check the tile the object is on
+    int onTile(float x, float y)
+    {
+        int a = (int)Math.Round(x);
+        int b = (int)Math.Round(y);
+        int ontile = a * boardWidth + b;
+        return ontile;
+    }
 
 
     public bool isStarted()
@@ -537,12 +705,14 @@ public class GameManager : MonoBehaviour
     void OnGUI()
 
     {
+
 	if (level == 100){ //level selction
 		for (int i = 1; i < 7; i++) {
 			for (int j = 1; j<4;j++){
 				int t=(j-1)*6+i;
             if (GUI.Button(new Rect(i*150, 150*j-50, 110, 110), t.ToString())) {
-                Application.LoadLevel (t+1);
+                level = t;
+				makeLevel();
             }
             }
         }
@@ -555,10 +725,12 @@ public class GameManager : MonoBehaviour
     	GUI.Label(new Rect(Screen.width/2-400/2, 100, 400, 100), "RHYTHM  DEFENCE",myStyle);
         GUI.Label(new Rect(Screen.width/2-50, 200, 330, 30), "Red Panda Games ");
         if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2, 200, 50), "START GAME")) {
-            Application.LoadLevel (2);      
+            level = 1;
+            makeLevel();     
             }
         if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2+150, 200, 50), "SELECT LEVEL")) {
-            Application.LoadLevel (1);      
+            level = 100;
+            makeLevel();      
             }
     }
         if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
@@ -574,15 +746,25 @@ public class GameManager : MonoBehaviour
         GUI.Label(new Rect(Screen.width - 155, 340, 110, 110), constraint2.ToString());
 
        if (GUI.Button(new Rect(400+165, 15, 60, 60), image: levels) )
+        //labels for how many towers are left
+        GUI.Label(new Rect(540, 25, 110, 110), "LEVEL " + level.ToString());
+
+        GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace + traywidth, 110, 110), constraint0.ToString());
+        GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 2 + traywidth * 2, 110, 110), constraint1.ToString());
+        GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 3 + traywidth * 3, 110, 110), constraint2.ToString());
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-               Application.LoadLevel (1);
+               Application.Quit();
         }
 
 
         if (!started)
         {
-            if (GUI.Button(new Rect(400+15, 15, 60, 60), image: start) || Input.GetKeyDown(KeyCode.S)) {
+            if (GUI.Button(new Rect(trayspace, trayspace, traywidth, traywidth / 3), "START (S)") || Input.GetKeyDown(KeyCode.S))
+            {
                 started = true;
+                PlayEffect(click);
+                PlayMusic(gametrack);
             }
         }
         if (enemybeaten==enemynum){
@@ -593,10 +775,13 @@ public class GameManager : MonoBehaviour
      		GUI.Label(new Rect(Screen.width/2-600/2, 100, 600, 100), "YOU GOT IT!",myStyle);
         	GUI.Label(new Rect(Screen.width/2-250, 200, 500, 100), "Press 'Space' to next level",myStyle2);   
         	if (GUI.Button(new Rect(Screen.width/2-80, 300, 80, 80), image: next)|| Input.GetKeyDown(KeyCode.Space) ) {      		
-        		enemynum=0;      	
-        		Application.LoadLevel (Application.loadedLevel + 1);
+        		enemynum=0;  
+                enemybeaten = 0; 	
+                level++;
+                resetLevel() ;
 
         	}
+
         }
 
 
@@ -604,22 +789,28 @@ public class GameManager : MonoBehaviour
         if (placing)
         {
             // if the rotate button is pressed
-            if (GUI.Button(new Rect(Screen.width-135, Screen.height - 55, 110, 30), "Rotate")|| Input.GetKeyDown(KeyCode.Q))
+
+			if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") || Input.GetKeyDown(KeyCode.Q))
             {
+                PlayEffect(click);
                 currentTower.rotate(); // rotate the tower being placed
             }
         }
 
-        if (GUI.Button(new Rect(400+90, 15, 60, 60), image: restart)|| Input.GetKeyDown(KeyCode.R) )
+
+        if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
+
         {
+            PlayEffect(click);
             resetLevel();
 
         }
 
-            // button for RED tower
+        // button for RED tower
 
-            if (GUI.Button(new Rect(Screen.width - 135, 25, 110, 110), image: redtexture)|| Input.GetKeyDown(KeyCode.Alpha1))
+        if (GUI.Button(new Rect(trayx, trayspace, traywidth, traywidth), image: redtexture) || Input.GetKeyDown(KeyCode.Alpha1))
         {
+            PlayEffect(click);
 
             if (placing)
             {
@@ -646,8 +837,10 @@ public class GameManager : MonoBehaviour
             }
         }
         // button for GREEN tower
-        if (GUI.Button(new Rect(Screen.width - 135, 160, 110, 110), image: greentexture)|| Input.GetKeyDown(KeyCode.Alpha2))
+        if (GUI.Button(new Rect(trayx, traywidth + trayspace * 2, traywidth, traywidth), image: greentexture) || Input.GetKeyDown(KeyCode.Alpha2))
         {
+            PlayEffect(click);
+
             if (placing)
             {
                 int type = currentTower.getTowerType();
@@ -673,8 +866,10 @@ public class GameManager : MonoBehaviour
             }
         }
         // button for BLUE tower
-        if (GUI.Button(new Rect(Screen.width - 135, 295, 110, 110), image: bluetexture)|| Input.GetKeyDown(KeyCode.Alpha3))
+        if (GUI.Button(new Rect(trayx, traywidth * 2 + trayspace * 3, traywidth, traywidth), image: bluetexture) || Input.GetKeyDown(KeyCode.Alpha3))
         {
+            PlayEffect(click);
+
             if (placing)
             {
                 int type = currentTower.getTowerType(); // previous tower type
@@ -698,7 +893,7 @@ public class GameManager : MonoBehaviour
                 constraint2 = constraint2 - 1;
                 placing = true;
             }
-            
+
         }
     	GUI.color=Color.black;
         GUI.Label(new Rect(90, 20, 110, 110), "LEVEL "+level.ToString());
@@ -706,5 +901,67 @@ public class GameManager : MonoBehaviour
     }
 
 
+    //creates quads for backround images
+    private void makeOverlay()
+    {
+        //the indicator to the left of the board
+        var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        Material mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/indicator");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(-2.2f, 3, -1);
+        background.transform.localScale = new Vector3(4, 8, 0);
+
+        //decoration under the game board (also beat box)
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/wires");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(4, -1.5f, 1);
+        background.transform.localScale = new Vector3(9, 2, 0);
+
+        //panel on the right of the board for towers (includes port thing)
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/towerTray");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(12, 3, 1);
+        background.transform.localScale = new Vector3(7, 14, 0);
+
+        //the background (currently just grey)
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(5, 3, 1);
+        background.transform.localScale = new Vector3(24, 12, 0);
+
+        //panel to conceal enemies
+        background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        mat = background.GetComponent<Renderer>().material;
+        mat.shader = Shader.Find("Sprites/Default");
+        mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+        mat.color = new Color(1, 1, 1);
+        background.transform.position = new Vector3(-3, 3, -.5f);
+        background.transform.localScale = new Vector3(5, 7, 0);
+    }
+
+    // Music section
+    public void PlayEffect(AudioClip clip)
+    {
+        sfx.clip = clip;
+        sfx.Play();
+    }
+
+    public void PlayMusic(AudioClip clip)
+    {
+        this.music.loop = true;
+        this.music.clip = clip;
+        this.music.Play();
+    }
 }
 

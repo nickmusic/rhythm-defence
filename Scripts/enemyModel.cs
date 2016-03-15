@@ -17,6 +17,10 @@ public class enemyModel : MonoBehaviour
 	private int beat;
 	private int damagebuf;
 
+	// sfx
+	private bool atEnd;
+	private AudioClip endsound;
+
 	public void init(int enemyType, int initHealth, Enemy owner) {
 		this.owner = owner;
 		healthcolor = 1;
@@ -55,6 +59,9 @@ public class enemyModel : MonoBehaviour
 			mat.mainTexture = Resources.Load<Texture2D> ("Textures/slimeGrey");	
 			mat.color = new Color (1, 1, 1, 1);
 		}
+
+		atEnd = false;
+		endsound = Resources.Load<AudioClip> ("Music/Enemy reaches finish");
 	}
 
 	void Start(){
@@ -92,6 +99,9 @@ public class enemyModel : MonoBehaviour
 			if ((numBeats % moverhythm == 0) && owner.m.isStarted()) {
 				if (transform.position.x < owner.m.boardWidth) {
 					transform.position = new Vector3 (transform.position.x + 1, transform.position.y);
+					if (transform.position.x == owner.m.boardWidth) {
+						owner.m.PlayEffect (endsound);
+					}
 				}
 			}
 		}
