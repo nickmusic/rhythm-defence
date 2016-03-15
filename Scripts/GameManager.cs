@@ -28,6 +28,11 @@ public class GameManager : MonoBehaviour
     Texture2D greentexture; // texture for green tower
     Texture2D bluetexture; // texture for blue tower
 
+    Texture2D levels; // texture for blue tower
+	Texture2D restart;
+	Texture2D start;
+	Texture2D next;
+
     // Beat tracking
     private float clock;
     private float startTime;
@@ -37,7 +42,9 @@ public class GameManager : MonoBehaviour
     int enemynum = 0;
 
     // Level number
-    public int level = 20;
+
+    private int level = 99;
+
 
     //button locations
     float trayx = 0;
@@ -71,7 +78,10 @@ public class GameManager : MonoBehaviour
         redtexture = Resources.Load<Texture2D>("Textures/redTower");
         greentexture = Resources.Load<Texture2D>("Textures/greenTower");
         bluetexture = Resources.Load<Texture2D>("Textures/blueTower");
-
+        levels = Resources.Load<Texture2D>("Textures/levels");
+        restart = Resources.Load<Texture2D>("Textures/restart");
+        start = Resources.Load<Texture2D>("Textures/start");
+        next = Resources.Load<Texture2D>("Textures/next");
         // set up folder for tiles
         tileFolder = new GameObject();
         tileFolder.name = "Tiles";
@@ -88,7 +98,7 @@ public class GameManager : MonoBehaviour
         enemies = new List<Enemy>();
 
         makeLevel();
-		buildBoard ();
+		    buildBoard ();
         makeOverlay();
 
         //set the camera based on aspect ratio
@@ -131,24 +141,28 @@ public class GameManager : MonoBehaviour
             trayspace = Screen.height / 30;
         }
 
+
+        if (level != 100 && level !=99){
+			var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+			Material mat = background.GetComponent<Renderer>().material;
+			mat.shader = Shader.Find("Sprites/Default");
+			mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
+			mat.color = new Color(1, 1, 1);
+			background.transform.position = new Vector3(5, 3, 1);
+			background.transform.localScale = new Vector3(20, 10, 0);
+		}
+
         // setting up music
         SoundSetUp();
-
-
-	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-	Material mat = background.GetComponent<Renderer>().material;
-	mat.shader = Shader.Find("Sprites/Default");
-	mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
-	mat.color = new Color(1, 1, 1);
-	background.transform.position = new Vector3(5, 3, 1);
-	background.transform.localScale = new Vector3(20, 10, 0);
 
         PlayMusic(idle);
     }
 
+
 	public float getBeat(){
 		return BEAT;
 	}
+
 
     private void SoundSetUp()
     {
@@ -359,11 +373,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void makeLevel()
-    {
-        addEnemies();
-        setConstraints();
-    }
+
+    private void makeLevel() {
+    	if (level != 100 && level !=99){
+        addEnemies ();
+        setConstraints ();
+        }
+	}
+
 
 
     public void resetLevel()
@@ -375,11 +392,14 @@ public class GameManager : MonoBehaviour
         numBeats = 0;
         started = false;
         placing = false;
+        enemynum = 0;
+        enemybeaten = 0;
         //numTiles = 0;
 
         PlayMusic(idle);
 
         makeLevel();
+
 
     }
 
@@ -479,6 +499,7 @@ public class GameManager : MonoBehaviour
             constraint0 = 0;
             constraint1 = 0;
             constraint2 = 4;
+
         }
         else if (level == 15)
         {
@@ -499,6 +520,7 @@ public class GameManager : MonoBehaviour
             constraint2 = 0;
         }
     }
+
 
 
     // add enemies
@@ -571,12 +593,7 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 12)
         {
-            /*addEnemy(2, 1, -1, 4);
-			addEnemy(2, 1, -1, 5);
-			addEnemy(2, 1, -3, 3);
-			addEnemy(2, 1, -3, 4);
-			addEnemy(2, 1, -3, 5);
-			addEnemy(2, 1, -3, 6);*/
+
 
             for (int i = 0; i < 6; i++)
             {
@@ -706,6 +723,54 @@ public class GameManager : MonoBehaviour
     void OnGUI()
 
     {
+
+	if (level == 100){ //level selction
+		for (int i = 1; i < 7; i++) {
+			for (int j = 1; j<4;j++){
+				int t=(j-1)*6+i;
+            if (GUI.Button(new Rect(i*150, 150*j-50, 110, 110), t.ToString())) {
+                level = t;
+				makeLevel();
+            }
+            }
+        }
+            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+    }
+
+    if (level == 99){ //level selction
+         GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
+         myStyle.fontSize = 40;
+
+    	GUI.Label(new Rect(Screen.width/2-400/2, 100, 400, 100), "RHYTHM  DEFENCE",myStyle);
+        GUI.Label(new Rect(Screen.width/2-50, 200, 330, 30), "Red Panda Games ");
+        if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2, 200, 50), "START GAME")) {
+            level = 1;
+            makeLevel();
+            }
+        if (GUI.Button(new Rect(Screen.width/2-100, Screen.height/2+150, 200, 50), "SELECT LEVEL")) {
+            level = 100;
+            makeLevel();
+            }
+
+            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+    }
+
+
+    if (level !=100 && level !=99){
+
+
+       if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels") ){
+       	    level = 100;
+            makeLevel();
+       }
         //labels for how many towers are left
         GUI.Label(new Rect(540, 25, 110, 110), "LEVEL " + level.ToString());
 
@@ -714,8 +779,10 @@ public class GameManager : MonoBehaviour
         GUI.Label(new Rect(trayx + (traywidth / 2.17f), trayspace * 3 + traywidth * 3, 110, 110), constraint2.ToString());
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Application.Quit();
+               Application.Quit();
         }
+
+
         if (!started)
         {
             if (GUI.Button(new Rect(trayspace, trayspace, traywidth, traywidth / 3), "START (S)") || Input.GetKeyDown(KeyCode.S))
@@ -725,34 +792,43 @@ public class GameManager : MonoBehaviour
                 PlayMusic(gametrack);
             }
         }
-        if (enemybeaten == enemynum)
-        {
+        if (enemybeaten==enemynum){
+            GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
+         	myStyle.fontSize = 80;
+            GUIStyle myStyle2 = new GUIStyle (GUI.skin.GetStyle("label"));
+         	myStyle2.fontSize = 30;
+     		GUI.Label(new Rect(Screen.width/2-600/2, 100, 600, 100), "YOU GOT IT!",myStyle);
+        	GUI.Label(new Rect(Screen.width/2-250, 200, 500, 100), "Press 'Space' to next level",myStyle2);
+        	if (GUI.Button(new Rect(Screen.width/2-80, 300, 80, 80), image: next)|| Input.GetKeyDown(KeyCode.Space) ) {
+        		enemynum=0;
+                enemybeaten = 0;
+                level++;
+                resetLevel() ;
 
-            if (GUI.Button(new Rect(trayspace * 3 + traywidth * 2, trayspace, traywidth, traywidth / 3), "NEXT LEVEL"))
-            {
-                enemynum = 0;
-                //Application.LoadLevel(Application.loadedLevel + 1);
-                //Application.LoadLevel("22");
-				level++;
-				resetLevel() ;
-            }
+        	}
+
         }
+
+
 
         if (placing)
         {
             // if the rotate button is pressed
-			if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE (Q)") || Input.GetKeyDown(KeyCode.Q))
+
+			if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") || Input.GetKeyDown(KeyCode.Q))
             {
                 PlayEffect(click);
                 currentTower.rotate(); // rotate the tower being placed
             }
         }
 
+
         if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART (R)") || Input.GetKeyDown(KeyCode.R))
 
         {
             PlayEffect(click);
             resetLevel();
+
         }
 
         // button for RED tower
@@ -844,7 +920,11 @@ public class GameManager : MonoBehaviour
             }
 
         }
+    	GUI.color=Color.black;
+        GUI.Label(new Rect(90, 20, 110, 110), "LEVEL "+level.ToString());
+   }
     }
+
 
     //creates quads for backround images
     private void makeOverlay()
