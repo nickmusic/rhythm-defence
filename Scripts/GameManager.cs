@@ -716,6 +716,11 @@ public class GameManager : MonoBehaviour
             }
             }
         }
+            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
     }
 
     if (level == 99){ //level selction
@@ -732,20 +737,22 @@ public class GameManager : MonoBehaviour
             level = 100;
             makeLevel();      
             }
-    }
-        if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
+
+            if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") ||Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
         }
 
+    }
+
         
     if (level !=100 && level !=99){
 
-        GUI.Label(new Rect(Screen.width - 155, 70, 110, 110), constraint0.ToString());
-        GUI.Label(new Rect(Screen.width - 155, 205, 110, 110), constraint1.ToString());
-        GUI.Label(new Rect(Screen.width - 155, 340, 110, 110), constraint2.ToString());
 
-       if (GUI.Button(new Rect(400+165, 15, 60, 60), image: levels) )
+       if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels") ){
+       	    level = 100;
+            makeLevel();      
+       }
         //labels for how many towers are left
         GUI.Label(new Rect(540, 25, 110, 110), "LEVEL " + level.ToString());
 
