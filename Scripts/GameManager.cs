@@ -144,28 +144,17 @@ public class GameManager : MonoBehaviour
 
 
         if (level != 100 && level !=99){
-		var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-		Material mat = background.GetComponent<Renderer>().material;
-		mat.shader = Shader.Find("Sprites/Default");
-		mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
-		mat.color = new Color(1, 1, 1);
-		background.transform.position = new Vector3(5, 3, 1);
-		background.transform.localScale = new Vector3(20, 10, 0);
-	}
+			var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+			Material mat = background.GetComponent<Renderer>().material;
+			mat.shader = Shader.Find("Sprites/Default");
+			mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
+			mat.color = new Color(1, 1, 1);
+			background.transform.position = new Vector3(5, 3, 1);
+			background.transform.localScale = new Vector3(20, 10, 0);
+		}
 
         // setting up music
         SoundSetUp();
-
-
-
-	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
-	Material mat = background.GetComponent<Renderer>().material;
-	mat.shader = Shader.Find("Sprites/Default");
-	mat.mainTexture = Resources.Load<Texture2D>("Textures/background10x20");
-	mat.color = new Color(1, 1, 1);
-	background.transform.position = new Vector3(5, 3, 1);
-	background.transform.localScale = new Vector3(20, 10, 0);
-
 
         PlayMusic(idle);
     }
@@ -380,12 +369,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-/ 
+
     private void makeLevel() {
     	if (level != 100 && level !=99){
         addEnemies ();
         setConstraints ();
         }
+	}
 
 
 
