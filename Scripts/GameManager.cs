@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
     private List<IndicatorTile> indicatorTiles;
 
     private GameObject titlePage;
-
+    private GameObject cover;
     // Use this for initialization
     void Start()
     {
@@ -745,17 +745,21 @@ public class GameManager : MonoBehaviour
 
 
 	if (level == 100){ //level selction
-		for (int i = 1; i < 7; i++) {
-			for (int j = 1; j<3;j++){
-				int t=(j-1)*6+i;
-			GUIStyle BStyle = new GUIStyle (GUI.skin.GetStyle("Button"));
-        	BStyle.fontSize = 25;
-            if (GUI.Button(new Rect(Screen.width/8+(i-1)*Screen.width/8, Screen.height/5+(j-1)*Screen.height/5, Screen.width/8-Screen.width/8/4, Screen.width/8-Screen.width/8/4), t.ToString(), BStyle)) {
-					resetLevel ();
-	                level = t;
-					makeLevel();
-	            }
-            }
+
+            for (int i = 1; i < 7; i++) {
+                for (int j = 1; j < 3; j++)
+                {
+                    int t = (j - 1) * 6 + i;
+                    GUIStyle BStyle = new GUIStyle(GUI.skin.GetStyle("Button"));
+                    BStyle.fontSize = 25;
+                    if (GUI.Button(new Rect(Screen.width / 8 + (i - 1) * Screen.width / 8, Screen.height / 5 + (j - 1) * Screen.height / 5, Screen.width / 8 - Screen.width / 8 / 4, Screen.width / 8 - Screen.width / 8 / 4), t.ToString(), BStyle))
+                    {
+                        resetLevel();
+                        level = t;
+                        makeLevel();
+                        DestroyImmediate(cover);
+                    }
+                }
         }
 		for (int i = 1; i < 4; i++) {
 			 int j = 3;
@@ -766,7 +770,8 @@ public class GameManager : MonoBehaviour
 					resetLevel ();
 	                level = t;
 					makeLevel();
-	            }
+                    DestroyImmediate(cover);
+                }
             
         }
 
@@ -794,6 +799,15 @@ public class GameManager : MonoBehaviour
                 level = 100;
                 makeLevel();
                 DestroyImmediate(titlePage);
+
+                //cover game board temporarily
+                cover = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                Material mat = cover.GetComponent<Renderer>().material;
+                mat.shader = Shader.Find("Sprites/Default");
+                mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+                mat.color = new Color(1, 1, 1);
+                cover.transform.position = new Vector3(4, 3, -2);
+                cover.transform.localScale = new Vector3(20, 14, 0);
             }
 
             if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "QUIT (Esc)") || Input.GetKeyDown(KeyCode.Escape))
@@ -813,7 +827,16 @@ public class GameManager : MonoBehaviour
        if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels") ){
        	    level = 100;
             makeLevel();
-       }
+
+                //cover game board temporarily
+                cover = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                Material mat = cover.GetComponent<Renderer>().material;
+                mat.shader = Shader.Find("Sprites/Default");
+                mat.mainTexture = Resources.Load<Texture2D>("Textures/backdrop");
+                mat.color = new Color(1, 1, 1);
+                cover.transform.position = new Vector3(4, 3, -2);
+                cover.transform.localScale = new Vector3(20, 14, 0);
+            }
         //labels for how many towers are left
         GUIStyle MyStyle = new GUIStyle (GUI.skin.GetStyle("label"));
         MyStyle.fontSize = 25;
@@ -905,6 +928,10 @@ public class GameManager : MonoBehaviour
                         addTower(0);
                         constraint0 = constraint0 - 1;
                     }
+                    else
+                    {
+                        addTower(type);
+                    }
                 }
                 else if (constraint0 > 0) // if not already placing, start placing this one if one is left
                 {
@@ -938,6 +965,10 @@ public class GameManager : MonoBehaviour
                         addTower(1);
                         constraint1 = constraint1 - 1;
                     }
+                    else
+                    {
+                        addTower(type);
+                    }
                 }
                 else if (constraint1 > 0) // if not already placing, start placing this one if one is left
                 {
@@ -968,6 +999,10 @@ public class GameManager : MonoBehaviour
                         if (type == 1) { constraint1 += 1; }
                         addTower(2);
                         constraint2 = constraint2 - 1;
+                    }
+                    else
+                    {
+                        addTower(type);
                     }
                 }
                 else if (constraint2 > 0) // if not already placing, start placing this one if one is left
