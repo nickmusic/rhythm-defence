@@ -1,4 +1,4 @@
-
+// The gamemanager of the rhythm-defense game
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
