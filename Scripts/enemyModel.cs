@@ -27,7 +27,6 @@ public class enemyModel : MonoBehaviour
 
 
 	// sfx
-	private bool atEnd;
 	private AudioClip endsound;
 
 	public void init(int enemyType, int initHealth, Enemy owner) {
@@ -73,8 +72,6 @@ public class enemyModel : MonoBehaviour
 			mat.color = new Color (1, 1, 1, 1);
 		}
 
-		atEnd = false;
-		endsound = Resources.Load<AudioClip> ("Music/Enemy reaches finish");
 	}
 
 	void Start(){
