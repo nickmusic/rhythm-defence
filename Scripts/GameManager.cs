@@ -161,6 +161,7 @@ public class GameManager : MonoBehaviour
         PlayMusic(idle);
     }
 
+<<<<<<< HEAD
     private void SoundSetUp()
     {
         // music
@@ -172,6 +173,15 @@ public class GameManager : MonoBehaviour
         enemyDead = Resources.Load<AudioClip>("Music/enemy defeated");
         enemyHit = Resources.Load<AudioClip>("Music/enemy hit by tower");
         click = Resources.Load<AudioClip>("Music/Mouse Click");
+=======
+	var background = GameObject.CreatePrimitive(PrimitiveType.Quad);
+	Material mat = background.GetComponent<Renderer>().material;
+	mat.shader = Shader.Find("Sprites/Default");
+	mat.mainTexture = Resources.Load<Texture2d>("Textures/background10x20");
+	mat.color = new Color(1, 1, 1);
+	background.transform.position = new Vecotr3(5, 3, 1);
+	background.transform.localScale = new Vector3(20, 10, 0);
+>>>>>>> master
     }
 
     // Update is called once per frame
