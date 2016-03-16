@@ -259,6 +259,19 @@ public class GameManager : MonoBehaviour
             }
             currentbullets.Clear();
         }
+			
+		if (level != 100 && level != 99){
+			if (placing){
+				if (Input.GetKeyDown(KeyCode.Return)){
+					currentTower.rotate(); // rotate the tower being placed
+				}
+			}
+			if (Input.GetKeyDown (KeyCode.R)) {
+				resetLevel ();
+			}
+		}
+
+
     }
 
     //adds a single game tile to the location x, y (unity units)
@@ -797,7 +810,7 @@ public class GameManager : MonoBehaviour
                 makeLevel();
                 DestroyImmediate(titlePage);
             }
-            if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 + 150, 200, 50), "SELECT LEVEL"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 + 150, 200, 50), "SELECT LEVEL"))
             {
                 level = 100;
                 makeLevel();
@@ -827,7 +840,7 @@ public class GameManager : MonoBehaviour
 
 
 
-       if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels") ){
+			if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels (L)") || Input.GetKeyDown(KeyCode.L)){
        	    level = 100;
             makeLevel();
 
@@ -891,7 +904,7 @@ public class GameManager : MonoBehaviour
             {
                 // if the rotate button is pressed
 
-                if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") )
+				if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE(Enter)"))
                 {
                     PlayEffect(click);
                     currentTower.rotate(); // rotate the tower being placed
@@ -901,7 +914,7 @@ public class GameManager : MonoBehaviour
 
 
 
-            if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART") )
+			if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART(R)") )
 
             {
                 PlayEffect(click);

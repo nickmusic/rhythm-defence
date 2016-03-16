@@ -72,6 +72,7 @@ public class Tower : MonoBehaviour
     // maybe bind this to right mouse or key later
     public void rotate()
     {
+		this.manager.resetColors ();
         direction = (direction + 1) % 4; // 0 = up, 1 = left, etc.
         transform.eulerAngles = new Vector3(0, 0, direction * 90);
     }
