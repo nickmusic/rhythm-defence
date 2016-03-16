@@ -111,7 +111,7 @@ public class enemyModel : MonoBehaviour
 	}
 
 	public void damage(int numBeats){
-		if (numBeats >= damagebuf ) {
+		if ((numBeats > damagebuf )&&(getX() < owner.m.boardWidth)) {
 			damagebuf = numBeats;
 			healthbuf = clock;
 			damageint = 1;

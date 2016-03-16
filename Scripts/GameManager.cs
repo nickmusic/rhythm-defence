@@ -476,15 +476,15 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 13)
         {
-            constraint0 = 1;
+            constraint0 = 2;
             constraint1 = 1;
-            constraint2 = 1;
+            constraint2 = 0;
         }
         else if (level == 12)
         {
             constraint0 = 0;
             constraint1 = 0;
-            constraint2 = 2;
+            constraint2 = 3;
         }
 
         // Luxing's levels
@@ -584,12 +584,13 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 13)
         {
-            // TODO: test repeating pattern?
-            addEnemy(2, 1, -2, 3);
-            addEnemy(2, 1, -2, 4);
-            addEnemy(2, 1, -2, 5);
-            addEnemy(2, 1, -1, 4);
-            addEnemy(2, 1, -3, 4);
+			for (int i = 0; i < 6; i++) {
+				addEnemy (2, 1, -2+(i * -4), 3);
+				addEnemy (2, 1, -2+(i * -4), 4);
+				addEnemy (2, 1, -2+(i * -4), 5);
+				addEnemy (2, 1, -1+(i * -4), 4);
+				addEnemy (2, 1, -3+(i * -4), 4);
+			}
         }
         else if (level == 12)
         {
