@@ -27,7 +27,6 @@ public class enemyModel : MonoBehaviour
 
 
 	// sfx
-	private bool atEnd;
 	private AudioClip endsound;
 
 	public void init(int enemyType, int initHealth, Enemy owner) {
@@ -73,8 +72,6 @@ public class enemyModel : MonoBehaviour
 			mat.color = new Color (1, 1, 1, 1);
 		}
 
-		atEnd = false;
-		endsound = Resources.Load<AudioClip> ("Music/Enemy reaches finish");
 	}
 
 	void Start(){
@@ -111,7 +108,7 @@ public class enemyModel : MonoBehaviour
 	}
 
 	public void damage(int numBeats){
-		if ((numBeats > damagebuf )&&(getX() < owner.m.boardWidth)) {
+		if ((numBeats > damagebuf ) && (getX() < owner.m.boardWidth)) {
 			damagebuf = numBeats;
 			healthbuf = clock;
 			damageint = 1;
@@ -139,7 +136,7 @@ public class enemyModel : MonoBehaviour
 		if(transform.position.x == owner.m.boardWidth){
             GUIStyle myStyle = new GUIStyle (GUI.skin.GetStyle("label"));
          	myStyle.fontSize = 70;
-     		GUI.Label(new Rect(Screen.width/2-600/2, 100, 600, 100), "Press 'R' to restart",myStyle);
+     		GUI.Label(new Rect(Screen.width/2-500/2, 100, 500, 100), "Click Restart",myStyle);
 
 	}
 	}
