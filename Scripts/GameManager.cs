@@ -627,9 +627,11 @@ public class GameManager : MonoBehaviour
         // Luxing's levels
         else if (level == 5)
         {
-            addEnemy(2, 1, -1, 3);
-            addEnemy(2, 1, -3, 3);
-            addEnemy(1, 2, -1, 4);
+			for (int i = 0; i < 4; i++) {
+				addEnemy (2, 1, -1+(i * -4), 3);
+				addEnemy (2, 1, -3+(i * -4), 3);
+				addEnemy (1, 2, -1+(i * -4), 4);
+			}
         }
         else if (level == 14)
         {
