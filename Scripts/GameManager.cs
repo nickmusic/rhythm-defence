@@ -259,6 +259,19 @@ public class GameManager : MonoBehaviour
             }
             currentbullets.Clear();
         }
+			
+		if (level != 100 && level != 99){
+			if (placing){
+				if (Input.GetKeyDown(KeyCode.Return)){
+					currentTower.rotate(); // rotate the tower being placed
+				}
+			}
+			if (Input.GetKeyDown (KeyCode.R)) {
+				resetLevel ();
+			}
+		}
+
+
     }
 
     //adds a single game tile to the location x, y (unity units)
@@ -493,15 +506,15 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 13)
         {
-            constraint0 = 1;
+            constraint0 = 2;
             constraint1 = 1;
-            constraint2 = 1;
+            constraint2 = 0;
         }
         else if (level == 12)
         {
             constraint0 = 0;
             constraint1 = 0;
-            constraint2 = 2;
+            constraint2 = 3;
         }
 
         // Luxing's levels
@@ -601,12 +614,13 @@ public class GameManager : MonoBehaviour
         }
         else if (level == 13)
         {
-            // TODO: test repeating pattern?
-            addEnemy(2, 1, -2, 3);
-            addEnemy(2, 1, -2, 4);
-            addEnemy(2, 1, -2, 5);
-            addEnemy(2, 1, -1, 4);
-            addEnemy(2, 1, -3, 4);
+			for (int i = 0; i < 6; i++) {
+				addEnemy (2, 1, -2+(i * -4), 3);
+				addEnemy (2, 1, -2+(i * -4), 4);
+				addEnemy (2, 1, -2+(i * -4), 5);
+				addEnemy (2, 1, -1+(i * -4), 4);
+				addEnemy (2, 1, -3+(i * -4), 4);
+			}
         }
         else if (level == 12)
         {
@@ -626,9 +640,11 @@ public class GameManager : MonoBehaviour
         // Luxing's levels
         else if (level == 5)
         {
-            addEnemy(2, 1, -1, 3);
-            addEnemy(2, 1, -3, 3);
-            addEnemy(1, 2, -1, 4);
+			for (int i = 0; i < 4; i++) {
+				addEnemy (2, 1, -1+(i * -4), 3);
+				addEnemy (2, 1, -3+(i * -4), 3);
+				addEnemy (1, 2, -1+(i * -4), 4);
+			}
         }
         else if (level == 14)
         {
@@ -794,7 +810,7 @@ public class GameManager : MonoBehaviour
                 makeLevel();
                 DestroyImmediate(titlePage);
             }
-            if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 + 150, 200, 50), "SELECT LEVEL"))
+			if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 + 150, 200, 50), "SELECT LEVEL"))
             {
                 level = 100;
                 makeLevel();
@@ -824,7 +840,7 @@ public class GameManager : MonoBehaviour
 
 
 
-       if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels") ){
+			if (GUI.Button(new Rect(25, Screen.height - 55, 110, 30), "Select Levels (L)") || Input.GetKeyDown(KeyCode.L)){
        	    level = 100;
             makeLevel();
 
@@ -888,7 +904,7 @@ public class GameManager : MonoBehaviour
             {
                 // if the rotate button is pressed
 
-                if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE") )
+				if (GUI.Button(new Rect(trayx, traywidth * 3 + trayspace * 4, traywidth, traywidth / 3), "ROTATE(Enter)"))
                 {
                     PlayEffect(click);
                     currentTower.rotate(); // rotate the tower being placed
@@ -898,7 +914,7 @@ public class GameManager : MonoBehaviour
 
 
 
-            if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART") )
+			if (GUI.Button(new Rect(trayspace * 2 + traywidth, trayspace, traywidth, traywidth / 3), "RESTART(R)") )
 
             {
                 PlayEffect(click);
